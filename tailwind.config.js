@@ -4,13 +4,27 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./utils/**/*.{js,ts,jsx,tsx,mdx}",
+    "./context/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      colors: {
+        purple: "#7C5DFA",
+        lightPurple: "#9277FF",
+        darkGrey: "#1E2139",
+        grey: "#252945",
+        lightestGrey: "#DFE3FA",
+        lightGrey: "#888EB0",
+        blueGrey: "#7E88C3",
+        almostBlack: "#0C0E16",
+        red: "#EC5757",
+        lightRed: "#9277FF",
+        almostWhite: "#f8f8f8",
+        darkestGrey: "#141625",
+      },
+      fontFamily: {
+        spartan: ["League Spartan", "sans-serif"],
       },
     },
   },
