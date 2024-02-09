@@ -1,37 +1,58 @@
 "use client";
 import Image from "next/image";
 import arrowDownIcon from "../public/icon-arrow-down.svg";
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Transition } from "@headlessui/react";
 
 const Filter = () => {
   const [filterIsOpen, setFilterIsOpen] = useState(false);
+  const dropdown = useRef(null);
+
+  useEffect(() => {
+    if (!filterIsOpen) return;
+
+    const closeDropdown = (e) => {
+      if (!dropdown.current.contains(e.target)) {
+        setFilterIsOpen(false);
+      }
+    };
+
+    window.addEventListener("mousedown", closeDropdown);
+
+    return () => window.removeEventListener("mousedown", closeDropdown);
+  }, [dropdown, filterIsOpen]);
+
   return (
-    <div className="relative headingText text-[12px] leading-[15px] tracking-[-0.25px] ">
+    <div ref={dropdown} className="relative headingText leading-[15px] tracking-[-0.25px] ">
       <button
         className="flex items-center space-x-3"
         onClick={() => setFilterIsOpen(!filterIsOpen)}
       >
-        Filter <span className="hidden md:inline">by status</span>
+        Filter <span className="hidden md:inline">&nbsp;by status</span>
         <Image
           src={arrowDownIcon}
           height={7}
           width={11}
           alt=""
-          className="w-[11px] h-auto object-contain object-center"
+          className={`${
+            filterIsOpen ? "[transform:rotateX(180deg)]" : ""
+          } transform duration-200 ease-linear w-[11px] h-auto object-contain object-center`}
         />
       </button>
-      {/* <Transition
-        show={filterIsOpen}
-        enter="transition duration-100 ease-out"
-        enterFrom="transform scale-95 opacity-0"
-        enterTo="transform scale-100 opacity-100"
-        leave="transition duration-75 ease-out"
-        leaveFrom="transform scale-100 opacity-100"
-        leaveTo="transform scale-95 opacity-0"
-      > */}
-        {filterIsOpen && (
-          <fieldset className="box-shadow bg-white rounded-[8px] p-6 w-[192px] space-y-4 absolute right-0 top-6">
+      {filterIsOpen && (
+        <Transition
+          show={filterIsOpen}
+          enter="transition duration-100 ease-out"
+          enterFrom="transform scale-95 opacity-0"
+          enterTo="transform scale-100 opacity-100"
+          leave="transition duration-75 ease-out"
+          leaveFrom="transform scale-100 opacity-100"
+          leaveTo="transform scale-95 opacity-0"
+        >
+          <fieldset
+            
+            className="box-shadow-dropdown bg-white rounded-[8px] p-6 w-[192px] space-y-4 absolute right-0 top-6"
+          >
             <div className="group flex items-center space-x-[13px]">
               <input
                 type="radio"
@@ -48,12 +69,12 @@ const Filter = () => {
                 <path
                   d="M1.5 4.5l2.124 2.124L8.97 1.28"
                   stroke="#FFF"
-                  stroke-width="2"
+                  strokeWidth="2"
                   fill="none"
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                 />
               </svg>
-              <label for="draft">Draft</label>
+              <label htmlFor="draft">Draft</label>
             </div>
             <div className="group flex items-center space-x-[13px]">
               <input
@@ -71,12 +92,12 @@ const Filter = () => {
                 <path
                   d="M1.5 4.5l2.124 2.124L8.97 1.28"
                   stroke="#FFF"
-                  stroke-width="2"
+                  strokeWidth="2"
                   fill="none"
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                 />
               </svg>
-              <label for="pending">Pending</label>
+              <label htmlFor="pending">Pending</label>
             </div>
             <div className="group flex items-center space-x-[13px]">
               <input
@@ -94,16 +115,16 @@ const Filter = () => {
                 <path
                   d="M1.5 4.5l2.124 2.124L8.97 1.28"
                   stroke="#FFF"
-                  stroke-width="2"
+                  strokeWidth="2"
                   fill="none"
-                  fill-rule="evenodd"
+                  clipRule="evenodd"
                 />
               </svg>
-              <label for="paid">Paid</label>
+              <label htmlFor="paid">Paid</label>
             </div>
           </fieldset>
-        )}
-      {/* </Transition> */}
+        </Transition>
+      )}
     </div>
   );
 };

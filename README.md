@@ -17,8 +17,8 @@ My Invoice App
 
 ### Links
 
-- Git URL: 
-- Live Site URL: 
+- Repository URL: https://github.com/thusmiley/my-invoice-app.git
+- Live Site URL: https://my-invoice-app.vercel.app/
 
 ### Built with
 
@@ -33,3 +33,7 @@ My Invoice App
 - React Router
 - React Hook Form
 - HeadlessUI
+
+### Collaborators
+
+- Server made by: @brendengerber - https://github.com/brendengerber

@@ -5,3 +5,4 @@ export const options = {
     Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_KEY}`,
   },
 };
+

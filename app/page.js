@@ -1,37 +1,59 @@
 import Image from "next/image";
-import plusIcon from "../public/icon-plus.svg";
-import arrowDownIcon from "../public/icon-arrow-down.svg";
 import Filter from "@/components/Filter";
+import AddNewButton from "@/components/AddNewButton";
+import data from "../utils/data.json";
+import InvoiceCard from "@/components/InvoiceCard";
+import illustration from "../public/illustration-empty.svg";
 
 export default function Home() {
   return (
-    <main className="min-h-screen mb-[105px] px-6 mx-auto">
-      <section className="flex items-center justify-between my-[34px]">
+    <main className="min-h-screen mb-[34px] px-6 mx-auto md:px-[48px] xl:max-w-[730px]">
+      <section className="flex items-center justify-between my-[34px] md:my-[56px]">
         <div>
-          <h1 className="headingText text-[20px] tracking-[-.63px]">
+          <h1 className="headingText text-[20px] tracking-[-.63px] md:text-[32px] md:tracking-[-1px]">
             Invoices
           </h1>
-          <p className="bodyText mt-1">7 invoices</p>
+          {data?.length === 0 ? (
+            <p className="bodyText mt-1 md:mt-2">No invoices</p>
+          ) : (
+            <p className="bodyText mt-1 md:mt-2">
+              <span className="hidden md:inline">There are&nbsp;</span>
+              {data.length}
+              <span className="hidden md:inline">&nbsp;total</span>
+              &nbsp;invoices
+            </p>
+          )}
         </div>
-        <div className="flex items-center space-x-[18px]">
-          {/* filter */}
+        <div className="flex items-center space-x-[18px] md:space-x-10">
           <Filter />
-          {/* add new  */}
-          <button className="bg-purple text-white bodyText flex items-center p-[6px] rounded-full">
-            <span className="bg-white rounded-full w-8 h-8 grid place-content-center">
-              <Image
-                src={plusIcon}
-                height={10}
-                width={10}
-                alt=""
-                className="w-[10px] h-auto object-contain object-center"
-              />
-            </span>
-            <span className="mx-2">New</span>
-            <span className="hidden md:inline"> Invoice</span>
-          </button>
+          <AddNewButton />
         </div>
       </section>
+
+      {data.length === 0 ? (
+        <section className="max-w-[217px] mx-auto mt-[102px] text-center md:max-w-[242px] md:mt-[210px] xl:mt-[141px]">
+          <Image
+            src={illustration}
+            width={242}
+            height={200}
+            alt=""
+            className="w-full h-auto object-contain object-center"
+          />
+          <h2 className="mt-10 headingText text-[20px] tracking-[-.63px] md:mt-[64px]">
+            There is nothing here
+          </h2>
+          <p className="bodyText mt-6 max-w-[221px] mx-auto">
+            Create an invoice by clicking the{" "}
+            <span className="font-bold">New</span> button and get started.
+          </p>
+        </section>
+      ) : (
+        <section className="space-y-4">
+          {data.map((invoice) => (
+            <InvoiceCard key={invoice.id} invoice={invoice} />
+          ))}
+        </section>
+      )}
     </main>
   );
 }

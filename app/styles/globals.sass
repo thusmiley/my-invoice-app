@@ -13,7 +13,7 @@
         font-synthesis: none
         text-rendering: optimizeLegibility
         scroll-behavior: smooth
-        @apply font-spartan text-almostBlack bg-almostWhite
+        @apply font-spartan text-almostBlack bg-almostWhite text-[12px] font-medium 
 
     input,
     textarea,
@@ -37,8 +37,10 @@
     .menu-active svg path 
         fill: white
         
-    .box-shadow
+    .box-shadow-dropdown
         box-shadow: 0px 10px 20px 0px rgba(72, 84, 159, 0.25)
+    .box-shadow-invoiceCard
+        box-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.10)
 
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
@@ -59,6 +61,8 @@
         display: none
 
 // utilities
-// @layer utilities
+@layer utilities
+    .darkMode-icon:hover path
+        @apply fill-lightestGrey duration-200 ease-in-out
     
                 

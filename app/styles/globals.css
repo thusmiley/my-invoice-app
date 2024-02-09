@@ -11,7 +11,7 @@
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     scroll-behavior: smooth;
-    @apply font-spartan text-almostBlack bg-almostWhite;
+    @apply font-spartan text-almostBlack bg-almostWhite text-[12px] font-medium;
   }
   input,
   textarea,
@@ -35,8 +35,11 @@
   .menu-active svg path {
     fill: white;
   }
-  .box-shadow {
+  .box-shadow-dropdown {
     box-shadow: 0px 10px 20px 0px rgba(72, 84, 159, 0.25);
+  }
+  .box-shadow-invoiceCard {
+    box-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.1);
   }
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
@@ -56,5 +59,10 @@
   input[type=search]::-webkit-search-results-button,
   input[type=search]::-webkit-search-results-decoration {
     display: none;
+  }
+}
+@layer utilities {
+  .darkMode-icon:hover path {
+    @apply fill-lightestGrey duration-200 ease-in-out;
   }
 }/*# sourceMappingURL=globals.css.map */
