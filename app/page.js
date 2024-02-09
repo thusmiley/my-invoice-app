@@ -7,7 +7,7 @@ import illustration from "../public/illustration-empty.svg";
 
 export default function Home() {
   return (
-    <main className="min-h-screen mb-[34px] px-6 mx-auto md:px-[48px] xl:max-w-[730px]">
+    <main className="min-h-screen mb-[90px] px-6 mx-auto md:px-[48px] xl:max-w-[730px]">
       <section className="flex items-center justify-between my-[34px] md:my-[56px]">
         <div>
           <h1 className="headingText text-[20px] tracking-[-.63px] md:text-[32px] md:tracking-[-1px]">
