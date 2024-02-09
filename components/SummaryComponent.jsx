@@ -33,11 +33,13 @@ const SummaryComponent = ({ invoice }) => {
         <div className="hidden md:block">
           <table className="table-fixed w-full">
             <thead className="">
-              <tr className="text-[11px] leading-[18px] tracking-[-.23px] bodyText">
-                <th className="text-left w-[50%] py-4">Item Name</th>
-                <th className="text-center w-[10%] py-4">QTY.</th>
-                <th className="text-right w-1/5 py-4">Price</th>
-                <th className="text-right w-1/5 py-4">Total</th>
+              <tr className="bodyText font-medium">
+                <th className="text-left w-[50%] py-4 font-medium">
+                  Item Name
+                </th>
+                <th className="text-center w-[10%] py-4 font-medium">QTY.</th>
+                <th className="text-right w-1/5 py-4 font-medium">Price</th>
+                <th className="text-right w-1/5 py-4 font-medium">Total</th>
               </tr>
             </thead>
             <tbody className="font-bold">
@@ -71,11 +73,9 @@ const SummaryComponent = ({ invoice }) => {
       </div>
 
       {/* amount due  */}
-      <div className="bg-[#373B53] p-6 rounded-b-[8px] text-white flex justify-between items-center md:px-8">
-        <p className="text-[11px] tracking-[-.23px] leading-[18px]">
-          Amount Due
-        </p>
-        <h3 className="text-[20px] leading-[32px] tracking-[-.42px] font-bold md:text-[24px] md:leading-[32px] md:tracking-[-.5px]">
+      <div className="bg-[#373B53] p-6 rounded-b-[8px] flex justify-between items-center md:px-8">
+        <p className="bodyText text-white">Amount Due</p>
+        <h3 className="priceText text-white">
           $
           {invoice?.total.toLocaleString(undefined, {
             minimumFractionDigits: 2,

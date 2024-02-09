@@ -24,7 +24,7 @@ const Invoice = ({ params }) => {
   return (
     <main className="min-h-screen relative px-6 mx-auto pb-[120px] md:pb-[50px] xl:max-w-[730px]">
       <button
-        className="flex items-center bodyText font-bold text-almostBlack my-8 md:mt-[48px] hover:text-lightGrey duration-200 ease-in-out"
+        className="flex items-center bodyText font-bold text-almostBlack my-8 md:mt-[48px] hover:text-lightGrey animation-effect"
         onClick={() => router.back()}
       >
         <Image
@@ -62,7 +62,7 @@ const Invoice = ({ params }) => {
           <div className="md:truncate">
             <div className="md:flex md:items-start md:justify-between">
               <div className="">
-                <h2 className="headingText md:text-[16px] md:leading-[24px] md:tracking-[-.8px]">
+                <h2 className="headingText">
                   <span className="text-lightGrey">#</span>
                   {invoice?.id}
                 </h2>
@@ -73,7 +73,7 @@ const Invoice = ({ params }) => {
                 ))}
               </div>
 
-              <div className="mt-[30px] bodyText text-[11px] tracking-[-.23px] leading-[18px] md:mt-0">
+              <div className="mt-[30px] bodyText md:mt-0 md:text-right">
                 <p>{invoice?.senderAddress.street}</p>
                 <p>{invoice?.senderAddress.city}</p>
                 <p>{invoice?.senderAddress.postCode}</p>
@@ -81,12 +81,12 @@ const Invoice = ({ params }) => {
               </div>
             </div>
 
-            <div className="mt-[30px] bodyText text-[11px] tracking-[-.23px] leading-[18px] md:flex md:space-x-[110px] md:mt-[21px]">
+            <div className="mt-[30px] bodyText md:flex md:space-x-[110px] md:mt-[21px]">
               <div className="flex space-x-10 items-start md:space-x-[98px]">
                 <div className="space-y-8">
                   <div className="">
                     <p>Invoice Date</p>
-                    <h3 className="mt-3 text-[15px] leading-[20px] tracking-[-.31px] headingText">
+                    <h3 className="mt-3 headingText">
                       {new Date(invoice?.createdAt).toLocaleDateString(
                         "en-us",
                         {
@@ -99,7 +99,7 @@ const Invoice = ({ params }) => {
                   </div>
                   <div className="">
                     <p>Payment Due</p>
-                    <h3 className="mt-3 text-[15px] leading-[20px] tracking-[-.31px] headingText">
+                    <h3 className="mt-3 headingText">
                       {new Date(invoice?.paymentDue).toLocaleDateString(
                         "en-us",
                         {
@@ -114,10 +114,8 @@ const Invoice = ({ params }) => {
 
                 <div>
                   <p>Bill To</p>
-                  <h3 className="mt-3 text-[15px] leading-[20px] tracking-[-.31px] headingText">
-                    {invoice?.clientName}
-                  </h3>
-                  <div className="text-[11px] tracking-[-.23px] leading-[18px] mt-2">
+                  <h3 className="mt-3 headingText">{invoice?.clientName}</h3>
+                  <div className="bodyText mt-2">
                     <p>{invoice?.clientAddress.street}</p>
                     <p>{invoice?.clientAddress.city}</p>
                     <p>{invoice?.clientAddress.postCode}</p>
@@ -127,9 +125,7 @@ const Invoice = ({ params }) => {
               </div>
               <div className="mt-8 md:mt-0">
                 <p className="text-lightGrey">Sent to</p>
-                <h3 className="mt-3 text-[15px] leading-[20px] tracking-[-.31px] headingText">
-                  {invoice?.clientEmail}
-                </h3>
+                <h3 className="mt-3 headingText">{invoice?.clientEmail}</h3>
               </div>
             </div>
           </div>

@@ -10,7 +10,7 @@ export default function Home() {
     <main className="min-h-screen mb-[90px] px-6 mx-auto md:px-[48px] xl:max-w-[730px]">
       <section className="flex items-center justify-between my-[34px] md:my-[56px]">
         <div>
-          <h1 className="headingText text-[20px] tracking-[-.63px] md:text-[32px] md:tracking-[-1px]">
+          <h1 className="headingText">
             Invoices
           </h1>
           {data?.length === 0 ? (
@@ -39,7 +39,7 @@ export default function Home() {
             alt=""
             className="w-full h-auto object-contain object-center"
           />
-          <h2 className="mt-10 headingText text-[20px] tracking-[-.63px] md:mt-[64px]">
+          <h2 className="mt-10 headingText md:mt-[64px]">
             There is nothing here
           </h2>
           <p className="bodyText mt-6 max-w-[221px] mx-auto">

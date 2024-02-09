@@ -23,7 +23,10 @@ const Filter = () => {
   }, [dropdown, filterIsOpen]);
 
   return (
-    <div ref={dropdown} className="relative headingText leading-[15px] tracking-[-0.25px] ">
+    <div
+      ref={dropdown}
+      className="relative text-almostBlack bodyText font-bold text-[16px]"
+    >
       <button
         className="flex items-center space-x-3"
         onClick={() => setFilterIsOpen(!filterIsOpen)}
@@ -36,7 +39,7 @@ const Filter = () => {
           alt=""
           className={`${
             filterIsOpen ? "[transform:rotateX(180deg)]" : ""
-          } transform duration-200 ease-linear w-[11px] h-auto object-contain object-center`}
+          } animation-effect ease-linear w-[11px] h-auto object-contain object-center`}
         />
       </button>
       {filterIsOpen && (
@@ -49,21 +52,18 @@ const Filter = () => {
           leaveFrom="transform scale-100 opacity-100"
           leaveTo="transform scale-95 opacity-0"
         >
-          <fieldset
-            
-            className="box-shadow-dropdown bg-white rounded-[8px] p-6 w-[192px] space-y-4 absolute right-0 top-6"
-          >
+          <fieldset className="box-shadow-dropdown bg-white rounded-[8px] p-6 w-[192px] space-y-4 absolute right-0 top-6">
             <div className="group flex items-center space-x-[13px]">
               <input
                 type="radio"
                 id="draft"
                 name="filter"
-                className="shrink-0 peer outline-none  appearance-none w-4 h-4 bg-lightestGrey rounded-[2px] border-[1px] border-lightestGrey hover:border-purple transition-all duration-200 ease-in-out checked:bg-purple checked:border-purple  cursor-pointer"
+                className="filter-input peer"
               />
               <svg
                 width="10"
                 height="8"
-                className="absolute hidden  peer-checked:block outline-none pointer-events-none left-[14px]"
+                className="absolute hidden peer-checked:block outline-none pointer-events-none left-[14px]"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -81,7 +81,7 @@ const Filter = () => {
                 type="radio"
                 id="pending"
                 name="filter"
-                className="shrink-0 peer outline-none  appearance-none w-4 h-4 bg-lightestGrey rounded-[2px] border-[1px] border-lightestGrey hover:border-purple transition-all duration-200 ease-in-out checked:bg-purple checked:border-purple  cursor-pointer"
+                className="filter-input peer"
               />
               <svg
                 width="10"
@@ -104,12 +104,12 @@ const Filter = () => {
                 type="radio"
                 id="paid"
                 name="filter"
-                className="shrink-0 peer outline-none  appearance-none w-4 h-4 bg-lightestGrey rounded-[2px] border-[1px] border-lightestGrey hover:border-purple transition-all duration-200 ease-in-out checked:bg-purple checked:border-purple  cursor-pointer"
+                className="filter-input peer"
               />
               <svg
                 width="10"
                 height="8"
-                className="absolute hidden  peer-checked:block outline-none pointer-events-none left-[14px]"
+                className="absolute hidden peer-checked:block outline-none pointer-events-none left-[14px]"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
