@@ -6,6 +6,7 @@ import StatusButton from "@/components/StatusButton";
 import data from "../../../utils/data.json";
 import { useState, useEffect } from "react";
 import SummaryComponent from "@/components/SummaryComponent";
+import { formatDate } from "@/utils";
 
 const Invoice = ({ params }) => {
   const router = useRouter();
@@ -38,27 +39,27 @@ const Invoice = ({ params }) => {
       </button>
 
       <section>
-        <div className="box-shadow-invoiceCard md:flex md:justify-between md:items-center md:bg-white md:rounded-[8px] md:py-5 md:px-8">
-          <div className="bg-white rounded-[8px] p-6 flex items-center justify-between md:rounded-none md:p-0 md:space-x-4">
+        <div className="box-shadow-invoiceCard md:flex md:justify-between md:items-center md:bg-white md:dark:bg-darkGrey md:rounded-[8px] md:py-5 md:px-8">
+          <div className="bg-white dark:bg-darkGrey rounded-[8px] p-6 flex items-center justify-between md:rounded-none md:p-0 md:space-x-4">
             <p className="bodyText">Status</p>
             <StatusButton status={invoice?.status} />
           </div>
 
-          <div className="bg-white p-6 flex justify-between items-center absolute bottom-0 w-full left-0 right-0 md:relative md:justify-end md:p-0 md:space-x-2">
-            <button className="bodyText py-3 px-6 bg-[#F9FAFE] rounded-full hover:bg-lightestGrey duration-200 ease-in-out">
+          <div className="bg-white dark:bg-darkGrey p-6 flex justify-between items-center absolute bottom-0 w-full left-0 right-0 md:relative md:justify-end md:p-0 md:space-x-2">
+            <button className="bodyText font-bold py-3 px-6 bg-[#F9FAFE] dark:bg-grey rounded-full hover:bg-lightestGrey dark:hover:text-blueGrey dark:hover:bg-white animation-effect">
               Edit
             </button>
-            <button className="bodyText py-3 px-6 bg-red rounded-full text-white hover:bg-lightRed duration-200 ease-in-out">
+            <button className="bodyText font-bold py-3 px-6 bg-red rounded-full text-white hover:bg-lightRed animation-effect">
               Delete
             </button>
-            <button className="bodyText py-3 px-6 bg-purple rounded-full text-white hover:bg-lightPurple duration-200 ease-in-out">
+            <button className="bodyText font-bold py-3 px-6 bg-purple rounded-full text-white hover:bg-lightPurple animation-effect">
               Mark as Paid
             </button>
           </div>
         </div>
 
         {/* invoice details */}
-        <div className="bg-white rounded-[8px] mt-4 mb-10 p-6 box-shadow-invoiceCard md:mt-6 md:p-8">
+        <div className="bg-white dark:bg-darkGrey rounded-[8px] mt-4 mb-10 p-6 box-shadow-invoiceCard md:mt-6 md:p-8">
           <div className="md:truncate">
             <div className="md:flex md:items-start md:justify-between">
               <div className="">
@@ -87,14 +88,7 @@ const Invoice = ({ params }) => {
                   <div className="">
                     <p>Invoice Date</p>
                     <h3 className="mt-3 headingText">
-                      {new Date(invoice?.createdAt).toLocaleDateString(
-                        "en-us",
-                        {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        }
-                      )}
+                      {formatDate(invoice?.createdAt)}
                     </h3>
                   </div>
                   <div className="">
@@ -124,7 +118,7 @@ const Invoice = ({ params }) => {
                 </div>
               </div>
               <div className="mt-8 md:mt-0">
-                <p className="text-lightGrey">Sent to</p>
+                <p>Sent to</p>
                 <h3 className="mt-3 headingText">{invoice?.clientEmail}</h3>
               </div>
             </div>

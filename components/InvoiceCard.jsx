@@ -3,13 +3,14 @@ import { useRouter } from "next/navigation";
 import StatusButton from "./StatusButton";
 import Image from "next/image";
 import arrowRightIcon from "../public/icon-arrow-right.svg";
+import { formatCurrency, formatDate } from "@/utils";
 
 const InvoiceCard = ({ invoice }) => {
   const router = useRouter();
 
   return (
     <div
-      className="bg-white rounded-[8px] p-6 cursor-pointer box-shadow-invoiceCard md:flex md:justify-between md:items-center md:py-4 border-[1px] border-white hover:border-purple animation-effect"
+      className="bg-white dark:bg-darkGrey rounded-[8px] p-6 cursor-pointer box-shadow-invoiceCard md:flex md:justify-between md:items-center md:py-4 border-[1px] border-white dark:border-darkGrey hover:border-purple animation-effect"
       onClick={() => router.push(`/invoice/${invoice.id}`)}
     >
       <div className="flex justify-between items-start md:justify-start md:space-x-7">
@@ -18,18 +19,16 @@ const InvoiceCard = ({ invoice }) => {
             <span className="text-lightGrey">#</span>
             {invoice.id}
           </h2>
-          <p className="bodyText mt-8 md:mt-0">Due {invoice.paymentDue}</p>
+          <p className="bodyText mt-8 md:mt-0">
+            Due {formatDate(invoice.paymentDue)}
+          </p>
         </div>
         <h3 className="bodyText">{invoice.clientName}</h3>
       </div>
 
       <div className="flex justify-between items-end -mt-4 md:mt-0 md:items-center md:justify-end">
         <h4 className="priceText -mb-2 md:mb-0 md:mr-10">
-          $
-          {invoice.total.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}
+          ${formatCurrency(invoice.total)}
         </h4>
         <StatusButton status={invoice.status} />
         <Image

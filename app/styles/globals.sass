@@ -13,7 +13,7 @@
         font-synthesis: none
         text-rendering: optimizeLegibility
         scroll-behavior: smooth
-        @apply font-spartan text-almostBlack bg-almostWhite text-[16px] font-medium 
+        @apply font-spartan text-almostBlack bg-almostWhite text-[16px] font-medium dark:bg-darkestGrey
 
     input,
     textarea,
@@ -29,19 +29,19 @@
 // components
 @layer components
     .headingText
-        @apply text-almostBlack font-bold text-[18px] tracking-[-.63px] leading-[20px]
+        @apply text-almostBlack font-bold text-[18px] tracking-[-.63px] leading-[20px] dark:text-white
 
     .bodyText
-        @apply text-lightGrey text-[16px] leading-[20px] tracking-[-0.25px] font-medium
+        @apply text-lightGrey dark:text-lightestGrey text-[16px] leading-[20px] tracking-[-0.25px] font-medium 
 
     .priceText
-        @apply text-almostBlack font-bold text-[20px] leading-[25px] tracking-[-0.8px] md:text-[22px] md:tracking-[-1px]
+        @apply text-almostBlack dark:text-white font-bold text-[20px] leading-[32px] tracking-[-0.42px] md:text-[22px] md:tracking-[-1px]
 
     .animation-effect
         @apply transition-all duration-200 ease-in-out 
 
     .filter-input
-        @apply shrink-0 outline-none  appearance-none w-4 h-4 bg-lightestGrey rounded-[2px] border-[1px] border-lightestGrey hover:border-purple transition-all duration-200 ease-in-out checked:bg-purple checked:border-purple  cursor-pointer
+        @apply shrink-0 outline-none appearance-none w-4 h-4 bg-lightestGrey dark:bg-darkestGrey rounded-[2px] border-[1px] border-lightestGrey dark:border-darkestGrey hover:border-purple dark:hover:border-purple transition-all duration-200 ease-in-out checked:bg-purple dark:checked:bg-purple checked:border-purple dark:checked:border-purple  cursor-pointer
 
     .box-shadow-dropdown
         box-shadow: 0px 10px 20px 0px rgba(72, 84, 159, 0.25)

@@ -1,38 +1,30 @@
-import React from "react";
+"use client";
+import { createContext, useContext, useEffect, useState } from "react";
 import { usePreferredColorScheme } from "../hooks/usePreferredScheme";
 import { useToggle } from "../hooks/useToggle";
 
-interface ThemeState {
-  dark: boolean;
-  toggleTheme: () => void;
+const ThemeContext = createContext();
+
+export function useThemeContext() {
+  return useContext(ThemeContext);
 }
 
-const ThemeContext =
-  React.createContext <
-  ThemeState >
-  {
-    dark: false,
-    toggleTheme: () => {},
-  };
-
-const ThemeProvider: React.FC = ({ children }) => {
+export function ThemeProvider({ children }) {
   const [preferred] = usePreferredColorScheme();
   const [dark, darkHandlers] = useToggle(preferred);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (preferred) darkHandlers.on();
     else darkHandlers.off();
   }, [preferred]);
+
   const toggleTheme = () => {
     darkHandlers.toggle();
   };
+
   return (
-    <ThemeContext.Provider value={{ dark, toggleTheme }}>
+    <ThemeContext.Provider value={(dark, toggleTheme)}>
       {children}
     </ThemeContext.Provider>
   );
-};
-
-const useThemeContext = () => React.useContext(ThemeContext);
-
-export { useThemeContext, ThemeProvider };
+}

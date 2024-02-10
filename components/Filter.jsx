@@ -52,7 +52,7 @@ const Filter = () => {
           leaveFrom="transform scale-100 opacity-100"
           leaveTo="transform scale-95 opacity-0"
         >
-          <fieldset className="box-shadow-dropdown bg-white rounded-[8px] p-6 w-[192px] space-y-4 absolute right-0 top-6">
+          <fieldset className="box-shadow-dropdown bg-white dark:bg-grey rounded-[8px] p-6 w-[192px] space-y-4 absolute right-0 top-6">
             <div className="group flex items-center space-x-[13px]">
               <input
                 type="radio"

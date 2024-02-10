@@ -3,7 +3,7 @@ import plusIcon from "../public/icon-plus.svg";
 
 const AddNewButton = () => {
   return (
-    <button className="bg-purple text-white bodyText flex items-center p-[6px] font-bold rounded-full hover:bg-lightPurple animation-effect md:p-2">
+    <button className="bg-purple bodyText flex items-center p-[6px] font-bold rounded-full hover:bg-lightPurple animation-effect md:p-2">
       <span className="bg-white rounded-full w-8 h-8 grid place-content-center">
         <Image
           src={plusIcon}
@@ -13,8 +13,8 @@ const AddNewButton = () => {
           className="w-[10px] h-auto object-contain object-center"
         />
       </span>
-      <span className="mx-2 md:ml-2">New</span>
-      <span className="hidden md:inline md:mr-2"> Invoice</span>
+      <span className="mx-2 md:ml-2 text-white">New</span>
+      <span className="hidden md:inline md:mr-2  text-white"> Invoice</span>
     </button>
   );
 };

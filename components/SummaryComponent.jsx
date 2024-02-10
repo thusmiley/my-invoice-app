@@ -1,9 +1,10 @@
+import { formatCurrency } from "@/utils";
 import React from "react";
 
 const SummaryComponent = ({ invoice }) => {
   return (
     <div className="mt-10 md:mt-[52px]">
-      <div className="bg-[#F9FAFE] p-6 rounded-t-[8px] space-y-6 md:p-8 md:space-y-0">
+      <div className="bg-[#F9FAFE] dark:bg-grey p-6 rounded-t-[8px] space-y-6 md:p-8 md:space-y-0">
         {/* mobile */}
         {invoice?.items?.map((obj, index) => (
           <div
@@ -13,20 +14,10 @@ const SummaryComponent = ({ invoice }) => {
             <div>
               <h3 className="mb-2 headingText">{obj.name}</h3>
               <p className="bodyText font-bold">
-                {obj.quantity} x $
-                {obj.price.toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {obj.quantity} x ${formatCurrency(obj.price)}
               </p>
             </div>
-            <h4 className="headingText">
-              $
-              {obj.total.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </h4>
+            <h4 className="headingText">${formatCurrency(obj.total)}</h4>
           </div>
         ))}
         {/* tablet and desktop */}
@@ -48,22 +39,14 @@ const SummaryComponent = ({ invoice }) => {
                   <td className="mb-2 headingText text-left py-4">
                     {obj.name}
                   </td>
-                  <td className="text-center text-lightGrey py-4">
+                  <td className="text-center text-lightGrey dark:text-lightestGrey py-4">
                     {obj.quantity}
                   </td>
-                  <td className="text-right text-lightGrey py-4">
-                    $
-                    {obj.price.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
+                  <td className="text-right text-lightGrey dark:text-lightestGrey py-4">
+                    ${formatCurrency(obj.price)}
                   </td>
-                  <td className="text-right py-4">
-                    $
-                    {obj.total.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
+                  <td className="text-right dark:text-white py-4">
+                    ${formatCurrency(obj.total)}
                   </td>
                 </tr>
               ))}
@@ -73,14 +56,10 @@ const SummaryComponent = ({ invoice }) => {
       </div>
 
       {/* amount due  */}
-      <div className="bg-[#373B53] p-6 rounded-b-[8px] flex justify-between items-center md:px-8">
+      <div className="bg-[#373B53] dark:bg-almostBlack p-6 rounded-b-[8px] flex justify-between items-center md:px-8">
         <p className="bodyText text-white">Amount Due</p>
-        <h3 className="priceText text-white">
-          $
-          {invoice?.total.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}
+        <h3 className="priceText text-white xl:text-[24px] xl:leading-[32px] xl:tracking-[-.5px]">
+          ${formatCurrency(invoice?.total)}
         </h3>
       </div>
     </div>

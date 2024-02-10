@@ -8,6 +8,8 @@ module.exports = {
     "./context/**/*.{js,ts,jsx,tsx,mdx}",
     "./hooks/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
+  mode: "jit",
   theme: {
     extend: {
       colors: {

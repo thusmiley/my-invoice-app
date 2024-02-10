@@ -10,9 +10,7 @@ export default function Home() {
     <main className="min-h-screen mb-[90px] px-6 mx-auto md:px-[48px] xl:max-w-[730px]">
       <section className="flex items-center justify-between my-[34px] md:my-[56px]">
         <div>
-          <h1 className="headingText">
-            Invoices
-          </h1>
+          <h1 className="headingText">Invoices</h1>
           {data?.length === 0 ? (
             <p className="bodyText mt-1 md:mt-2">No invoices</p>
           ) : (
