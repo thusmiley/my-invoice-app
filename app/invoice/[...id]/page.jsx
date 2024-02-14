@@ -23,7 +23,7 @@ const Invoice = ({ params }) => {
   }, []);
 
   return (
-    <main className="min-h-screen relative px-6 mx-auto pb-[120px] md:pb-[50px] xl:max-w-[730px]">
+    <main className="min-h-screen pt-[72px] relative px-6 mx-auto pb-[120px] md:pb-[50px] xl:max-w-[730px]">
       <button
         className="flex items-center bodyText font-bold text-almostBlack my-8 md:mt-[48px] hover:text-lightGrey animation-effect"
         onClick={() => router.back()}

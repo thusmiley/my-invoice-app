@@ -1,5 +1,6 @@
 import NavBar from "@/components/NavBar";
 import "./styles/globals.css";
+import { InvoiceProvider } from "@/context/InvoiceContext";
 
 export const metadata = {
   title: "My Invoice App",
@@ -25,8 +26,10 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <NavBar />
-        {children}
+        <InvoiceProvider>
+          <NavBar />
+          {children}
+        </InvoiceProvider>
       </body>
     </html>
   );

@@ -10,7 +10,7 @@ const InvoiceCard = ({ invoice }) => {
 
   return (
     <div
-      className="bg-white dark:bg-darkGrey rounded-[8px] p-6 cursor-pointer box-shadow-invoiceCard md:flex md:justify-between md:items-center md:py-4 border-[1px] border-white dark:border-darkGrey hover:border-purple animation-effect"
+      className="bg-white dark:bg-darkGrey rounded-[8px] relative z-0 p-6 cursor-pointer box-shadow-invoiceCard md:flex md:justify-between md:items-center md:py-4 border-[1px] border-white dark:border-darkGrey hover:border-purple dark:hover:border-purple animation-effect"
       onClick={() => router.push(`/invoice/${invoice.id}`)}
     >
       <div className="flex justify-between items-start md:justify-start md:space-x-7">

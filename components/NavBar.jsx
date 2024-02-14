@@ -33,7 +33,7 @@ const NavBar = () => {
   };
 
   return (
-    <header className="xl:h-screen xl:fixed">
+    <header className="fixed top-0 w-full z-10 xl:h-screen">
       <nav className="bg-[#373B53] dark:bg-darkGrey flex justify-between items-center xl:flex-col xl:justify-start xl:fixed xl:top-0 xl:rounded-r-[30px] xl:items-stretch xl:h-full">
         <Link href="/">
           <svg
@@ -118,6 +118,7 @@ const NavBar = () => {
             height={32}
             alt="toggle dark mode"
             className="w-8 h-auto object-cover object-center rounded-full xl:w-10"
+            priority={false}
           />
         </div>
       </nav>

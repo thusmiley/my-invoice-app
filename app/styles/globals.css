@@ -47,28 +47,43 @@
   .box-shadow-invoiceCard {
     box-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.1);
   }
+  .form-heading {
+    @apply font-bold text-[18px] tracking-[-.63px] leading-[20px] text-purple mt-6;
+  }
+  .form-input {
+    @apply bg-white dark:bg-darkGrey border-[1px] border-lightestGrey dark:border-grey rounded-[4px] py-4 pl-5 outline-grey outline-1 outline-offset-0 text-almostBlack bodyText font-bold placeholder:text-lightGrey dark:darkModeAutofillOverride;
+  }
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,
   input:-webkit-autofill:active {
-    -webkit-transition: #10141E 5000000s ease-in-out 0s;
-    transition: #10141E 5000000s ease-in-out 0s;
-    -webkit-box-shadow: 0 0 0 40px #10141E inset;
+    -webkit-transition: #fff 5000000s ease-in-out 0s;
+    transition: #fff 5000000s ease-in-out 0s;
+    -webkit-box-shadow: 0 0 0 40px #fff inset;
+    -webkit-text-fill-color: #0C0E16;
+    background-clip: content-box;
+  }
+  .darkModeAutofillOverride:-webkit-autofill, .darkModeAutofillOverride:-webkit-autofill:hover, .darkModeAutofillOverride:-webkit-autofill:focus, .darkModeAutofillOverride:-webkit-autofill:active {
+    -webkit-transition: #1E2139 5000000s ease-in-out 0s;
+    transition: #1E2139 5000000s ease-in-out 0s;
+    -webkit-box-shadow: 0 0 0 40px #1E2139 inset;
     -webkit-text-fill-color: white;
     background-clip: content-box;
   }
-  input[type=search] {
-    -webkit-border-radius: 0;
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
-  input[type=search]::-webkit-search-decoration,
-  input[type=search]::-webkit-search-cancel-button,
-  input[type=search]::-webkit-search-results-button,
-  input[type=search]::-webkit-search-results-decoration {
-    display: none;
+  input[type=number] {
+    -moz-appearance: textfield;
   }
 }
 @layer utilities {
   .darkMode-icon:hover path {
     @apply fill-lightestGrey duration-200 ease-in-out;
+  }
+  .deleteIcon:hover path {
+    @apply fill-red;
   }
 }/*# sourceMappingURL=globals.css.map */

@@ -3,8 +3,10 @@ import Image from "next/image";
 import arrowDownIcon from "../public/icon-arrow-down.svg";
 import { useState, useEffect, useRef } from "react";
 import { Transition } from "@headlessui/react";
+import { useInvoiceContext } from "@/context/InvoiceContext";
 
 const Filter = () => {
+  const { status, setStatus, handleFilterClick } = useInvoiceContext();
   const [filterIsOpen, setFilterIsOpen] = useState(false);
   const dropdown = useRef(null);
 
@@ -25,7 +27,7 @@ const Filter = () => {
   return (
     <div
       ref={dropdown}
-      className="relative text-almostBlack bodyText font-bold text-[16px]"
+      className="relative z-[1] text-almostBlack bodyText font-bold text-[16px]"
     >
       <button
         className="flex items-center space-x-3"
@@ -58,7 +60,9 @@ const Filter = () => {
                 type="radio"
                 id="draft"
                 name="filter"
+                value="draft"
                 className="filter-input peer"
+                onClick={handleFilterClick}
               />
               <svg
                 width="10"
@@ -81,7 +85,9 @@ const Filter = () => {
                 type="radio"
                 id="pending"
                 name="filter"
+                value="pending"
                 className="filter-input peer"
+                onClick={handleFilterClick}
               />
               <svg
                 width="10"
@@ -104,7 +110,9 @@ const Filter = () => {
                 type="radio"
                 id="paid"
                 name="filter"
+                value="paid"
                 className="filter-input peer"
+                onClick={handleFilterClick}
               />
               <svg
                 width="10"
