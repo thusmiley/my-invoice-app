@@ -21,63 +21,75 @@ const ItemListComponent = () => {
   const total = formatCurrency(qty * price);
 
   return (
-    <div className="space-y-6 pb-[48px]">
-      <div className="flex flex-col">
-        <label htmlFor="itemName" className="bodyText mb-[10px]">
+    <div className="space-y-6 pb-[48px] md:flex md:space-y-0 md:space-x-4">
+      <div className="form-control md:w-[40%]">
+        <label
+          htmlFor="itemName"
+          className={`${errors.itemName ? "text-red" : ""} bodyText mb-[10px]`}
+        >
           Item Name
         </label>
         <input
           type="text"
           name="itemName"
           id="itemName"
+          placeholder="New Item"
           {...register("itemName", {
-            required: "Required",
+            required: "can't be empty",
           })}
-          className="form-input"
+          className={`${errors.itemName ? "border-red" : ""} form-input`}
         />
         {errors.itemName && (
           <p className="errorMsg">{errors.itemName.message}</p>
         )}
       </div>
-      <div className="flex space-x-4 w-full">
-        <div className="flex flex-col w-[20%]">
-          <label htmlFor="qty" className="bodyText mb-[10px]">
+      <div className="flex space-x-4 w-full md:w-[60%]">
+        <div className="form-control w-[20%]">
+          <label
+            htmlFor="qty"
+            className={`${errors.qty ? "text-red" : ""} bodyText mb-[10px]`}
+          >
             Qty.
           </label>
           <input
             type="text"
             name="qty"
             id="qty"
+            placeholder="0"
             {...register("qty", {
               required: "Required",
             })}
-            className="form-input"
+            className={`${errors.qty ? "border-red" : ""} form-input`}
             onChange={(e) => setQty(e.target.value)}
           />
           {errors.qty && <p className="errorMsg">{errors.qty.message}</p>}
         </div>
-        <div className="flex flex-col w-[35%]">
-          <label htmlFor="price" className="bodyText mb-[10px]">
+        <div className="form-control w-[35%]">
+          <label
+            htmlFor="price"
+            className={`${errors.price ? "text-red" : ""} bodyText mb-[10px]`}
+          >
             Price
           </label>
           <input
             type="number"
             name="price"
             id="price"
+            placeholder="0"
             {...register("price", {
               required: "Required",
             })}
-            className="form-input"
+            className={`${errors.price ? "border-red" : ""} form-input`}
             onChange={(e) => setPrice(e.target.value)}
           />
           {errors.price && <p className="errorMsg">{errors.price.message}</p>}
         </div>
-        <div className="flex flex-col w-[35%]">
+        <div className="form-control w-[35%]">
           <span htmlFor="total" className="bodyText mb-[10px]">
             Total
           </span>
           <p className="py-4 bodyText font-bold text-lightGrey">
-            {qty && price ? total : ""}
+            {qty && price ? total : "0.00"}
           </p>
         </div>
         <div className="w-[10%] cursor-pointer relative">

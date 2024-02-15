@@ -39,7 +39,7 @@
     @apply transition-all duration-200 ease-in-out;
   }
   .filter-input {
-    @apply shrink-0 outline-none appearance-none w-4 h-4 bg-lightestGrey dark:bg-darkestGrey rounded-[2px] border-[1px] border-lightestGrey dark:border-darkestGrey hover:border-purple dark:hover:border-purple transition-all duration-200 ease-in-out checked:bg-purple dark:checked:bg-purple checked:border-purple dark:checked:border-purple  cursor-pointer;
+    @apply shrink-0 outline-none appearance-none w-4 h-4 bg-lightestGrey dark:bg-darkestGrey rounded-[2px] border-[1px] border-lightestGrey dark:border-darkestGrey hover:border-purple dark:hover:border-purple transition-all duration-200 ease-in-out checked:bg-purple dark:checked:bg-purple checked:border-purple dark:checked:border-purple cursor-pointer;
   }
   .box-shadow-dropdown {
     box-shadow: 0px 10px 20px 0px rgba(72, 84, 159, 0.25);
@@ -47,11 +47,20 @@
   .box-shadow-invoiceCard {
     box-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.1);
   }
+  .box-shadow-terms {
+    box-shadow: 0px 10px 20px 0px rgba(72, 84, 159, 0.25);
+  }
   .form-heading {
     @apply font-bold text-[18px] tracking-[-.63px] leading-[20px] text-purple mt-6;
   }
+  .form-control {
+    @apply relative flex flex-col;
+  }
   .form-input {
-    @apply bg-white dark:bg-darkGrey border-[1px] border-lightestGrey dark:border-grey rounded-[4px] py-4 pl-5 outline-grey outline-1 outline-offset-0 text-almostBlack bodyText font-bold placeholder:text-lightGrey dark:darkModeAutofillOverride;
+    @apply bg-white dark:bg-darkGrey border-[1px] border-lightestGrey dark:border-grey rounded-[4px] py-4 px-5 text-almostBlack bodyText font-bold placeholder:text-lightGrey dark:darkModeAutofillOverride cursor-pointer hover:border-purple focus:border-purple dark:hover:border-purple dark:focus:border-purple outline-none;
+  }
+  .errorMsg {
+    @apply text-[10px] leading-[15px] tracking-[-.21px] text-red absolute top-1 right-0;
   }
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
@@ -85,5 +94,15 @@
   }
   .deleteIcon:hover path {
     @apply fill-red;
+  }
+  .linear-bg {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.01) 20%, rgba(0, 0, 0, 0.05) 50%, rgba(0, 0, 0, 0.1) 100%);
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }/*# sourceMappingURL=globals.css.map */

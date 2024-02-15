@@ -11,7 +11,7 @@ import AddInvoiceModal from "@/components/AddInvoiceModal";
 
 export default function Home() {
   const [loadMore, setLoadMore] = useState(5);
-  const [addInvoice, setAddInvoice] = useState(false);
+  const [addInvoice, setAddInvoice] = useState(true);
   const { status } = useInvoiceContext();
 
   const handleLoadMore = () => {
@@ -49,15 +49,18 @@ export default function Home() {
         </div>
         <div className="flex items-center">
           <Filter />
-          <AddNewButton onClick={() => setAddInvoice(true)} />
-          {!addInvoice && (
+          <AddNewButton addInvoice={addInvoice} setAddInvoice={setAddInvoice} />
+          {addInvoice && (
             <AddInvoiceModal
               addInvoice={addInvoice}
               setAddInvoice={setAddInvoice}
             />
           )}
-          {!addInvoice && (
-            <div className="fixed w-full h-full top-[72px] bottom-0 left-0 right-0 bg-black/50" />
+          {addInvoice && (
+            <div
+              className="fixed w-full h-full top-[72px] bottom-0 left-0 right-0 z-10 bg-black/50 md:top-[80px] xl:top-0 xl:left-[103px]"
+              onClick={() => setAddInvoice(!addInvoice)}
+            />
           )}
         </div>
       </section>
