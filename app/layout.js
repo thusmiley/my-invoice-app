@@ -27,8 +27,8 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <InvoiceProvider>
-          <NavBar />
-          {children}
+            <NavBar />
+            {children}
         </InvoiceProvider>
       </body>
     </html>

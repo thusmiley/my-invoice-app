@@ -8,12 +8,8 @@ import { formatDate, formatCurrency } from "@/utils";
 import { data } from "autoprefixer";
 import { Listbox } from "@headlessui/react";
 import ItemListComponent from "./ItemListComponent";
-import dayjs, { Dayjs } from "dayjs";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import AdvancedFormat from "dayjs/plugin/advancedFormat";
+
+import Datepicker from "./DatePicker";
 
 const terms = [
   { id: 1, name: "Net 1 Day" },
@@ -22,12 +18,7 @@ const terms = [
   { id: 4, name: "Net 30 Days" },
 ];
 
-let localizedFormat = require("dayjs/plugin/localizedFormat");
-dayjs.extend(localizedFormat);
-dayjs().format("ll");
-
-const AddInvoiceModal = ({ addInvoice, setAddInvoice }) => {
-  const [value, setValue] = useState(dayjs(new Date()).format("ll"));
+const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
 
   const [itemNum, setItemNum] = useState(1);
   const [selectedTerm, setSelectedTerm] = useState(terms[3]);
@@ -206,6 +197,7 @@ const AddInvoiceModal = ({ addInvoice, setAddInvoice }) => {
               type="text"
               name="name"
               id="name"
+              autoComplete="on"
               {...register("name", {
                 required: "can't be empty",
               })}
@@ -224,6 +216,7 @@ const AddInvoiceModal = ({ addInvoice, setAddInvoice }) => {
               type="email"
               name="email"
               id="email"
+              autoComplete="on"
               placeholder="e.g. email@example.com"
               {...register("email", {
                 required: "can't be empty",
@@ -355,27 +348,8 @@ const AddInvoiceModal = ({ addInvoice, setAddInvoice }) => {
         <div className="space-y-6 pt-8">
           <div className="space-y-6 md:flex md:space-y-0 md:space-x-6">
             <div className="form-control md:w-1/2">
-              <label
-                htmlFor="date"
-                className={`${
-                  errors.date ? "text-red" : ""
-                } bodyText mb-[10px]`}
-              >
-                Invoice Date
-              </label>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DatePicker", "DatePicker"]}>
-                  {/* <DatePicker
-                    label="Uncontrolled picker"
-                    defaultValue={dayjs("2022-04-17")}
-                  /> */}
-                  <DatePicker
-                    label="Controlled picker"
-                    value={value}
-                    onChange={(newValue) => setValue(newValue)}
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
+              <span className="bodyText mb-[10px]">Invoice Date</span>
+              <Datepicker />
             </div>
             <div className="form-control basis-1/2 relative md:w-1/2">
               <span
@@ -487,4 +461,4 @@ const AddInvoiceModal = ({ addInvoice, setAddInvoice }) => {
   );
 };
 
-export default AddInvoiceModal;
+export default InvoiceForm;

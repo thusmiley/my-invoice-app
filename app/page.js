@@ -7,7 +7,7 @@ import data from "../utils/data.json";
 import InvoiceCard from "@/components/InvoiceCard";
 import illustration from "../public/illustration-empty.svg";
 import { useInvoiceContext } from "@/context/InvoiceContext";
-import AddInvoiceModal from "@/components/AddInvoiceModal";
+import InvoiceForm from "@/components/InvoiceForm";
 
 export default function Home() {
   const [loadMore, setLoadMore] = useState(5);
@@ -51,7 +51,7 @@ export default function Home() {
           <Filter />
           <AddNewButton addInvoice={addInvoice} setAddInvoice={setAddInvoice} />
           {addInvoice && (
-            <AddInvoiceModal
+            <InvoiceForm
               addInvoice={addInvoice}
               setAddInvoice={setAddInvoice}
             />
