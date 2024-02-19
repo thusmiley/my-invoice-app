@@ -81,7 +81,7 @@
   @apply text-purple dark:text-purple;
 }
 .react-datepicker__day.react-datepicker__day--keyboard-selected {
-  @apply text-almostBlack dark:text-white hover:text-purple dark:hover:text-purple bg-none;
+  @apply text-almostBlack dark:text-white hover:text-purple dark:hover:text-purple bg-none outline-none border-none;
 }
 
 .react-datepicker__navigation-icon--previous {

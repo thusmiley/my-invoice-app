@@ -1,17 +1,16 @@
 "use client";
 import { formatCurrency } from "@/utils";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useFormContext, FormProvider } from "react-hook-form";
 
 const ItemListComponent = () => {
   const {
     register,
-    control,
     handleSubmit,
     formState: { errors, isDirty, isValid },
-  } = useForm({
+  } = useFormContext({
     criteriaMode: "firstError",
-    mode: "onChange",
+    mode: "onSubmit",
     shouldFocusError: true,
   });
 
