@@ -14,7 +14,7 @@ const Datepicker = () => {
   return (
     <DatePicker
       selected={value}
-      dateFormat="MMM DD, YYYY"
+      dateFormat="PP"
       showIcon
       icon={
         <svg

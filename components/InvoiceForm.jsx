@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import backArrowIcon from "../public/icon-arrow-left.svg";
-import downArrowIcon from "../public/icon-arrow-down.svg";
 import { useForm } from "react-hook-form";
 import { useEffect, useState, Fragment } from "react";
 import { formatDate, formatCurrency, terms, data } from "@/utils";
@@ -83,9 +82,11 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
               <p className="errorMsg">{errors.senderStreet.message}</p>
             )}
           </div>
-          <div className="space-y-6 md:flex md:space-y-0 md:w-full md:space-x-6">
-            <div className="flex space-x-6 justify-between md:w-[60%] md:space-x-0">
-              <div className="form-control w-1/2 md:w-[46%] md:mr-6">
+          {/* city, zipcode, country group */}
+          <div className="grid gap-6 md:grid-cols-3">
+            {/* city, zipcode group */}
+            <div className="grid grid-cols-2 gap-6 md:col-span-2">
+              <div className="form-control">
                 <label
                   htmlFor="senderCity"
                   className={`${
@@ -114,7 +115,7 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
                   <p className="errorMsg">{errors.senderCity.message}</p>
                 )}
               </div>
-              <div className="form-control w-1/2 md:w-[46%]">
+              <div className="form-control">
                 <label
                   htmlFor="senderZipCode"
                   className={`${
@@ -143,7 +144,7 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
                 )}
               </div>
             </div>
-            <div className="form-control md:w-[35.5%]">
+            <div className="form-control">
               <label
                 htmlFor="senderCountry"
                 className={`${
@@ -244,9 +245,11 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
               <p className="errorMsg">{errors.clientStreet.message}</p>
             )}
           </div>
-          <div className="space-y-6 md:flex md:space-y-0 md:w-full md:space-x-6">
-            <div className="flex space-x-6 justify-between md:w-[60%] md:space-x-0">
-              <div className="form-control w-1/2 md:w-[46%] md:mr-6">
+          {/* city, zipcode, country group */}
+          <div className="grid gap-6 md:grid-cols-3">
+            {/* city, zipcode group */}
+            <div className="grid grid-cols-2 gap-6 md:col-span-2">
+              <div className="form-control">
                 <label
                   htmlFor="clientCity"
                   className={`${
@@ -275,7 +278,7 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
                   <p className="errorMsg">{errors.clientCity.message}</p>
                 )}
               </div>
-              <div className="form-control w-1/2 md:w-[46%] md:mr-6">
+              <div className="form-control">
                 <label
                   htmlFor="clientZipCode"
                   className={`${
@@ -304,7 +307,7 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
                 )}
               </div>
             </div>
-            <div className="form-control md:w-[35.5%]">
+            <div className="form-control">
               <label
                 htmlFor="clientCountry"
                 className={`${
