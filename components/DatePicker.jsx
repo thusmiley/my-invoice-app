@@ -5,7 +5,6 @@ import arrowRight from "../public/icon-arrow-right.svg";
 import Image from "next/image";
 
 import DatePicker from "react-datepicker";
-// import "react-datepicker/dist/react-datepicker.css";
 import "../app/styles/datepicker.css";
 
 const Datepicker = () => {

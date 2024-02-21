@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import avatar from "../public/image-avatar.jpg";
+import { useInvoiceContext } from "@/context/InvoiceContext";
 
 const NavBar = () => {
   const [darkMode, setDarkMode] = useState(true);
+  const { addInvoice, setAddInvoice } = useInvoiceContext();
 
   useEffect(() => {
     if (
@@ -35,7 +37,7 @@ const NavBar = () => {
   return (
     <header className="fixed top-0 w-full z-10 xl:h-screen">
       <nav className="bg-[#373B53] dark:bg-darkGrey flex justify-between items-center xl:flex-col xl:justify-start xl:fixed xl:top-0 xl:rounded-r-[30px] xl:items-stretch xl:h-full">
-        <Link href="/">
+        <Link href="/" onClick={() => setAddInvoice(false)}>
           <svg
             className="h-[72px] w-auto object-cover object-center md:h-20 xl:w-[103px] xl:h-auto"
             alt="my invoice logo"

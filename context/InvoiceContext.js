@@ -12,6 +12,7 @@ export function useInvoiceContext() {
 export function InvoiceProvider({ children }) {
   const [filteredData, setFilteredData] = useState();
   const [status, setStatus] = useState("all");
+  const [addInvoice, setAddInvoice] = useState(true);
 
   const handleFilterClick = (e) => {
     setStatus(e.target.value);
@@ -25,6 +26,8 @@ export function InvoiceProvider({ children }) {
         filteredData,
         setFilteredData,
         handleFilterClick,
+        addInvoice,
+        setAddInvoice,
       }}
     >
       {children}

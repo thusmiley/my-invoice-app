@@ -11,8 +11,7 @@ import InvoiceForm from "@/components/InvoiceForm";
 
 export default function Home() {
   const [loadMore, setLoadMore] = useState(5);
-  const [addInvoice, setAddInvoice] = useState(true);
-  const { status } = useInvoiceContext();
+  const { status, addInvoice, setAddInvoice } = useInvoiceContext();
 
   const handleLoadMore = () => {
     setLoadMore(loadMore + 5);
