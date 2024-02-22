@@ -27,3 +27,18 @@ export const terms = [
   { id: 3, name: "Net 14 Days" },
   { id: 4, name: "Net 30 Days" },
 ];
+
+export const differenceInDays = (day1, day2) => {
+  let days = Math.round((new Date(day2) - new Date(day1)) / (1000 * 3600 * 24));
+
+  switch (days) {
+    case 1:
+      return terms[0];
+    case 7:
+      return terms[1];
+    case 4:
+      return terms[2];
+    case 30:
+      return terms[3];
+  }
+};

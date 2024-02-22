@@ -9,9 +9,7 @@ const PaymentTerms = ({ selectedTerm, setSelectedTerm }) => {
   return (
     <Listbox value={selectedTerm} onChange={setSelectedTerm}>
       <Listbox.Button as="div">
-        <div
-          className="bodyText font-bold cursor-pointer py-4 px-6 form-input flex justify-between items-center"
-        >
+        <div className="bodyText font-bold cursor-pointer py-4 px-6 form-input flex justify-between items-center">
           {selectedTerm.name}
           <Image
             src={downArrowIcon}

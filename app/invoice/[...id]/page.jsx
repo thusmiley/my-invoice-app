@@ -7,10 +7,15 @@ import data from "../../../utils/data.json";
 import { useState, useEffect } from "react";
 import SummaryComponent from "@/components/SummaryComponent";
 import { formatDate } from "@/utils";
+import { useInvoiceContext } from "@/context/InvoiceContext";
+import { Transition } from "@headlessui/react";
+import InvoiceForm from "@/components/InvoiceForm";
 
 const Invoice = ({ params }) => {
   const router = useRouter();
   const [invoice, setInvoice] = useState();
+  const { addInvoice, setAddInvoice, editInvoice, setEditInvoice } =
+    useInvoiceContext();
 
   useEffect(() => {
     setInvoice(
@@ -46,7 +51,10 @@ const Invoice = ({ params }) => {
           </div>
 
           <div className="bg-white dark:bg-darkGrey p-6 flex justify-between items-center absolute bottom-0 w-full left-0 right-0 md:relative md:justify-end md:p-0 md:space-x-2">
-            <button className="bodyText font-bold py-3 px-6 bg-[#F9FAFE] dark:bg-grey rounded-full hover:bg-lightestGrey dark:hover:text-blueGrey dark:hover:bg-white animation-effect">
+            <button
+              className="bodyText font-bold py-3 px-6 bg-[#F9FAFE] dark:bg-grey rounded-full hover:bg-lightestGrey dark:hover:text-blueGrey dark:hover:bg-white animation-effect"
+              onClick={() => setEditInvoice(!editInvoice)}
+            >
               Edit
             </button>
             <button className="bodyText font-bold py-3 px-6 bg-red rounded-full text-white hover:bg-lightRed animation-effect">
@@ -128,6 +136,38 @@ const Invoice = ({ params }) => {
           <SummaryComponent invoice={invoice} />
         </div>
       </section>
+
+      <Transition show={editInvoice}>
+        <Transition.Child
+          enter="transition ease-in-out duration-300 transform"
+          enterFrom="-translate-x-full opacity-0"
+          enterTo="translate-x-0 opacity-100"
+          leave="transition ease-in-out duration-300 transform"
+          leaveFrom="translate-x-0 opacity-100"
+          leaveTo="-translate-x-full opacity-0"
+        >
+          <InvoiceForm
+            invoice={invoice}
+            addInvoice={addInvoice}
+            setAddInvoice={setAddInvoice}
+            editInvoice={editInvoice}
+            setEditInvoice={setEditInvoice}
+          />
+        </Transition.Child>
+        <Transition.Child
+          enter="transition-opacity ease-linear duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity ease-linear duration-300"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div
+            className="fixed w-full h-full top-[72px] bottom-0 left-0 right-0 z-10 bg-black/50 md:top-[80px] xl:top-0 xl:left-[103px]"
+            onClick={() => setEditInvoice(!editInvoice)}
+          />
+        </Transition.Child>
+      </Transition>
     </main>
   );
 };

@@ -7,12 +7,12 @@ import Image from "next/image";
 import DatePicker from "react-datepicker";
 import "../app/styles/datepicker.css";
 
-const Datepicker = () => {
-  const [value, setValue] = useState(new Date());
+const Datepicker = ({ date, addInvoice, editInvoice }) => {
+  const [invoiceDate, setInvoiceDate] = useState(date);
 
   return (
     <DatePicker
-      selected={value}
+      selected={invoiceDate}
       dateFormat="PP"
       showIcon
       icon={
@@ -27,8 +27,9 @@ const Datepicker = () => {
       }
       toggleCalendarOnIconClick
       closeOnScroll={true}
-      onChange={(date) => setValue(date)}
+      onChange={(date) => setInvoiceDate(date)}
       onFocus={(e) => (e.target.readOnly = true)}
+      readOnly={editInvoice ? true : false}
     />
   );
 };

@@ -1,55 +1,113 @@
 "use client";
 import Image from "next/image";
 import backArrowIcon from "../public/icon-arrow-left.svg";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useEffect, useState, Fragment } from "react";
-import { formatDate, formatCurrency, terms, data } from "@/utils";
+import {
+  formatDate,
+  formatCurrency,
+  terms,
+  data,
+  differenceInDays,
+} from "@/utils";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import Datepicker from "./DatePicker";
 import PaymentTerms from "./PaymentTerms";
-import ItemListComponent from "./ItemListComponent";
+import ItemListArray from "./ItemListArray";
 
-const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
-  const [selectedTerm, setSelectedTerm] = useState(terms[3]);
+const Schema = yup.object().shape({
+  senderStreet: yup.string().required("can't be empty"),
+  senderCity: yup.string().required("can't be empty"),
+  senderZipCode: yup
+    .number()
+    .typeError("can't be empty")
+    .required("can't be empty"),
+  senderCountry: yup.string().required("can't be empty"),
+  name: yup.string().required("can't be empty"),
+  email: yup.string().email("invalid").required("can't be empty"),
+  clientStreet: yup.string().required("can't be empty"),
+  clientCity: yup.string().required("can't be empty"),
+  clientZipCode: yup
+    .number()
+    .typeError("can't be empty")
+    .required("can't be empty"),
+  clientCountry: yup.string().required("can't be empty"),
+  projectDescription: yup.string().required("can't be empty"),
+});
+const DraftSchema = yup.object().shape({
+  senderStreet: yup.string(),
+  senderCity: yup.string(),
+  senderZipCode: yup.string(),
+  senderCountry: yup.string(),
+  name: yup.string(),
+  email: yup.string().email(),
+  clientStreet: yup.string(),
+  clientCity: yup.string(),
+  clientZipCode: yup.string(),
+  clientCountry: yup.string(),
+  projectDescription: yup.string(),
+});
+
+const InvoiceForm = ({
+  invoice,
+  addInvoice,
+  setAddInvoice,
+  editInvoice,
+  setEditInvoice,
+}) => {
+  const [selectedTerm, setSelectedTerm] = useState();
 
   const {
     register,
-    control,
-    watch,
     handleSubmit,
+    control,
     getValues,
-    setValue,
+    setError,
     formState: { errors, isDirty, isValid },
   } = useForm({
     criteriaMode: "firstError",
-    mode: "onSubmit",
+    mode: "onChange",
     shouldFocusError: true,
+    defaultValues: {
+      listItem: [{ itemName: "", qty: "", price: "" }],
+    },
+    resolver: yupResolver(Schema),
   });
 
-  const { append } = useFieldArray({
-    control,
-    name: "itemName",
-    name: "qty",
-    name: "price",
+  const onSubmit = handleSubmit((_data) => {
+    console.log("Schema valid!");
+    setAddInvoice(false);
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const saveDraft = async () => {
+    const data = getValues();
+
+    try {
+      await DraftSchema.validate(data, { abortEarly: false });
+      console.log("Draft schema valid!");
+      setAddInvoice(false);
+    } catch (error) {
+      error.inner?.map((inner, index) => {
+        const { type, path, errors } = inner;
+        return setError(path, { type, message: errors[index] });
+      });
+    }
   };
 
-  //   const handleItemRows = (itemNum) => {
-  //     const rows = [];
-  //     for (let i = 0; i < itemNum; i++) {
-  //       rows.push(<ItemListComponent key={i} />);
-  //     }
-  //     return rows;
-  //   };
-
   return (
-    <div className="fixed h-[100dvh] overflow-y-scroll no-scrollbar z-50 w-full top-[72px] left-0 right-0 bottom-0 px-6 mx-auto pb-[72px] bg-white dark:bg-darkestGrey md:w-[80%] md:top-[80px] md:left-0 md:ml-0 md:rounded-r-[20px] md:pb-[80px] max-w-[719px] xl:top-0 xl:left-[103px] xl:pb-0">
+    <div className="fixed h-[100dvh] overflow-y-scroll no-scrollbar z-50 w-full top-[72px] left-0 right-0 bottom-0 px-6 mx-auto pb-[72px] bg-white dark:bg-darkestGrey md:w-[80%] md:top-[80px] md:left-0 md:ml-0 md:rounded-r-[20px] md:pb-[80px] max-w-[719px] xl:top-0 xl:left-[103px] xl:pb-0 xl:h-screen">
       <button
         className="flex items-center bodyText font-bold text-almostBlack my-8 md:mt-[48px] hover:text-lightGrey animation-effect md:hidden"
-        onClick={() => setAddInvoice(false)}
+        onClick={() => {
+          if (addInvoice) {
+            setAddInvoice(false);
+          }
+          if (editInvoice) {
+            setEditInvoice(false);
+          }
+        }}
       >
         <Image
           src={backArrowIcon}
@@ -60,11 +118,14 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
         />
         Go back
       </button>
-      <form
-        className="relative md:mt-[56px] md:px-[56px] "
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <h1 className="priceText text-[28px]">New Invoice</h1>
+      <form className="relative md:mt-[56px] md:px-[56px] " onSubmit={onSubmit}>
+        {addInvoice && <h1 className="priceText text-[28px]">New Invoice</h1>}
+        {editInvoice && (
+          <h1 className="priceText text-[28px]">
+            Edit <span className="text-[#777F98]">#</span>
+            {invoice?.id}
+          </h1>
+        )}
         {/* bill from  */}
         <div className="space-y-6">
           <h2 className="form-heading">Bill From</h2>
@@ -82,9 +143,8 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
               name="senderStreet"
               id="senderStreet"
               placeholder="1600 Amphitheatre Parkway, Mountain View"
-              {...register("senderStreet", {
-                required: "can't be empty",
-              })}
+              value={invoice ? invoice.senderAddress.street : ""}
+              {...register("senderStreet", {})}
               className={`${
                 errors.senderStreet ? "border-red" : ""
               } form-input truncate`}
@@ -111,8 +171,8 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
                   name="senderCity"
                   id="senderCity"
                   placeholder="CA"
+                  value={invoice ? invoice.senderAddress.city : ""}
                   {...register("senderCity", {
-                    required: "can't be empty",
                     pattern: {
                       value:
                         /^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$/,
@@ -137,12 +197,12 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
                   Zip Code
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   name="senderZipCode"
                   id="senderZipCode"
                   placeholder="94043"
+                  value={invoice ? invoice.senderAddress.postCode : ""}
                   {...register("senderZipCode", {
-                    required: "can't be empty",
                     pattern: {
                       value: /^\s*?\d{5}(?:[-\s]\d{4})?\s*?$/,
                       message: "Invalid zipcode",
@@ -171,8 +231,8 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
                 name="senderCountry"
                 id="senderCountry"
                 placeholder="US"
+                value={invoice ? invoice.senderAddress.country : ""}
                 {...register("senderCountry", {
-                  required: "can't be empty",
                   pattern: {
                     value: /[a-zA-Z]{2,}/,
                     message: "Invalid country",
@@ -205,9 +265,8 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
               id="name"
               autoComplete="on"
               placeholder="Naughty Cat"
-              {...register("name", {
-                required: "can't be empty",
-              })}
+              value={invoice ? invoice.clientName : ""}
+              {...register("name", {})}
               className={`${errors.name ? "border-red" : ""} form-input`}
             />
             {errors.name && <p className="errorMsg">{errors.name.message}</p>}
@@ -225,8 +284,8 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
               id="email"
               autoComplete="on"
               placeholder="support@naughty-cat.com"
+              value={invoice ? invoice.clientEmail : ""}
               {...register("email", {
-                required: "can't be empty",
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
                   message: "Invalid email address",
@@ -250,9 +309,8 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
               name="clientStreet"
               id="clientStreet"
               placeholder="2406 Columbus Ln, Madison"
-              {...register("clientStreet", {
-                required: "can't be empty",
-              })}
+              value={invoice ? invoice.clientAddress.street : ""}
+              {...register("clientStreet", {})}
               className={`${
                 errors.clientStreet ? "border-red" : ""
               } form-input truncate`}
@@ -279,8 +337,8 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
                   name="clientCity"
                   id="clientCity"
                   placeholder="WI"
+                  value={invoice ? invoice.clientAddress.city : ""}
                   {...register("clientCity", {
-                    required: "can't be empty",
                     pattern: {
                       value:
                         /^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$/,
@@ -305,12 +363,12 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
                   Zip Code
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   name="clientZipCode"
                   id="clientZipCode"
                   placeholder="53704"
+                  value={invoice ? invoice.clientAddress.postCode : ""}
                   {...register("clientZipCode", {
-                    required: "can't be empty",
                     pattern: {
                       value: /^\s*?\d{5}(?:[-\s]\d{4})?\s*?$/,
                       message: "Invalid zipcode",
@@ -339,8 +397,8 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
                 name="clientCountry"
                 id="clientCountry"
                 placeholder="US"
+                value={invoice ? invoice.clientAddress.country : ""}
                 {...register("clientCountry", {
-                  required: "can't be empty",
                   pattern: {
                     value: /[a-zA-Z]{2,}/,
                     message: "Invalid country",
@@ -362,12 +420,20 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
           <div className="space-y-6 md:flex md:space-y-0 md:space-x-6">
             <div className="form-control md:w-1/2">
               <span className="bodyText mb-[10px]">Invoice Date</span>
-              <Datepicker />
+              <Datepicker
+                date={invoice ? invoice.createdAt : new Date()}
+                addInvoice={addInvoice}
+                editInvoice={editInvoice}
+              />
             </div>
             <div className="form-control basis-1/2 relative md:w-1/2">
               <span className="bodyText mb-[10px]">Payment Terms</span>
               <PaymentTerms
-                selectedTerm={selectedTerm}
+                selectedTerm={
+                  invoice
+                    ? differenceInDays(invoice.createdAt, invoice.paymentDue)
+                    : terms[3]
+                }
                 setSelectedTerm={setSelectedTerm}
               />
             </div>
@@ -386,9 +452,8 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
               name="projectDescription"
               id="projectDescription"
               placeholder="Graphic Design Service"
-              {...register("projectDescription", {
-                required: "can't be empty",
-              })}
+              value={invoice ? invoice.description : ""}
+              {...register("projectDescription", {})}
               className={`${
                 errors.projectDescription ? "border-red" : ""
               } form-input truncate`}
@@ -404,44 +469,36 @@ const InvoiceForm = ({ addInvoice, setAddInvoice }) => {
           <h2 className="text-[24px] leading-[32px] tracking-[-.38px] text-[#777F98] font-bold">
             Item List
           </h2>
-
-          <ItemListComponent
-            {...{
-              control,
-              watch,
-              register,
-              getValues,
-              setValue,
-              errors,
-            }}
+          <ItemListArray
+            array={invoice.items}
+            addInvoice={addInvoice}
+            editInvoice={editInvoice}
+            {...{ control, register, errors }}
           />
-
-          {/* {handleItemRows(itemNum)} */}
-          <button
-            type="button"
-            className="bg-[#F9FAFE] dark:bg-darkGrey rounded-[24px] py-4 w-full bodyText text-blueGrey hover:text-blueGrey dark:text-lightGrey font-bold hover:bg-lighitemListGrey dark:hover:text-white animation-effect dark:hover:bg-grey"
-            onClick={() => {
-              append({ itemName: "New Item", qty: "0", price: "0" });
-            }}
-          >
-            + Add New Item
-          </button>
         </div>
 
         <div className="mt-6 w-full flex flex-col h-[155px] md:h-[112px]">
           <div className="h-[64px] -mx-6 linear-bg overflow-hidden md:hidden"></div>
           <div className="bg-white -mx-6 overflow-hidden dark:bg-darkGrey p-6 flex justify-between dark:md:bg-darkestGrey md:py-8">
             <button
-              className="bodyText text-[12px] md:text-[16px] font-bold py-3 px-6 bg-[#F9FAFE] dark:bg-[#F9FAFE] dark:text-blueGrey rounded-full hover:bg-lighitemListGrey dark:hover:text-blueGrey dark:hover:bg-lighitemListGrey animation-effect"
+              type="button"
+              className="bodyText text-[12px] md:text-[16px] font-bold py-3 px-6 text-blueGrey bg-[#F9FAFE] dark:bg-grey dark:text-lightestGrey rounded-full hover:bg-lightestGrey dark:hover:text-grey dark:hover:bg-white animation-effect"
               onClick={() => setAddInvoice(false)}
             >
               Discard
             </button>
-            <button className="bodyText text-[12px] md:text-[16px] text-lighitemListGrey font-bold py-3 px-6 bg-[#373B53] hover:bg-almostBlack dark:hover:bg-darkGrey rounded-full dark:hover:text-white animation-effect">
+            <button
+              type="button"
+              className="bodyText text-[12px] md:text-[16px] text-lightGrey bg-[#373B53] hover:bg-almostBlack dark:text-lightestGrey font-bold py-3 px-6 dark:bg-[#373B53]  dark:hover:bg-darkGrey rounded-full dark:hover:text-lightestGrey animation-effect"
+              onClick={saveDraft}
+            >
               Save as Draft
             </button>
-            <button className="bodyText text-[12px] md:text-[16px] text-white font-bold py-3 px-6 bg-purple dark:bg-purple rounded-full hover:bg-lightPurple  dark:hover:bg-lightPurple animation-effect">
-              Save & Send
+            <button
+              type="submit"
+              className="bodyText text-[12px] md:text-[16px] text-white dark:text-white font-bold py-3 px-6 bg-purple dark:bg-purple rounded-full hover:bg-lightPurple dark:hover:bg-lightPurple animation-effect"
+            >
+              Save
             </button>
           </div>
         </div>

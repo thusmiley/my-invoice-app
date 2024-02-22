@@ -35,7 +35,7 @@ const NavBar = () => {
   };
 
   return (
-    <header className="fixed top-0 w-full z-10 xl:h-screen">
+    <header className="fixed top-0 w-full z-10 xl:h-screen xl:w-[103px]">
       <nav className="bg-[#373B53] dark:bg-darkGrey flex justify-between items-center xl:flex-col xl:justify-start xl:fixed xl:top-0 xl:rounded-r-[30px] xl:items-stretch xl:h-full">
         <Link href="/" onClick={() => setAddInvoice(false)}>
           <svg
