@@ -1,7 +1,6 @@
 "use client";
-import { useFieldArray } from "react-hook-form";
 import ItemComponent from "./ItemComponent";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const ItemListArray = ({
   array,
@@ -11,40 +10,38 @@ const ItemListArray = ({
   register,
   errors,
 }) => {
-  const defaultValue = [{ itemName: "", qty: "", price: "" }];
-
-  const { fields, append, remove, update } = useFieldArray({
-    control,
-    name: "listItem",
+  const [list, setList] = useState(() => {
+    if (addInvoice) {
+      return [{ name: "", quantity: "", price: "", total: "0.00" }];
+    }
+    if (editInvoice) {
+      return array;
+    }
   });
 
   useEffect(() => {
-    defaultValue.forEach((field, index) => {
-      Object.keys(field).forEach((key) => {
-        update(index, field[key]);
-      });
-    });
-  }, [defaultValue, update]);
-
-  console.log(fields);
+    console.log(list);
+  }, [list]);
 
   return (
     <>
       <ul>
-        {fields.map((item, index) => {
+        {list?.map((item) => {
           return (
             <div key={item.id} className="relative">
               <ItemComponent
-                defaultValue={defaultValue}
-                key={item.id}
-                {...{ index, control, register, errors }}
+                item={item}
+                index={item.id}
+                addInvoice={addInvoice}
+                editInvoice={editInvoice}
+                {...{ control, register, errors }}
               />
-              {fields.length > 1 ? (
+              {list.length > 1 ? (
                 <button
                   type="button"
                   onClick={() => {
-                    if (fields.length > 1) {
-                      remove(index);
+                    if (list.length > 1) {
+                      setList(list.filter((card) => card.id !== item.id));
                     }
                   }}
                   className="cursor-pointer absolute right-5 bottom-[70px] animation-effect"
@@ -73,9 +70,11 @@ const ItemListArray = ({
       <button
         type="button"
         className="bg-[#F9FAFE] dark:bg-darkGrey rounded-[24px] py-4 w-full bodyText text-blueGrey hover:text-blueGrey dark:text-lightGrey font-bold hover:bg-lightestGrey dark:hover:text-white animation-effect dark:hover:bg-grey"
-        onClick={() => {
-          append({ itemName: "", qty: "", price: "" });
-        }}
+        onClick={() =>
+          setList(
+            list.push({ name: "", quantity: "", price: "", total: "0.00" })
+          )
+        }
       >
         + Add New Item
       </button>

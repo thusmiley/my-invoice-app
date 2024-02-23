@@ -1,9 +1,7 @@
 import NavBar from "@/components/NavBar";
 import "./styles/globals.css";
 import { InvoiceProvider } from "@/context/InvoiceContext";
-
 export const metadata = {
-  title: "My Invoice App",
   description: "Made by Thu Smiley @Naughty Cat",
 };
 
@@ -27,8 +25,8 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <InvoiceProvider>
-            <NavBar />
-            {children}
+          <NavBar />
+          {children}
         </InvoiceProvider>
       </body>
     </html>

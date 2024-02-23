@@ -12,7 +12,7 @@ const StatusButton = ({ status }) => {
           className={`${status === "draft" ? "bg-lightestGrey" : ""} ${
             status === "pending" ? "bg-orange" : ""
           } ${status === "paid" ? "bg-green" : ""} w-2 h-2 rounded-full mr-2`}
-        ></span>{" "}
+        ></span>
         {status}
       </p>
     </div>

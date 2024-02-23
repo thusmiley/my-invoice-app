@@ -3,24 +3,33 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import Filter from "@/components/Filter";
 import AddNewButton from "@/components/AddNewButton";
-import data from "../utils/data.json";
+import data from "../../utils/data.json";
 import InvoiceCard from "@/components/InvoiceCard";
-import illustration from "../public/illustration-empty.svg";
+import illustration from "../../public/illustration-empty.svg";
 import { useInvoiceContext } from "@/context/InvoiceContext";
 import InvoiceForm from "@/components/InvoiceForm";
 import { Transition } from "@headlessui/react";
+import Head from "next/head";
 
 export default function Home() {
-  const [loadMore, setLoadMore] = useState(5);
-  const { status, addInvoice, setAddInvoice, editInvoice, setEditInvoice } =
-    useInvoiceContext();
+  const [loadMore, setLoadMore] = useState(10);
+  const {
+    filterStatus,
+    addInvoice,
+    setAddInvoice,
+    editInvoice,
+    setEditInvoice,
+  } = useInvoiceContext();
 
   const handleLoadMore = () => {
-    setLoadMore(loadMore + 5);
+    setLoadMore(loadMore + 10);
   };
 
   return (
     <main className="min-h-screen z-0 pt-[72px] mb-[90px] px-6 mx-auto md:px-[48px] xl:max-w-[730px]">
+      <Head>
+        <title>My Invoice App</title>
+      </Head>
       <section className="flex items-center justify-between my-[34px] md:my-[56px]">
         <div>
           <h1 className="headingText">Invoices</h1>
@@ -29,19 +38,19 @@ export default function Home() {
           ) : (
             <p className="bodyText mt-1 md:mt-2">
               <span className="hidden md:inline">There are&nbsp;</span>
-              {status === "all"
+              {filterStatus === "all"
                 ? data.length
-                : data.filter((item) => item.status === status).length}
-              {status === "all" && (
+                : data.filter((item) => item.status === filterStatus).length}
+              {filterStatus === "all" && (
                 <span className="hidden md:inline">&nbsp;total</span>
               )}
-              {status === "draft" && (
+              {filterStatus === "draft" && (
                 <span className="hidden md:inline">&nbsp;draft</span>
               )}
-              {status === "pending" && (
+              {filterStatus === "pending" && (
                 <span className="hidden md:inline">&nbsp;pending</span>
               )}
-              {status === "paid" && (
+              {filterStatus === "paid" && (
                 <span className="hidden md:inline">&nbsp;paid</span>
               )}
               &nbsp;invoices
@@ -60,8 +69,8 @@ export default function Home() {
               leaveFrom="translate-x-0 opacity-100"
               leaveTo="-translate-x-full opacity-0"
             >
-                          <InvoiceForm
-                              invoice={null}
+              <InvoiceForm
+                invoice={null}
                 addInvoice={addInvoice}
                 setAddInvoice={setAddInvoice}
                 editInvoice={editInvoice}
@@ -105,12 +114,22 @@ export default function Home() {
       ) : (
         <section className="relative text-center">
           <div className="space-y-4 text-left">
-            {data.slice(0, loadMore).map((invoice) => (
-              <InvoiceCard key={invoice.id} invoice={invoice} />
-            ))}
+            {filterStatus === "all"
+              ? data
+                  .slice(0, loadMore)
+                  .map((invoice) => (
+                    <InvoiceCard key={invoice.id} invoice={invoice} />
+                  ))
+              : data
+                  .filter((item) => item.status === filterStatus)
+                  .slice(0, loadMore)
+                  .map((invoice) => (
+                    <InvoiceCard key={invoice.id} invoice={invoice} />
+                  ))}
           </div>
-          {data.length > 5 && (
+          {data.length > 10 && (
             <button
+              type="button"
               className="bg-purple text-white mt-12 animation-effect rounded-full py-[6px] px-5 hover:bg-lightPurple"
               onClick={handleLoadMore}
             >

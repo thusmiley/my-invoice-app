@@ -9,6 +9,8 @@ import {
   terms,
   data,
   differenceInDays,
+  Schema,
+  DraftSchema,
 } from "@/utils";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -17,62 +19,25 @@ import Datepicker from "./DatePicker";
 import PaymentTerms from "./PaymentTerms";
 import ItemListArray from "./ItemListArray";
 
-const Schema = yup.object().shape({
-  senderStreet: yup.string().required("can't be empty"),
-  senderCity: yup.string().required("can't be empty"),
-  senderZipCode: yup
-    .number()
-    .typeError("can't be empty")
-    .required("can't be empty"),
-  senderCountry: yup.string().required("can't be empty"),
-  name: yup.string().required("can't be empty"),
-  email: yup.string().email("invalid").required("can't be empty"),
-  clientStreet: yup.string().required("can't be empty"),
-  clientCity: yup.string().required("can't be empty"),
-  clientZipCode: yup
-    .number()
-    .typeError("can't be empty")
-    .required("can't be empty"),
-  clientCountry: yup.string().required("can't be empty"),
-  projectDescription: yup.string().required("can't be empty"),
-});
-const DraftSchema = yup.object().shape({
-  senderStreet: yup.string(),
-  senderCity: yup.string(),
-  senderZipCode: yup.string(),
-  senderCountry: yup.string(),
-  name: yup.string(),
-  email: yup.string().email(),
-  clientStreet: yup.string(),
-  clientCity: yup.string(),
-  clientZipCode: yup.string(),
-  clientCountry: yup.string(),
-  projectDescription: yup.string(),
-});
-
 const InvoiceForm = ({
   invoice,
   addInvoice,
   setAddInvoice,
   editInvoice,
   setEditInvoice,
+  getValues,
 }) => {
   const [selectedTerm, setSelectedTerm] = useState();
-
   const {
     register,
     handleSubmit,
     control,
-    getValues,
     setError,
     formState: { errors, isDirty, isValid },
   } = useForm({
     criteriaMode: "firstError",
     mode: "onChange",
     shouldFocusError: true,
-    defaultValues: {
-      listItem: [{ itemName: "", qty: "", price: "" }],
-    },
     resolver: yupResolver(Schema),
   });
 
@@ -118,7 +83,7 @@ const InvoiceForm = ({
         />
         Go back
       </button>
-      <form className="relative md:mt-[56px] md:px-[56px] " onSubmit={onSubmit}>
+      <form className="relative md:mt-[56px] md:px-[56px]" onSubmit={onSubmit}>
         {addInvoice && <h1 className="priceText text-[28px]">New Invoice</h1>}
         {editInvoice && (
           <h1 className="priceText text-[28px]">
@@ -470,7 +435,7 @@ const InvoiceForm = ({
             Item List
           </h2>
           <ItemListArray
-            array={invoice.items}
+            array={invoice?.items}
             addInvoice={addInvoice}
             editInvoice={editInvoice}
             {...{ control, register, errors }}
@@ -479,26 +444,41 @@ const InvoiceForm = ({
 
         <div className="mt-6 w-full flex flex-col h-[155px] md:h-[112px]">
           <div className="h-[64px] -mx-6 linear-bg overflow-hidden md:hidden"></div>
-          <div className="bg-white -mx-6 overflow-hidden dark:bg-darkGrey p-6 flex justify-between dark:md:bg-darkestGrey md:py-8">
+          <div
+            className={`${addInvoice ? "justify-between" : ""} ${
+              editInvoice ? "justify-end space-x-2" : ""
+            } bg-white -mx-6 overflow-hidden dark:bg-darkGrey p-6 flex  dark:md:bg-darkestGrey md:py-8`}
+          >
             <button
               type="button"
               className="bodyText text-[12px] md:text-[16px] font-bold py-3 px-6 text-blueGrey bg-[#F9FAFE] dark:bg-grey dark:text-lightestGrey rounded-full hover:bg-lightestGrey dark:hover:text-grey dark:hover:bg-white animation-effect"
-              onClick={() => setAddInvoice(false)}
+              onClick={() => {
+                if (addInvoice) {
+                  setAddInvoice(false);
+                }
+                if (editInvoice) {
+                  setEditInvoice(false);
+                }
+              }}
             >
-              Discard
+              {addInvoice && "Discard"}
+              {editInvoice && "Cancel"}
             </button>
-            <button
-              type="button"
-              className="bodyText text-[12px] md:text-[16px] text-lightGrey bg-[#373B53] hover:bg-almostBlack dark:text-lightestGrey font-bold py-3 px-6 dark:bg-[#373B53]  dark:hover:bg-darkGrey rounded-full dark:hover:text-lightestGrey animation-effect"
-              onClick={saveDraft}
-            >
-              Save as Draft
-            </button>
+            {addInvoice && (
+              <button
+                type="button"
+                className="bodyText text-[12px] md:text-[16px] text-lightGrey bg-[#373B53] hover:bg-almostBlack dark:text-lightestGrey font-bold py-3 px-6 dark:bg-[#373B53]  dark:hover:bg-darkGrey rounded-full dark:hover:text-lightestGrey animation-effect"
+                onClick={saveDraft}
+              >
+                Save as Draft
+              </button>
+            )}
             <button
               type="submit"
               className="bodyText text-[12px] md:text-[16px] text-white dark:text-white font-bold py-3 px-6 bg-purple dark:bg-purple rounded-full hover:bg-lightPurple dark:hover:bg-lightPurple animation-effect"
             >
-              Save
+              {addInvoice && "Save"}
+              {editInvoice && "Save Changes"}
             </button>
           </div>
         </div>

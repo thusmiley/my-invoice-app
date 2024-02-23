@@ -1,26 +1,53 @@
 "use client";
 import { formatCurrency } from "@/utils";
 import { useState, useEffect } from "react";
-import { useFieldArray } from "react-hook-form";
 
 const ItemComponent = ({
-  key,
-  defaultValue,
+  item,
   index,
+  addInvoice,
+  editInvoice,
   control,
   register,
   errors,
 }) => {
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "listItem",
-    rules: {
-      required: true,
-    },
+  const [itemName, setItemName] = useState(() => {
+    if (addInvoice) {
+      return "";
+    }
+    if (editInvoice) {
+      return item.name;
+    }
   });
-  const [qty, setQty] = useState();
-  const [price, setPrice] = useState();
-  const total = formatCurrency(qty * price);
+  const [itemQty, setItemQty] = useState(() => {
+    if (addInvoice) {
+      return "";
+    }
+    if (editInvoice) {
+      return item.quantity;
+    }
+  });
+  const [itemPrice, setItemPrice] = useState(() => {
+    if (addInvoice) {
+      return "";
+    }
+    if (editInvoice) {
+      return item.price;
+    }
+  });
+  const [itemTotal, setItemTotal] = useState(() => {
+    if (addInvoice && itemQty && itemPrice) {
+      return formatCurrency(itemQty * itemPrice);
+    }
+    if (editInvoice) {
+      return formatCurrency(item.total);
+    }
+  });
+
+  console.log(itemName);
+  console.log(itemQty);
+  console.log(itemPrice);
+  console.log(itemTotal);
 
   return (
     <li className="space-y-6 pb-[48px] md:flex md:space-y-0 md:space-x-4">
@@ -35,14 +62,15 @@ const ItemComponent = ({
           type="text"
           name="itemName"
           id={`itemName${index}`}
-          defaultValue={defaultValue?.[index]?.[key]}
+          value={itemName}
           placeholder="New Item"
-          {...register(`listItem.${index}.itemName`, {
+          {...register("itemName", {
             required: "can't be empty",
           })}
           className={`${
             errors.itemName ? "border-red" : ""
           } form-input truncate`}
+          onChange={(e) => setItemName(e.target.value)}
         />
         {errors.itemName && (
           <p className="errorMsg">{errors.itemName.message}</p>
@@ -61,12 +89,12 @@ const ItemComponent = ({
             name="qty"
             id={`qty${index}`}
             placeholder="0"
-            defaultValue={defaultValue?.[index]?.[key]}
-            {...register(`listItem.${index}.qty`, {
+            value={itemQty}
+            {...register(`qty`, {
               required: "Required",
             })}
             className={`${errors.qty ? "border-red" : ""} form-input`}
-            onChange={(e) => setQty(e.target.value)}
+            onChange={(e) => setItemQty(e.target.value)}
           />
           {errors.qty && <p className="errorMsg">{errors.qty.message}</p>}
         </div>
@@ -82,20 +110,18 @@ const ItemComponent = ({
             name="price"
             id={`price${index}`}
             placeholder="0"
-            defaultValue={defaultValue?.[index]?.[key]}
-            {...register(`listItem.${index}.price`, {
+            value={item.price}
+            {...register(`price`, {
               required: "Required",
             })}
             className={`${errors.price ? "border-red" : ""} form-input`}
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={(e) => setItemPrice(e.target.value)}
           />
           {errors.price && <p className="errorMsg">{errors.price.message}</p>}
         </div>
         <div className="form-control w-[35%]">
           <span className="bodyText mb-[10px]">Total</span>
-          <p className="py-4 bodyText font-bold text-lightGrey">
-            {qty && price ? total : "0.00"}
-          </p>
+          <p className="py-4 bodyText font-bold text-lightGrey">{itemTotal}</p>
         </div>
       </div>
     </li>

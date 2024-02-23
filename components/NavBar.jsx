@@ -8,7 +8,11 @@ import { useInvoiceContext } from "@/context/InvoiceContext";
 
 const NavBar = () => {
   const [darkMode, setDarkMode] = useState(true);
-  const { addInvoice, setAddInvoice } = useInvoiceContext();
+  const { userData, addInvoice, setAddInvoice, isDemo, setIsDemo } =
+    useInvoiceContext();
+  const [profileIsOpen, setProfileIsOpen] = useState(false);
+
+  console.log(userData);
 
   useEffect(() => {
     if (
@@ -37,7 +41,7 @@ const NavBar = () => {
   return (
     <header className="fixed top-0 w-full z-10 xl:h-screen xl:w-[103px]">
       <nav className="bg-[#373B53] dark:bg-darkGrey flex justify-between items-center xl:flex-col xl:justify-start xl:fixed xl:top-0 xl:rounded-r-[30px] xl:items-stretch xl:h-full">
-        <Link href="/" onClick={() => setAddInvoice(false)}>
+        <Link href="/dashboard" onClick={() => setAddInvoice(false)}>
           <svg
             className="h-[72px] w-auto object-cover object-center md:h-20 xl:w-[103px] xl:h-auto"
             alt="my invoice logo"
@@ -80,7 +84,7 @@ const NavBar = () => {
           </svg>
         </Link>
 
-        <div className="flex justify-end items-center mr-6 md:mr-8 xl:flex-col xl:justify-center xl:mr-0 xl:absolute xl:bottom-6">
+        <div className="flex justify-end items-center mr-6 md:mr-[48px] xl:flex-col xl:justify-center xl:mr-0 xl:absolute xl:bottom-6">
           {darkMode ? (
             <svg
               width="20"
@@ -115,13 +119,41 @@ const NavBar = () => {
 
           <div className="w-[1px] h-[72px] bg-[#494E6E] mx-6 md:mx-8 md:h-20 xl:h-[1px] xl:w-[103px] xl:mx-0 xl:my-6" />
           <Image
-            src={avatar}
+            src={userData ? userData.photoUrl : avatar}
             width={32}
             height={32}
             alt="toggle dark mode"
             className="w-8 h-auto object-cover object-center rounded-full xl:w-10"
             priority={false}
+            onClick={() => setProfileIsOpen(!profileIsOpen)}
           />
+          {profileIsOpen && (
+            <>
+              <div
+                className="fixed w-full h-full top-[72px] bottom-0 left-0 right-0 md:top-[80px] xl:top-0 xl:left-[103px]"
+                onClick={() => setProfileIsOpen(!profileIsOpen)}
+              />
+              <div className="fixed top-[80px] right-6 bg-white dark:bg-darkGrey rounded-[8px] px-6 py-3 cursor-pointer box-shadow-invoiceCard slideup md:top-[88px] md:right-[48px] xl:bottom-6 xl:left-[111px] xl:top-auto xl:right-auto">
+                {isDemo ? (
+                  <Link
+                    href={`https://api.invoice-app.naughty-cat.com/authentication/github`}
+                    className="bodyText font-bold hover:text-purple"
+                    onClick={() => setProfileIsOpen(!profileIsOpen)}
+                  >
+                    Sign in with Github
+                  </Link>
+                ) : (
+                  <Link
+                    href={`https://api.invoice-app.naughty-cat.com/logout`}
+                    className="bodyText font-bold hover:text-purple"
+                    onClick={() => setProfileIsOpen(!profileIsOpen)}
+                  >
+                    Sign Out
+                  </Link>
+                )}
+              </div>
+            </>
+          )}
         </div>
       </nav>
     </header>

@@ -6,7 +6,8 @@ import { Transition } from "@headlessui/react";
 import { useInvoiceContext } from "@/context/InvoiceContext";
 
 const Filter = () => {
-  const { status, setStatus, handleFilterClick } = useInvoiceContext();
+  const { filterStatus, setFilterStatus, handleFilterClick } =
+    useInvoiceContext();
   const [filterIsOpen, setFilterIsOpen] = useState(false);
   const dropdown = useRef(null);
 
@@ -58,16 +59,53 @@ const Filter = () => {
             <div className="group flex items-center space-x-[13px]">
               <input
                 type="radio"
-                id="draft"
+                id="all"
                 name="filter"
-                value="draft"
-                className="filter-input peer"
+                value="all"
+                className={`${
+                  filterStatus === "all"
+                    ? "bg-purple dark:bg-purple border-purple dark:border-purple"
+                    : ""
+                } filter-input`}
                 onClick={handleFilterClick}
               />
               <svg
                 width="10"
                 height="8"
-                className="absolute hidden peer-checked:block outline-none pointer-events-none left-[14px]"
+                className={`${
+                  filterStatus === "all" ? "block" : "hidden"
+                } absolute outline-none pointer-events-none left-[14px]`}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M1.5 4.5l2.124 2.124L8.97 1.28"
+                  stroke="#FFF"
+                  strokeWidth="2"
+                  fill="none"
+                  fillRule="evenodd"
+                />
+              </svg>
+              <label htmlFor="all">All</label>
+            </div>
+            <div className="group flex items-center space-x-[13px]">
+              <input
+                type="radio"
+                id="draft"
+                name="filter"
+                value="draft"
+                className={`${
+                  filterStatus === "draft"
+                    ? "bg-purple dark:bg-purple border-purple dark:border-purple"
+                    : ""
+                } filter-input`}
+                onClick={handleFilterClick}
+              />
+              <svg
+                width="10"
+                height="8"
+                className={`${
+                  filterStatus === "draft" ? "block" : "hidden"
+                } absolute outline-none pointer-events-none left-[14px]`}
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -86,13 +124,19 @@ const Filter = () => {
                 id="pending"
                 name="filter"
                 value="pending"
-                className="filter-input peer"
+                className={`${
+                  filterStatus === "pending"
+                    ? "bg-purple dark:bg-purple border-purple dark:border-purple"
+                    : ""
+                } filter-input`}
                 onClick={handleFilterClick}
               />
               <svg
                 width="10"
                 height="8"
-                className="absolute hidden  peer-checked:block outline-none pointer-events-none left-[14px]"
+                className={`${
+                  filterStatus === "pending" ? "block" : "hidden"
+                } absolute outline-none pointer-events-none left-[14px]`}
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -111,13 +155,19 @@ const Filter = () => {
                 id="paid"
                 name="filter"
                 value="paid"
-                className="filter-input peer"
+                className={`${
+                  filterStatus === "paid"
+                    ? "bg-purple dark:bg-purple border-purple dark:border-purple"
+                    : ""
+                } filter-input`}
                 onClick={handleFilterClick}
               />
               <svg
                 width="10"
                 height="8"
-                className="absolute hidden peer-checked:block outline-none pointer-events-none left-[14px]"
+                className={`${
+                  filterStatus === "paid" ? "block" : "hidden"
+                } absolute outline-none pointer-events-none left-[14px]`}
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
