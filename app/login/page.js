@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useInvoiceContext } from "@/context/InvoiceContext";
 
 export default function Login() {
-  const { isDemo, setIsDemo } = useInvoiceContext();
+  const { setIsDemo, setIsLogin } = useInvoiceContext();
 
   return (
     <main className="flex justify-center items-center min-h-dvh mb-[90px] px-6 mx-auto md:px-[48px] md:max-w-[550px]">
@@ -23,13 +23,14 @@ export default function Login() {
           <Link
             href="/dashboard"
             className="w-full text-lightGrey bg-[#373B53] hover:bg-almostBlack dark:text-lightestGrey font-bold py-3 px-6 dark:bg-[#373B53] text-center dark:hover:bg-darkGrey rounded-full dark:hover:text-lightestGrey animation-effect md:w-auto"
-            onClick={() => setIsDemo(!isDemo)}
+            onClick={() => setIsDemo(true)}
           >
             View as Demo
           </Link>
           <Link
             href={`https://api.invoice-app.naughty-cat.com/authentication/github`}
             className="w-full bg-purple font-bold text-white animation-effect rounded-full py-3 px-6 hover:bg-lightPurple flex items-center justify-center md:w-auto"
+            onClick={() => setIsLogin(true)}
           >
             Sign in with Github
             <svg

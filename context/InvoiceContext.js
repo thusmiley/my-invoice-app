@@ -1,9 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-// import "dotenv/config";
-// import { options } from "@/utils";
-import data from "../utils/data.json";
+import exampleData from "../utils/data.json";
 
 const InvoiceContext = createContext();
 
@@ -17,8 +15,37 @@ export function InvoiceProvider({ children }) {
   const [addInvoice, setAddInvoice] = useState(false);
   const [editInvoice, setEditInvoice] = useState(false);
   const [isDemo, setIsDemo] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
 
   const [userData, setUserData] = useState();
+
+  useEffect(() => {
+    const localStoredIsDemo = localStorage.getItem("localIsDemo");
+    if (localStoredIsDemo) {
+      setIsDemo(JSON.parse(localStoredIsDemo));
+      return;
+    } else {
+      setIsDemo(false);
+      return;
+    }
+
+    if (localStoredIsDemo !== isDemo) {
+      localStorage.setItem("localIsDemo", isDemo);
+    }
+
+    const localStoredIsLogin = localStorage.getItem("localIsLogin");
+    if (localStoredIsLogin) {
+      setIsDemo(JSON.parse(localStoredIsLogin));
+      return;
+    } else {
+      setIsDemo(false);
+      return;
+    }
+
+    if (localStoredIsLogin !== isLogin) {
+      localStorage.setItem("localIsLogin", isLogin);
+    }
+  }, [isDemo, isLogin]);
 
   useEffect(() => {
     fetch(`https://api.invoice-app.naughty-cat.com/user`)
@@ -31,6 +58,45 @@ export function InvoiceProvider({ children }) {
         console.log(error);
       });
   }, []);
+
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      if (isDemo) {
+        const localStoredInvoices = localStorage.getItem("localInvoices");
+        if (localStoredInvoices) {
+          setFilteredData(JSON.parse(localStoredInvoices));
+          return;
+        } else {
+          setFilteredData(exampleData);
+          return;
+        }
+      }
+
+      if (isLogin) {
+        try {
+          const response = await fetch(
+            `https://api.invoice-app.naughty-cat.com/invoices/all`
+          );
+
+          if (response.status !== 200) throw new Error();
+
+          const data = await response.json();
+
+          setFilteredData(data);
+        } catch (e) {
+          setFilteredData([]);
+        }
+      }
+    };
+
+    fetchInvoices();
+  }, [isDemo]);
+
+  useEffect(() => {
+    if (isDemo) {
+      localStorage.setItem("localInvoices", JSON.stringify(filteredData));
+    }
+  }, [filteredData, isDemo]);
 
   const handleFilterClick = (e) => {
     setFilterStatus(e.target.value);
@@ -50,7 +116,10 @@ export function InvoiceProvider({ children }) {
         setEditInvoice,
         isDemo,
         setIsDemo,
-        userData, setUserData
+        isLogin,
+        setIsLogin,
+        userData,
+        setUserData,
       }}
     >
       {children}

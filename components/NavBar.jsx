@@ -12,7 +12,7 @@ const NavBar = () => {
     useInvoiceContext();
   const [profileIsOpen, setProfileIsOpen] = useState(false);
 
-  console.log(userData);
+  //   console.log(userData);
 
   useEffect(() => {
     if (
@@ -143,13 +143,18 @@ const NavBar = () => {
                     Sign in with Github
                   </Link>
                 ) : (
-                  <Link
-                    href={`https://api.invoice-app.naughty-cat.com/logout`}
+                  <button
                     className="bodyText font-bold hover:text-purple"
-                    onClick={() => setProfileIsOpen(!profileIsOpen)}
+                    onClick={() => {
+                      setProfileIsOpen(!profileIsOpen);
+                      fetch(
+                        `https://api.invoice-app.naughty-cat.com/authentication/logout`,
+                        { method: "POST" }
+                      );
+                    }}
                   >
                     Sign Out
-                  </Link>
+                  </button>
                 )}
               </div>
             </>

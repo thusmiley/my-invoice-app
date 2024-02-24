@@ -3,7 +3,6 @@ import { useRouter } from "next/navigation";
 import backArrowIcon from "../../../public/icon-arrow-left.svg";
 import Image from "next/image";
 import StatusButton from "@/components/StatusButton";
-import data from "../../../utils/data.json";
 import { useState, useEffect } from "react";
 import SummaryComponent from "@/components/SummaryComponent";
 import { formatDate } from "@/utils";
@@ -15,18 +14,25 @@ import Head from "next/head";
 const Invoice = ({ params }) => {
   const router = useRouter();
   const [invoice, setInvoice] = useState();
-  const { addInvoice, setAddInvoice, editInvoice, setEditInvoice } =
-    useInvoiceContext();
+  const {
+    filteredData,
+    addInvoice,
+    setAddInvoice,
+    editInvoice,
+    setEditInvoice,
+    isDemo,
+  } = useInvoiceContext();
 
   useEffect(() => {
-    setInvoice(
-      data.filter(
-        (item) =>
-          item.id.toString().toLowerCase() ===
-          params.id.toString().toLowerCase()
-      )[0]
-    );
+    const matchedId = filteredData?.filter(
+      (item) => item.invoiceNumber === params.id
+    )[0];
+    setInvoice(matchedId);
   }, []);
+
+  console.log(invoice);
+  console.log(filteredData);
+  console.log(isDemo);
 
   return (
     <main className="min-h-screen pt-[72px] relative px-6 mx-auto pb-[120px] md:pb-[50px] xl:max-w-[730px]">
@@ -77,9 +83,9 @@ const Invoice = ({ params }) => {
               <div className="">
                 <h2 className="headingText">
                   <span className="text-lightGrey">#</span>
-                  {invoice?.id}
+                  {invoice?.invoiceNumber}
                 </h2>
-                {invoice?.items.map((obj, index) => (
+                {invoice?.invoiceItems?.map((obj, index) => (
                   <span key={index} className="bodyText mt-1">
                     {(index ? ", " : "") + obj.name}
                   </span>

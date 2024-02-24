@@ -3,7 +3,6 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import Filter from "@/components/Filter";
 import AddNewButton from "@/components/AddNewButton";
-import data from "../../utils/data.json";
 import InvoiceCard from "@/components/InvoiceCard";
 import illustration from "../../public/illustration-empty.svg";
 import { useInvoiceContext } from "@/context/InvoiceContext";
@@ -13,7 +12,7 @@ import Head from "next/head";
 
 export default function Home() {
   const [loadMore, setLoadMore] = useState(10);
-  const {
+  const {filteredData,
     filterStatus,
     addInvoice,
     setAddInvoice,
@@ -28,19 +27,20 @@ export default function Home() {
   return (
     <main className="min-h-screen z-0 pt-[72px] mb-[90px] px-6 mx-auto md:px-[48px] xl:max-w-[730px]">
       <Head>
-        <title>My Invoice App</title>
+        <title>Dashboard | My Invoice App</title>
       </Head>
       <section className="flex items-center justify-between my-[34px] md:my-[56px]">
         <div>
           <h1 className="headingText">Invoices</h1>
-          {data?.length === 0 ? (
+          {filteredData?.length === 0 ? (
             <p className="bodyText mt-1 md:mt-2">No invoices</p>
           ) : (
             <p className="bodyText mt-1 md:mt-2">
               <span className="hidden md:inline">There are&nbsp;</span>
               {filterStatus === "all"
-                ? data.length
-                : data.filter((item) => item.status === filterStatus).length}
+                ? filteredData?.length
+                : filteredData.filter((item) => item.status === filterStatus)
+                    .length}
               {filterStatus === "all" && (
                 <span className="hidden md:inline">&nbsp;total</span>
               )}
@@ -94,7 +94,7 @@ export default function Home() {
         </div>
       </section>
 
-      {data.length === 0 ? (
+      {filteredData?.length === 0 ? (
         <section className="max-w-[217px] mx-auto mt-[102px] text-center md:max-w-[242px] md:mt-[210px] xl:mt-[141px]">
           <Image
             src={illustration}
@@ -115,19 +115,25 @@ export default function Home() {
         <section className="relative text-center">
           <div className="space-y-4 text-left">
             {filterStatus === "all"
-              ? data
-                  .slice(0, loadMore)
+              ? filteredData
+                  ?.slice(0, loadMore)
                   .map((invoice) => (
-                    <InvoiceCard key={invoice.id} invoice={invoice} />
+                    <InvoiceCard
+                      key={invoice.invoiceNumber}
+                      invoice={invoice}
+                    />
                   ))
-              : data
+              : filteredData
                   .filter((item) => item.status === filterStatus)
                   .slice(0, loadMore)
                   .map((invoice) => (
-                    <InvoiceCard key={invoice.id} invoice={invoice} />
+                    <InvoiceCard
+                      key={invoice.invoiceNumber}
+                      invoice={invoice}
+                    />
                   ))}
           </div>
-          {data.length > 10 && (
+          {filteredData?.length > 10 && (
             <button
               type="button"
               className="bg-purple text-white mt-12 animation-effect rounded-full py-[6px] px-5 hover:bg-lightPurple"
