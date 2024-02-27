@@ -7,7 +7,7 @@ import Image from "next/image";
 import DatePicker from "react-datepicker";
 import "../app/styles/datepicker.css";
 
-const Datepicker = ({ date, addInvoice, editInvoice }) => {
+const Datepicker = ({ date, isAddInvoice, isEditInvoice }) => {
   const [invoiceDate, setInvoiceDate] = useState(date);
 
   return (
@@ -29,7 +29,7 @@ const Datepicker = ({ date, addInvoice, editInvoice }) => {
       closeOnScroll={true}
       onChange={(date) => setInvoiceDate(date)}
       onFocus={(e) => (e.target.readOnly = true)}
-      readOnly={editInvoice ? true : false}
+      readOnly={isEditInvoice ? true : false}
     />
   );
 };

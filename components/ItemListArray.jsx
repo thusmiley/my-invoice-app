@@ -4,17 +4,17 @@ import { useEffect, useState } from "react";
 
 const ItemListArray = ({
   array,
-  addInvoice,
-  editInvoice,
+  isAddInvoice,
+  isEditInvoice,
   control,
   register,
   errors,
 }) => {
   const [list, setList] = useState(() => {
-    if (addInvoice) {
+    if (isAddInvoice) {
       return [{ name: "", quantity: "", price: "", total: "0.00" }];
     }
-    if (editInvoice) {
+    if (isEditInvoice) {
       return array;
     }
   });
@@ -32,8 +32,8 @@ const ItemListArray = ({
               <ItemComponent
                 item={item}
                 index={item.id}
-                addInvoice={addInvoice}
-                editInvoice={editInvoice}
+                isAddInvoice={isAddInvoice}
+                isEditInvoice={isEditInvoice}
                 {...{ control, register, errors }}
               />
               {list.length > 1 ? (

@@ -21,10 +21,10 @@ import ItemListArray from "./ItemListArray";
 
 const InvoiceForm = ({
   invoice,
-  addInvoice,
-  setAddInvoice,
-  editInvoice,
-  setEditInvoice,
+  isAddInvoice,
+  setIsAddInvoice,
+  isEditInvoice,
+  setIsEditInvoice,
   getValues,
 }) => {
   const [selectedTerm, setSelectedTerm] = useState();
@@ -43,7 +43,7 @@ const InvoiceForm = ({
 
   const onSubmit = handleSubmit((_data) => {
     console.log("Schema valid!");
-    setAddInvoice(false);
+    setIsAddInvoice(false);
   });
 
   const saveDraft = async () => {
@@ -52,7 +52,7 @@ const InvoiceForm = ({
     try {
       await DraftSchema.validate(data, { abortEarly: false });
       console.log("Draft schema valid!");
-      setAddInvoice(false);
+      setIsAddInvoice(false);
     } catch (error) {
       error.inner?.map((inner, index) => {
         const { type, path, errors } = inner;
@@ -66,11 +66,11 @@ const InvoiceForm = ({
       <button
         className="flex items-center bodyText font-bold text-almostBlack my-8 md:mt-[48px] hover:text-lightGrey animation-effect md:hidden"
         onClick={() => {
-          if (addInvoice) {
-            setAddInvoice(false);
+          if (isAddInvoice) {
+            setIsAddInvoice(false);
           }
-          if (editInvoice) {
-            setEditInvoice(false);
+          if (isEditInvoice) {
+            setIsEditInvoice(false);
           }
         }}
       >
@@ -84,8 +84,8 @@ const InvoiceForm = ({
         Go back
       </button>
       <form className="relative md:mt-[56px] md:px-[56px]" onSubmit={onSubmit}>
-        {addInvoice && <h1 className="priceText text-[28px]">New Invoice</h1>}
-        {editInvoice && (
+        {isAddInvoice && <h1 className="priceText text-[28px]">New Invoice</h1>}
+        {isEditInvoice && (
           <h1 className="priceText text-[28px]">
             Edit <span className="text-[#777F98]">#</span>
             {invoice?.id}
@@ -108,7 +108,7 @@ const InvoiceForm = ({
               name="senderStreet"
               id="senderStreet"
               placeholder="1600 Amphitheatre Parkway, Mountain View"
-              value={invoice ? invoice.senderAddress.street : ""}
+              value={invoice ? invoice.billFromStreetAddress : ""}
               {...register("senderStreet", {})}
               className={`${
                 errors.senderStreet ? "border-red" : ""
@@ -136,7 +136,7 @@ const InvoiceForm = ({
                   name="senderCity"
                   id="senderCity"
                   placeholder="CA"
-                  value={invoice ? invoice.senderAddress.city : ""}
+                  value={invoice ? invoice.billFromCity : ""}
                   {...register("senderCity", {
                     pattern: {
                       value:
@@ -166,7 +166,7 @@ const InvoiceForm = ({
                   name="senderZipCode"
                   id="senderZipCode"
                   placeholder="94043"
-                  value={invoice ? invoice.senderAddress.postCode : ""}
+                  value={invoice ? invoice.billFromPostalCode : ""}
                   {...register("senderZipCode", {
                     pattern: {
                       value: /^\s*?\d{5}(?:[-\s]\d{4})?\s*?$/,
@@ -196,7 +196,7 @@ const InvoiceForm = ({
                 name="senderCountry"
                 id="senderCountry"
                 placeholder="US"
-                value={invoice ? invoice.senderAddress.country : ""}
+                value={invoice ? invoice.billFromCountry : ""}
                 {...register("senderCountry", {
                   pattern: {
                     value: /[a-zA-Z]{2,}/,
@@ -230,7 +230,7 @@ const InvoiceForm = ({
               id="name"
               autoComplete="on"
               placeholder="Naughty Cat"
-              value={invoice ? invoice.clientName : ""}
+              value={invoice ? invoice.billToName : ""}
               {...register("name", {})}
               className={`${errors.name ? "border-red" : ""} form-input`}
             />
@@ -249,7 +249,7 @@ const InvoiceForm = ({
               id="email"
               autoComplete="on"
               placeholder="support@naughty-cat.com"
-              value={invoice ? invoice.clientEmail : ""}
+              value={invoice ? invoice.billToEmail : ""}
               {...register("email", {
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
@@ -274,7 +274,7 @@ const InvoiceForm = ({
               name="clientStreet"
               id="clientStreet"
               placeholder="2406 Columbus Ln, Madison"
-              value={invoice ? invoice.clientAddress.street : ""}
+              value={invoice ? invoice.billToStreetAddress : ""}
               {...register("clientStreet", {})}
               className={`${
                 errors.clientStreet ? "border-red" : ""
@@ -302,7 +302,7 @@ const InvoiceForm = ({
                   name="clientCity"
                   id="clientCity"
                   placeholder="WI"
-                  value={invoice ? invoice.clientAddress.city : ""}
+                  value={invoice ? invoice.billToCity : ""}
                   {...register("clientCity", {
                     pattern: {
                       value:
@@ -332,7 +332,7 @@ const InvoiceForm = ({
                   name="clientZipCode"
                   id="clientZipCode"
                   placeholder="53704"
-                  value={invoice ? invoice.clientAddress.postCode : ""}
+                  value={invoice ? invoice.billToPostalCode : ""}
                   {...register("clientZipCode", {
                     pattern: {
                       value: /^\s*?\d{5}(?:[-\s]\d{4})?\s*?$/,
@@ -362,7 +362,7 @@ const InvoiceForm = ({
                 name="clientCountry"
                 id="clientCountry"
                 placeholder="US"
-                value={invoice ? invoice.clientAddress.country : ""}
+                value={invoice ? invoice.billToCountry : ""}
                 {...register("clientCountry", {
                   pattern: {
                     value: /[a-zA-Z]{2,}/,
@@ -387,8 +387,8 @@ const InvoiceForm = ({
               <span className="bodyText mb-[10px]">Invoice Date</span>
               <Datepicker
                 date={invoice ? invoice.createdAt : new Date()}
-                addInvoice={addInvoice}
-                editInvoice={editInvoice}
+                isAddInvoice={isAddInvoice}
+                isEditInvoice={isEditInvoice}
               />
             </div>
             <div className="form-control basis-1/2 relative md:w-1/2">
@@ -396,7 +396,7 @@ const InvoiceForm = ({
               <PaymentTerms
                 selectedTerm={
                   invoice
-                    ? differenceInDays(invoice.createdAt, invoice.paymentDue)
+                    ? differenceInDays(invoice.date, invoice.paymentTerms)
                     : terms[3]
                 }
                 setSelectedTerm={setSelectedTerm}
@@ -417,7 +417,7 @@ const InvoiceForm = ({
               name="projectDescription"
               id="projectDescription"
               placeholder="Graphic Design Service"
-              value={invoice ? invoice.description : ""}
+              value={invoice ? invoice.projectDescription : ""}
               {...register("projectDescription", {})}
               className={`${
                 errors.projectDescription ? "border-red" : ""
@@ -436,8 +436,8 @@ const InvoiceForm = ({
           </h2>
           <ItemListArray
             array={invoice?.items}
-            addInvoice={addInvoice}
-            editInvoice={editInvoice}
+            isAddInvoice={isAddInvoice}
+            isEditInvoice={isEditInvoice}
             {...{ control, register, errors }}
           />
         </div>
@@ -445,26 +445,26 @@ const InvoiceForm = ({
         <div className="mt-6 w-full flex flex-col h-[155px] md:h-[112px]">
           <div className="h-[64px] -mx-6 linear-bg overflow-hidden md:hidden"></div>
           <div
-            className={`${addInvoice ? "justify-between" : ""} ${
-              editInvoice ? "justify-end space-x-2" : ""
+            className={`${isAddInvoice ? "justify-between" : ""} ${
+              isEditInvoice ? "justify-end space-x-2" : ""
             } bg-white -mx-6 overflow-hidden dark:bg-darkGrey p-6 flex  dark:md:bg-darkestGrey md:py-8`}
           >
             <button
               type="button"
               className="bodyText text-[12px] md:text-[16px] font-bold py-3 px-6 text-blueGrey bg-[#F9FAFE] dark:bg-grey dark:text-lightestGrey rounded-full hover:bg-lightestGrey dark:hover:text-grey dark:hover:bg-white animation-effect"
               onClick={() => {
-                if (addInvoice) {
-                  setAddInvoice(false);
+                if (isAddInvoice) {
+                  setIsAddInvoice(false);
                 }
-                if (editInvoice) {
-                  setEditInvoice(false);
+                if (isEditInvoice) {
+                  setIsEditInvoice(false);
                 }
               }}
             >
-              {addInvoice && "Discard"}
-              {editInvoice && "Cancel"}
+              {isAddInvoice && "Discard"}
+              {isEditInvoice && "Cancel"}
             </button>
-            {addInvoice && (
+            {isAddInvoice && (
               <button
                 type="button"
                 className="bodyText text-[12px] md:text-[16px] text-lightGrey bg-[#373B53] hover:bg-almostBlack dark:text-lightestGrey font-bold py-3 px-6 dark:bg-[#373B53]  dark:hover:bg-darkGrey rounded-full dark:hover:text-lightestGrey animation-effect"
@@ -477,8 +477,8 @@ const InvoiceForm = ({
               type="submit"
               className="bodyText text-[12px] md:text-[16px] text-white dark:text-white font-bold py-3 px-6 bg-purple dark:bg-purple rounded-full hover:bg-lightPurple dark:hover:bg-lightPurple animation-effect"
             >
-              {addInvoice && "Save"}
-              {editInvoice && "Save Changes"}
+              {isAddInvoice && "Save"}
+              {isEditInvoice && "Save Changes"}
             </button>
           </div>
         </div>

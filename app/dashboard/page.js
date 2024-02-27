@@ -12,12 +12,13 @@ import Head from "next/head";
 
 export default function Home() {
   const [loadMore, setLoadMore] = useState(10);
-  const {filteredData,
+  const {
+    filteredData,
     filterStatus,
-    addInvoice,
-    setAddInvoice,
-    editInvoice,
-    setEditInvoice,
+    isAddInvoice,
+    setIsAddInvoice,
+    isEditInvoice,
+    setIsEditInvoice,
   } = useInvoiceContext();
 
   const handleLoadMore = () => {
@@ -59,8 +60,11 @@ export default function Home() {
         </div>
         <div className="flex items-center">
           <Filter />
-          <AddNewButton addInvoice={addInvoice} setAddInvoice={setAddInvoice} />
-          <Transition show={addInvoice}>
+          <AddNewButton
+            isAddInvoice={isAddInvoice}
+            setIsAddInvoice={setIsAddInvoice}
+          />
+          <Transition show={isAddInvoice}>
             <Transition.Child
               enter="transition ease-in-out duration-300 transform"
               enterFrom="-translate-x-full opacity-0"
@@ -71,10 +75,10 @@ export default function Home() {
             >
               <InvoiceForm
                 invoice={null}
-                addInvoice={addInvoice}
-                setAddInvoice={setAddInvoice}
-                editInvoice={editInvoice}
-                setEditInvoice={setEditInvoice}
+                isAddInvoice={isAddInvoice}
+                setIsAddInvoice={setIsAddInvoice}
+                isEditInvoice={isEditInvoice}
+                setIsEditInvoice={setIsEditInvoice}
               />
             </Transition.Child>
             <Transition.Child
@@ -87,7 +91,7 @@ export default function Home() {
             >
               <div
                 className="fixed w-full h-full top-[72px] bottom-0 left-0 right-0 z-10 bg-black/50 md:top-[80px] xl:top-0 xl:left-[103px]"
-                onClick={() => setAddInvoice(!addInvoice)}
+                onClick={() => setIsAddInvoice(!isAddInvoice)}
               />
             </Transition.Child>
           </Transition>
@@ -118,19 +122,13 @@ export default function Home() {
               ? filteredData
                   ?.slice(0, loadMore)
                   .map((invoice) => (
-                    <InvoiceCard
-                      key={invoice.invoiceNumber}
-                      invoice={invoice}
-                    />
+                    <InvoiceCard key={invoice.id} invoice={invoice} />
                   ))
               : filteredData
                   .filter((item) => item.status === filterStatus)
                   .slice(0, loadMore)
                   .map((invoice) => (
-                    <InvoiceCard
-                      key={invoice.invoiceNumber}
-                      invoice={invoice}
-                    />
+                    <InvoiceCard key={invoice.id} invoice={invoice} />
                   ))}
           </div>
           {filteredData?.length > 10 && (

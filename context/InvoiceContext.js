@@ -12,91 +12,79 @@ export function useInvoiceContext() {
 export function InvoiceProvider({ children }) {
   const [filteredData, setFilteredData] = useState();
   const [filterStatus, setFilterStatus] = useState("all");
-  const [addInvoice, setAddInvoice] = useState(false);
-  const [editInvoice, setEditInvoice] = useState(false);
-  const [isDemo, setIsDemo] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
+  const [isAddInvoice, setIsAddInvoice] = useState(false);
+  const [isEditInvoice, setIsEditInvoice] = useState(false);
+  const [isDemo, setIsDemo] = useState(
+    localStorage.getItem("localIsDemo")
+      ? localStorage.getItem("localIsDemo")
+      : false
+  );
+  const [isLoggedin, setIsLoggedin] = useState(
+    localStorage.getItem("localIsLoggedin")
+      ? localStorage.getItem("localIsLoggedin")
+      : false
+  );
 
   const [userData, setUserData] = useState();
 
   useEffect(() => {
-    const localStoredIsDemo = localStorage.getItem("localIsDemo");
-    if (localStoredIsDemo) {
-      setIsDemo(JSON.parse(localStoredIsDemo));
-      return;
-    } else {
-      setIsDemo(false);
-      return;
-    }
-
-    if (localStoredIsDemo !== isDemo) {
-      localStorage.setItem("localIsDemo", isDemo);
-    }
-
-    const localStoredIsLogin = localStorage.getItem("localIsLogin");
-    if (localStoredIsLogin) {
-      setIsDemo(JSON.parse(localStoredIsLogin));
-      return;
-    } else {
-      setIsDemo(false);
-      return;
-    }
-
-    if (localStoredIsLogin !== isLogin) {
-      localStorage.setItem("localIsLogin", isLogin);
-    }
-  }, [isDemo, isLogin]);
-
-  useEffect(() => {
-    fetch(`https://api.invoice-app.naughty-cat.com/user`)
-      .then((response) => response.json())
-      .then((response) => {
-        setUserData(response);
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
-  useEffect(() => {
-    const fetchInvoices = async () => {
-      if (isDemo) {
-        const localStoredInvoices = localStorage.getItem("localInvoices");
-        if (localStoredInvoices) {
-          setFilteredData(JSON.parse(localStoredInvoices));
-          return;
-        } else {
-          setFilteredData(exampleData);
-          return;
-        }
-      }
-
-      if (isLogin) {
-        try {
-          const response = await fetch(
-            `https://api.invoice-app.naughty-cat.com/invoices/all`
-          );
-
-          if (response.status !== 200) throw new Error();
-
-          const data = await response.json();
-
-          setFilteredData(data);
-        } catch (e) {
-          setFilteredData([]);
-        }
-      }
-    };
-
-    fetchInvoices();
-  }, [isDemo]);
-
-  useEffect(() => {
+    localStorage.setItem("localIsDemo", isDemo);
     if (isDemo) {
-      localStorage.setItem("localInvoices", JSON.stringify(filteredData));
+      const localStoredInvoices = localStorage.getItem("localInvoices");
+      if (localStoredInvoices) {
+        setFilteredData(JSON.parse(localStoredInvoices));
+      } else {
+        setFilteredData(exampleData);
+      }
+    }
+
+    localStorage.setItem("localIsLoggedin", isLoggedin);
+    if (isLoggedin === true) {
+      fetch(`https://api.invoice-app.naughty-cat.com/user`)
+        .then((response) => response.json())
+        .then((response) => {
+          setUserData(response);
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      fetch(`https://api.invoice-app.naughty-cat.com/invoices/all`)
+        .then((response) => response.json())
+        .then((response) => {
+          setFilteredData(response);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [isDemo, isLoggedin]);
+
+  useEffect(() => {
+    const checkInvoices = JSON.stringify(filteredData);
+    if (isDemo && checkInvoices) {
+      localStorage.setItem("localInvoices", checkInvoices);
     }
   }, [filteredData, isDemo]);
+
+  const handleLogin = () => {
+    fetch(`https://api.invoice-app.naughty-cat.com/authentication/github`)
+      .then((response) => response.json())
+      .then((response) => {
+        setIsLoggedin(true);
+        setIsDemo(false);
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const handleSignout = () => {
+    fetch(`https://api.invoice-app.naughty-cat.com/authentication/logout`, {
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        setIsLoggedin(false);
+      })
+      .catch((err) => console.error(err));
+  };
 
   const handleFilterClick = (e) => {
     setFilterStatus(e.target.value);
@@ -110,14 +98,16 @@ export function InvoiceProvider({ children }) {
         filteredData,
         setFilteredData,
         handleFilterClick,
-        addInvoice,
-        setAddInvoice,
-        editInvoice,
-        setEditInvoice,
+        isAddInvoice,
+        setIsAddInvoice,
+        isEditInvoice,
+        setIsEditInvoice,
         isDemo,
         setIsDemo,
-        isLogin,
-        setIsLogin,
+        isLoggedin,
+        setIsLoggedin,
+        handleSignout,
+        handleLogin,
         userData,
         setUserData,
       }}

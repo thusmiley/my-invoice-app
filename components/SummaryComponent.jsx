@@ -6,7 +6,7 @@ const SummaryComponent = ({ invoice }) => {
     <div className="mt-10 md:mt-[52px]">
       <div className="bg-[#F9FAFE] dark:bg-grey p-6 rounded-t-[8px] space-y-6 md:p-8 md:space-y-0">
         {/* mobile */}
-        {invoice?.items?.map((obj, index) => (
+        {invoice?.invoiceItems?.map((obj, index) => (
           <div
             key={index}
             className="flex justify-between items-center md:hidden"
@@ -34,7 +34,7 @@ const SummaryComponent = ({ invoice }) => {
               </tr>
             </thead>
             <tbody className="font-bold">
-              {invoice?.items?.map((obj, index) => (
+              {invoice?.invoiceItems?.map((obj, index) => (
                 <tr key={index}>
                   <td className="mb-2 headingText text-left py-4">
                     {obj.name}
@@ -59,7 +59,7 @@ const SummaryComponent = ({ invoice }) => {
       <div className="bg-[#373B53] dark:bg-almostBlack p-6 rounded-b-[8px] flex justify-between items-center md:px-8">
         <p className="bodyText text-white">Amount Due</p>
         <h3 className="priceText text-white xl:text-[24px] xl:leading-[32px] xl:tracking-[-.5px]">
-          ${formatCurrency(invoice?.total)}
+          ${formatCurrency(invoice?.amountDue)}
         </h3>
       </div>
     </div>

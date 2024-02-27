@@ -5,41 +5,41 @@ import { useState, useEffect } from "react";
 const ItemComponent = ({
   item,
   index,
-  addInvoice,
-  editInvoice,
+  isAddInvoice,
+  isEditInvoice,
   control,
   register,
   errors,
 }) => {
   const [itemName, setItemName] = useState(() => {
-    if (addInvoice) {
+    if (isAddInvoice) {
       return "";
     }
-    if (editInvoice) {
+    if (isEditInvoice) {
       return item.name;
     }
   });
   const [itemQty, setItemQty] = useState(() => {
-    if (addInvoice) {
+    if (isAddInvoice) {
       return "";
     }
-    if (editInvoice) {
+    if (isEditInvoice) {
       return item.quantity;
     }
   });
   const [itemPrice, setItemPrice] = useState(() => {
-    if (addInvoice) {
+    if (isAddInvoice) {
       return "";
     }
-    if (editInvoice) {
+    if (isEditInvoice) {
       return item.price;
     }
   });
   const [itemTotal, setItemTotal] = useState(() => {
-    if (addInvoice && itemQty && itemPrice) {
+    if (isAddInvoice && itemQty && itemPrice) {
       return formatCurrency(itemQty * itemPrice);
     }
-    if (editInvoice) {
+    if (isEditInvoice) {
       return formatCurrency(item.total);
     }
   });

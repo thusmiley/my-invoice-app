@@ -13,26 +13,16 @@ import Head from "next/head";
 
 const Invoice = ({ params }) => {
   const router = useRouter();
-  const [invoice, setInvoice] = useState();
   const {
     filteredData,
-    addInvoice,
-    setAddInvoice,
-    editInvoice,
-    setEditInvoice,
+    isAddInvoice,
+    setIsAddInvoice,
+    isEditInvoice,
+    setIsEditInvoice,
     isDemo,
   } = useInvoiceContext();
 
-  useEffect(() => {
-    const matchedId = filteredData?.filter(
-      (item) => item.invoiceNumber === params.id
-    )[0];
-    setInvoice(matchedId);
-  }, []);
-
-  console.log(invoice);
-  console.log(filteredData);
-  console.log(isDemo);
+  let invoice = filteredData?.filter((item) => item.id === params.id[0])[0];
 
   return (
     <main className="min-h-screen pt-[72px] relative px-6 mx-auto pb-[120px] md:pb-[50px] xl:max-w-[730px]">
@@ -63,7 +53,7 @@ const Invoice = ({ params }) => {
           <div className="bg-white dark:bg-darkGrey p-6 flex justify-between items-center absolute bottom-0 w-full left-0 right-0 md:relative md:justify-end md:p-0 md:space-x-2">
             <button
               className="bodyText font-bold py-3 px-6 bg-[#F9FAFE] dark:bg-grey rounded-full hover:bg-lightestGrey dark:hover:text-blueGrey dark:hover:bg-white animation-effect"
-              onClick={() => setEditInvoice(!editInvoice)}
+              onClick={() => setIsEditInvoice(!isEditInvoice)}
             >
               Edit
             </button>
@@ -83,7 +73,7 @@ const Invoice = ({ params }) => {
               <div className="">
                 <h2 className="headingText">
                   <span className="text-lightGrey">#</span>
-                  {invoice?.invoiceNumber}
+                  {invoice?.id}
                 </h2>
                 {invoice?.invoiceItems?.map((obj, index) => (
                   <span key={index} className="bodyText mt-1">
@@ -93,10 +83,10 @@ const Invoice = ({ params }) => {
               </div>
 
               <div className="mt-[30px] bodyText md:mt-0 md:text-right">
-                <p>{invoice?.senderAddress.street}</p>
-                <p>{invoice?.senderAddress.city}</p>
-                <p>{invoice?.senderAddress.postCode}</p>
-                <p>{invoice?.senderAddress.country}</p>
+                <p>{invoice?.billFromStreetAddress}</p>
+                <p>{invoice?.billFromCity}</p>
+                <p>{invoice?.billFromPostalCode}</p>
+                <p>{invoice?.billFromCountry}</p>
               </div>
             </div>
 
@@ -106,13 +96,13 @@ const Invoice = ({ params }) => {
                   <div className="">
                     <p>Invoice Date</p>
                     <h3 className="mt-3 headingText">
-                      {formatDate(invoice?.createdAt)}
+                      {formatDate(invoice?.date)}
                     </h3>
                   </div>
                   <div className="">
                     <p>Payment Due</p>
                     <h3 className="mt-3 headingText">
-                      {new Date(invoice?.paymentDue).toLocaleDateString(
+                      {new Date(invoice?.amountDue).toLocaleDateString(
                         "en-us",
                         {
                           year: "numeric",
@@ -126,18 +116,18 @@ const Invoice = ({ params }) => {
 
                 <div>
                   <p>Bill To</p>
-                  <h3 className="mt-3 headingText">{invoice?.clientName}</h3>
+                  <h3 className="mt-3 headingText">{invoice?.billToName}</h3>
                   <div className="bodyText mt-2">
-                    <p>{invoice?.clientAddress.street}</p>
-                    <p>{invoice?.clientAddress.city}</p>
-                    <p>{invoice?.clientAddress.postCode}</p>
-                    <p>{invoice?.clientAddress.country}</p>
+                    <p>{invoice?.billToStreetAddress}</p>
+                    <p>{invoice?.billToCity}</p>
+                    <p>{invoice?.billToPostalCode}</p>
+                    <p>{invoice?.billToCountry}</p>
                   </div>
                 </div>
               </div>
               <div className="mt-8 md:mt-0">
                 <p>Sent to</p>
-                <h3 className="mt-3 headingText">{invoice?.clientEmail}</h3>
+                <h3 className="mt-3 headingText">{invoice?.billToEmail}</h3>
               </div>
             </div>
           </div>
@@ -147,7 +137,7 @@ const Invoice = ({ params }) => {
         </div>
       </section>
 
-      <Transition show={editInvoice}>
+      <Transition show={isEditInvoice}>
         <Transition.Child
           enter="transition ease-in-out duration-300 transform"
           enterFrom="-translate-x-full opacity-0"
@@ -158,10 +148,10 @@ const Invoice = ({ params }) => {
         >
           <InvoiceForm
             invoice={invoice}
-            addInvoice={addInvoice}
-            setAddInvoice={setAddInvoice}
-            editInvoice={editInvoice}
-            setEditInvoice={setEditInvoice}
+            isAddInvoice={isAddInvoice}
+            setIsAddInvoice={setIsAddInvoice}
+            isEditInvoice={isEditInvoice}
+            setIsEditInvoice={setIsEditInvoice}
           />
         </Transition.Child>
         <Transition.Child
@@ -174,7 +164,7 @@ const Invoice = ({ params }) => {
         >
           <div
             className="fixed w-full h-full top-[72px] bottom-0 left-0 right-0 z-10 bg-black/50 md:top-[80px] xl:top-0 xl:left-[103px]"
-            onClick={() => setEditInvoice(!editInvoice)}
+            onClick={() => setIsEditInvoice(!isEditInvoice)}
           />
         </Transition.Child>
       </Transition>

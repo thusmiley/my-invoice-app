@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import avatar from "../public/image-avatar.jpg";
@@ -8,11 +9,18 @@ import { useInvoiceContext } from "@/context/InvoiceContext";
 
 const NavBar = () => {
   const [darkMode, setDarkMode] = useState(true);
-  const { userData, addInvoice, setAddInvoice, isDemo, setIsDemo } =
-    useInvoiceContext();
-  const [profileIsOpen, setProfileIsOpen] = useState(false);
-
-  //   console.log(userData);
+  const {
+    userData,
+    isAddInvoice,
+    setIsAddInvoice,
+    isDemo,
+    setIsDemo,
+    isLoggedin,
+    setIsLoggedin,
+    handleSignout,
+  } = useInvoiceContext();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (
@@ -38,10 +46,14 @@ const NavBar = () => {
     setDarkMode(!darkMode);
   };
 
+
   return (
     <header className="fixed top-0 w-full z-10 xl:h-screen xl:w-[103px]">
       <nav className="bg-[#373B53] dark:bg-darkGrey flex justify-between items-center xl:flex-col xl:justify-start xl:fixed xl:top-0 xl:rounded-r-[30px] xl:items-stretch xl:h-full">
-        <Link href="/dashboard" onClick={() => setAddInvoice(false)}>
+        <Link
+          href={pathname === "/login" ? "/login" : "/dashboard"}
+          onClick={() => setIsAddInvoice(false)}
+        >
           <svg
             className="h-[72px] w-auto object-cover object-center md:h-20 xl:w-[103px] xl:h-auto"
             alt="my invoice logo"
@@ -117,40 +129,46 @@ const NavBar = () => {
             </svg>
           )}
 
-          <div className="w-[1px] h-[72px] bg-[#494E6E] mx-6 md:mx-8 md:h-20 xl:h-[1px] xl:w-[103px] xl:mx-0 xl:my-6" />
+          <div
+            className={`${
+              pathname === "/login" ? "hidden" : ""
+            } w-[1px] h-[72px] bg-[#494E6E] mx-6 md:mx-8 md:h-20 xl:h-[1px] xl:w-[103px] xl:mx-0 xl:my-6`}
+          />
           <Image
             src={userData ? userData.photoUrl : avatar}
             width={32}
             height={32}
-            alt="toggle dark mode"
-            className="w-8 h-auto object-cover object-center rounded-full xl:w-10"
+            alt="profile photo"
+            className={`${
+              pathname === "/login" ? "hidden" : ""
+            } w-8 h-auto object-cover object-center rounded-full xl:w-10`}
             priority={false}
-            onClick={() => setProfileIsOpen(!profileIsOpen)}
+            onClick={() => setIsProfileOpen(!isProfileOpen)}
           />
-          {profileIsOpen && (
+          {isProfileOpen && (
             <>
               <div
                 className="fixed w-full h-full top-[72px] bottom-0 left-0 right-0 md:top-[80px] xl:top-0 xl:left-[103px]"
-                onClick={() => setProfileIsOpen(!profileIsOpen)}
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
               />
               <div className="fixed top-[80px] right-6 bg-white dark:bg-darkGrey rounded-[8px] px-6 py-3 cursor-pointer box-shadow-invoiceCard slideup md:top-[88px] md:right-[48px] xl:bottom-6 xl:left-[111px] xl:top-auto xl:right-auto">
-                {isDemo ? (
+                {isDemo && (
                   <Link
                     href={`https://api.invoice-app.naughty-cat.com/authentication/github`}
                     className="bodyText font-bold hover:text-purple"
-                    onClick={() => setProfileIsOpen(!profileIsOpen)}
+                    onClick={() => {
+                      setIsProfileOpen(!isProfileOpen);
+                    }}
                   >
                     Sign in with Github
                   </Link>
-                ) : (
+                )}
+                {isLoggedin === true && (
                   <button
                     className="bodyText font-bold hover:text-purple"
                     onClick={() => {
-                      setProfileIsOpen(!profileIsOpen);
-                      fetch(
-                        `https://api.invoice-app.naughty-cat.com/authentication/logout`,
-                        { method: "POST" }
-                      );
+                      setIsProfileOpen(!isProfileOpen);
+                      handleSignout;
                     }}
                   >
                     Sign Out
