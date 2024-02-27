@@ -22,10 +22,8 @@ export const terms = [
   { id: 4, name: "Net 30 Days" },
 ];
 
-export const differenceInDays = (day1, day2) => {
-  let days = Math.round((new Date(day2) - new Date(day1)) / (1000 * 3600 * 24));
-
-  switch (days) {
+export const findPaymentTerms = (term) => {
+  switch (term) {
     case 1:
       return terms[0];
     case 7:
@@ -35,6 +33,12 @@ export const differenceInDays = (day1, day2) => {
     case 30:
       return terms[3];
   }
+};
+
+export const findPaymentDueDate = (date, days) => {
+  let myNewDate = new Date(date);
+  let result = myNewDate.setDate(myNewDate.getDate() + days);
+  return result;
 };
 
 export const Schema = yup.object().shape({

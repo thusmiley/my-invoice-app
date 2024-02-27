@@ -96,7 +96,7 @@ const NavBar = () => {
           </svg>
         </Link>
 
-        <div className="flex justify-end items-center mr-6 md:mr-[48px] xl:flex-col xl:justify-center xl:mr-0 xl:absolute xl:bottom-6">
+        <div className="flex justify-end items-center mr-6 md:mr-[48px] xl:flex-col xl:justify-center xl:mr-0 xl:absolute xl:bottom-6 xl:mx-auto xl:left-0 xl:right-0">
           {darkMode ? (
             <svg
               width="20"

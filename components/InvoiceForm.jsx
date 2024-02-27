@@ -8,7 +8,7 @@ import {
   formatCurrency,
   terms,
   data,
-  differenceInDays,
+  findPaymentTerms,
   Schema,
   DraftSchema,
 } from "@/utils";
@@ -386,7 +386,7 @@ const InvoiceForm = ({
             <div className="form-control md:w-1/2">
               <span className="bodyText mb-[10px]">Invoice Date</span>
               <Datepicker
-                date={invoice ? invoice.createdAt : new Date()}
+                date={invoice ? invoice.date : new Date()}
                 isAddInvoice={isAddInvoice}
                 isEditInvoice={isEditInvoice}
               />
@@ -395,9 +395,7 @@ const InvoiceForm = ({
               <span className="bodyText mb-[10px]">Payment Terms</span>
               <PaymentTerms
                 selectedTerm={
-                  invoice
-                    ? differenceInDays(invoice.date, invoice.paymentTerms)
-                    : terms[3]
+                  invoice ? findPaymentTerms(invoice.paymentTerms) : terms[3]
                 }
                 setSelectedTerm={setSelectedTerm}
               />

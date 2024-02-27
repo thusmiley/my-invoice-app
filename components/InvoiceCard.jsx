@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import StatusButton from "./StatusButton";
 import Image from "next/image";
 import arrowRightIcon from "../public/icon-arrow-right.svg";
-import { formatCurrency, formatDate } from "@/utils";
+import { formatCurrency, formatDate, findPaymentDueDate } from "@/utils";
 
 const InvoiceCard = ({ invoice }) => {
   const router = useRouter();
@@ -20,7 +20,8 @@ const InvoiceCard = ({ invoice }) => {
             {invoice.id}
           </h2>
           <p className="bodyText mt-8 md:mt-0">
-            Due {formatDate(invoice.date)}
+            Due&nbsp;
+            {formatDate(findPaymentDueDate(invoice?.date, invoice?.paymentTerms))}
           </p>
         </div>
         <h3 className="bodyText">{invoice.billToName}</h3>

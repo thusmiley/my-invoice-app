@@ -5,7 +5,7 @@ import Image from "next/image";
 import StatusButton from "@/components/StatusButton";
 import { useState, useEffect } from "react";
 import SummaryComponent from "@/components/SummaryComponent";
-import { formatDate } from "@/utils";
+import { formatDate, findPaymentDueDate } from "@/utils";
 import { useInvoiceContext } from "@/context/InvoiceContext";
 import { Transition } from "@headlessui/react";
 import InvoiceForm from "@/components/InvoiceForm";
@@ -102,13 +102,8 @@ const Invoice = ({ params }) => {
                   <div className="">
                     <p>Payment Due</p>
                     <h3 className="mt-3 headingText">
-                      {new Date(invoice?.amountDue).toLocaleDateString(
-                        "en-us",
-                        {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        }
+                      {formatDate(
+                        findPaymentDueDate(invoice?.date, invoice?.paymentTerms)
                       )}
                     </h3>
                   </div>
