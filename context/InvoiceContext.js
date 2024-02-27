@@ -15,13 +15,14 @@ export function InvoiceProvider({ children }) {
   const [isAddInvoice, setIsAddInvoice] = useState(false);
   const [isEditInvoice, setIsEditInvoice] = useState(false);
   const [isDemo, setIsDemo] = useState(
-    localStorage.getItem("localIsDemo")
-      ? localStorage.getItem("localIsDemo")
+    typeof window !== undefined && window.localStorage.getItem("localIsDemo")
+      ? window.localStorage.getItem("localIsDemo")
       : false
   );
   const [isLoggedin, setIsLoggedin] = useState(
-    localStorage.getItem("localIsLoggedin")
-      ? localStorage.getItem("localIsLoggedin")
+    typeof window !== undefined &&
+      window.localStorage.getItem("localIsLoggedin")
+      ? window.localStorage.getItem("localIsLoggedin")
       : false
   );
 
