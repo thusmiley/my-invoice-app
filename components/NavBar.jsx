@@ -17,7 +17,6 @@ const NavBar = () => {
     setIsDemo,
     isLoggedin,
     setIsLoggedin,
-    handleSignout,
   } = useInvoiceContext();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const pathname = usePathname();
@@ -162,16 +161,19 @@ const NavBar = () => {
                     Sign in with Github
                   </Link>
                 )}
-                {isLoggedin  && (
-                  <button
-                    className="bodyText font-bold hover:text-purple"
-                    onClick={() => {
-                      setIsProfileOpen(!isProfileOpen);
-                      handleSignout;
-                    }}
+                {isLoggedin && (
+                  <form
+                    action="https://api.invoice-app.naughty-cat.com/authentication/logout"
+                    method="POST"
                   >
-                    Sign Out
-                  </button>
+                    <button
+                      type="submit"
+                      className="bodyText font-bold hover:text-purple"
+                      onClick={() => setIsProfileOpen(!isProfileOpen)}
+                    >
+                      Sign Out
+                    </button>
+                  </form>
                 )}
               </div>
             </div>

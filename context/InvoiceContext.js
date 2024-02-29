@@ -30,7 +30,7 @@ export function InvoiceProvider({ children }) {
 
   useEffect(() => {
     localStorage.setItem("localIsDemo", isDemo);
-    if (isDemo) {
+    if (isDemo === true) {
       const localStoredInvoices = localStorage.getItem("localInvoices");
       if (localStoredInvoices) {
         setFilteredData(JSON.parse(localStoredInvoices));
@@ -66,27 +66,6 @@ export function InvoiceProvider({ children }) {
     }
   }, [filteredData, isDemo]);
 
-  const handleLogin = () => {
-    fetch(`https://api.invoice-app.naughty-cat.com/authentication/github/`)
-      .then((response) => response.json())
-      .then((response) => {
-        setIsLoggedin(true);
-        setIsDemo(false);
-      })
-      .catch((err) => console.error(err));
-  };
-
-  const handleSignout = () => {
-    fetch(`https://api.invoice-app.naughty-cat.com/authentication/logout/`, {
-      method: "POST",
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        setIsLoggedin(false);
-      })
-      .catch((err) => console.error(err));
-  };
-
   const handleFilterClick = (e) => {
     setFilterStatus(e.target.value);
   };
@@ -107,8 +86,6 @@ export function InvoiceProvider({ children }) {
         setIsDemo,
         isLoggedin,
         setIsLoggedin,
-        handleSignout,
-        handleLogin,
         userData,
         setUserData,
       }}

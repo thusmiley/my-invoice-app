@@ -7,7 +7,7 @@ import {
   formatDate,
   formatCurrency,
   terms,
-  data,
+  data,getValues,
   findPaymentTerms,
   Schema,
   DraftSchema,
@@ -37,9 +37,7 @@ const InvoiceForm = ({
       return invoice?.invoiceItems;
     }
     if (isAddInvoice) {
-      return [
-        { id: uuidv4(), name: "", quantity: "", price: "", total: "0.00" },
-      ];
+      return [{ id: uuidv4(), name: "", quantity: "", price: "", total: "" }];
     }
   });
 
@@ -450,7 +448,7 @@ const InvoiceForm = ({
             setItemArray={setItemArray}
             isAddInvoice={isAddInvoice}
             isEditInvoice={isEditInvoice}
-            {...{ control, register, errors }}
+            {...{ control, register, errors, getValues }}
           />
         </div>
 

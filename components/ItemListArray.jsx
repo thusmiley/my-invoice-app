@@ -1,8 +1,8 @@
 "use client";
+import { formatCurrency } from "@/utils";
 import ItemComponent from "./ItemComponent";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { formatCurrency } from "@/utils";
 
 const ItemListArray = ({
   itemArray,
@@ -12,32 +12,21 @@ const ItemListArray = ({
   control,
   register,
   errors,
+  getValues,
 }) => {
-  const [itemName, setItemName] = useState();
-  const [itemQty, setItemQty] = useState();
-  const [itemPrice, setItemPrice] = useState();
-  const [itemTotal, setItemTotal] = useState();
 
   return (
     <>
       <ul>
-        {itemArray.map((item) => {
+        {itemArray?.map((item) => {
           return (
             <div key={item.id} className="relative">
               <ItemComponent
-                itemName={isEditInvoice ? item.name : ""}
-                setItemName={setItemName}
-                itemQty={isEditInvoice ? item.quantity : ""}
-                setItemQty={setItemQty}
-                itemPrice={isEditInvoice ? item.price : ""}
-                setItemPrice={setItemPrice}
-                itemTotal={item.total}
-                setItemTotal={setItemTotal}
                 item={item}
                 id={item.id}
                 isAddInvoice={isAddInvoice}
                 isEditInvoice={isEditInvoice}
-                {...{ control, register, errors }}
+                {...{ control, register, errors, getValues }}
               />
               {itemArray.length > 1 ? (
                 <button
@@ -83,7 +72,7 @@ const ItemListArray = ({
               name: "",
               quantity: "",
               price: "",
-              total: "0.00",
+              total: "",
             },
           ])
         }

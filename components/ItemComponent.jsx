@@ -3,14 +3,6 @@ import { formatCurrency } from "@/utils";
 import { useState, useEffect } from "react";
 
 const ItemComponent = ({
-  itemName,
-  setItemName,
-  itemQty,
-  setItemQty,
-  itemPrice,
-  setItemPrice,
-  itemTotal,
-  setItemTotal,
   item,
   id,
   isAddInvoice,
@@ -18,7 +10,19 @@ const ItemComponent = ({
   control,
   register,
   errors,
+  getValues,
 }) => {
+  const [itemName, setItemName] = useState(item.name ? item.name : "");
+  const [itemQty, setItemQty] = useState(item.quantity ? item.quantity : "");
+  const [itemPrice, setItemPrice] = useState(item.price ? item.price : "");
+  const [itemTotal, setItemTotal] = useState(
+    item.total ? formatCurrency(item.total) : "0.00"
+  );
+
+  useEffect(() => {
+    setItemTotal(formatCurrency(itemQty * itemPrice));
+  }, [itemQty, itemPrice]);
+
   return (
     <li className="space-y-6 pb-[48px] md:flex md:space-y-0 md:space-x-4">
       <div className="form-control md:w-[40%]">
@@ -57,7 +61,7 @@ const ItemComponent = ({
             Qty.
           </label>
           <input
-            type="text"
+            type="number"
             name="qty"
             id={`qty${id}`}
             placeholder="0"
@@ -66,7 +70,10 @@ const ItemComponent = ({
               required: "Required",
             })}
             className={`${errors.qtyid ? "border-red" : ""} form-input`}
-            onChange={(e) => setItemQty(e.target.value)}
+            onChange={(e) => {
+              setItemQty(e.target.value);
+             
+            }}
           />
           {errors.qtyid && <p className="errorMsg">{errors.qtyid.message}</p>}
         </div>
@@ -96,9 +103,7 @@ const ItemComponent = ({
         <div className="form-control w-[35%]">
           <span className="bodyText mb-[10px]">Total</span>
 
-          <p className="py-4 bodyText font-bold text-lightGrey">
-            {itemTotal !== '0.00' ? itemTotal : formatCurrency(itemQty * itemPrice)}
-          </p>
+          <p className="py-4 bodyText font-bold text-lightGrey">{itemTotal}</p>
         </div>
       </div>
     </li>
