@@ -1,47 +1,56 @@
 "use client";
 import ItemComponent from "./ItemComponent";
 import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { formatCurrency } from "@/utils";
 
 const ItemListArray = ({
-  array,
+  itemArray,
+  setItemArray,
   isAddInvoice,
   isEditInvoice,
   control,
   register,
   errors,
 }) => {
-  const [list, setList] = useState(() => {
-    if (isAddInvoice) {
-      return [{ name: "", quantity: "", price: "", total: "0.00" }];
-    }
-    if (isEditInvoice) {
-      return array;
-    }
-  });
-
-  useEffect(() => {
-    console.log(list);
-  }, [list]);
+  const [itemName, setItemName] = useState("");
+  const [itemQty, setItemQty] = useState("");
+  const [itemPrice, setItemPrice] = useState("");
+  const [itemTotal, setItemTotal] = useState("0.00");
 
   return (
     <>
       <ul>
-        {list?.map((item) => {
+        {itemArray.map((item) => {
           return (
             <div key={item.id} className="relative">
               <ItemComponent
+                itemName={itemName}
+                setItemName={isEditInvoice ? item.name : itemName}
+                itemQty={itemQty}
+                setItemQty={isEditInvoice ? item.quantity : itemQty}
+                itemPrice={itemPrice}
+                setItemPrice={isEditInvoice ? item.price : itemPrice}
+                itemTotal={itemTotal}
+                setItemTotal={
+                  isEditInvoice
+                    ? item.total
+                    : formatCurrency(itemQty * itemPrice)
+                }
                 item={item}
-                index={item.id}
+                id={item.id}
                 isAddInvoice={isAddInvoice}
                 isEditInvoice={isEditInvoice}
                 {...{ control, register, errors }}
               />
-              {list.length > 1 ? (
+              {itemArray.length > 1 ? (
                 <button
                   type="button"
                   onClick={() => {
-                    if (list.length > 1) {
-                      setList(list.filter((card) => card.id !== item.id));
+                    if (itemArray.length > 1) {
+                      setItemArray(
+                        itemArray.filter((card) => card.id !== item.id)
+                      );
                     }
                   }}
                   className="cursor-pointer absolute right-5 bottom-[70px] animation-effect"
@@ -71,9 +80,16 @@ const ItemListArray = ({
         type="button"
         className="bg-[#F9FAFE] dark:bg-darkGrey rounded-[24px] py-4 w-full bodyText text-blueGrey hover:text-blueGrey dark:text-lightGrey font-bold hover:bg-lightestGrey dark:hover:text-white animation-effect dark:hover:bg-grey"
         onClick={() =>
-          setList(
-            list.push({ name: "", quantity: "", price: "", total: "0.00" })
-          )
+          setItemArray([
+            ...itemArray,
+            {
+              id: uuidv4(),
+              name: "",
+              quantity: "",
+              price: "",
+              total: "0.00",
+            },
+          ])
         }
       >
         + Add New Item

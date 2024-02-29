@@ -25,7 +25,7 @@ const PaymentTerms = ({ selectedTerm, setSelectedTerm }) => {
           <Listbox.Option key={term.id} value={term} as={Fragment}>
             {({ active, selected }) => (
               <li
-                value={term.name}
+                // value={term.name}
                 className={`${active ? "text-purple dark:text-purple" : ""} ${
                   selected ? "text-purple dark:text-purple" : ""
                 }  bodyText font-bold cursor-pointer py-4 px-6`}

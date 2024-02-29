@@ -14,6 +14,7 @@ import {
 } from "@/utils";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { v4 as uuidv4 } from "uuid";
 
 import Datepicker from "./DatePicker";
 import PaymentTerms from "./PaymentTerms";
@@ -27,7 +28,21 @@ const InvoiceForm = ({
   setIsEditInvoice,
   getValues,
 }) => {
-  const [selectedTerm, setSelectedTerm] = useState();
+  const [selectedTerm, setSelectedTerm] = useState(
+    invoice ? findPaymentTerms(invoice.paymentTerms) : terms[3]
+  );
+
+  const [itemArray, setItemArray] = useState(() => {
+    if (isEditInvoice) {
+      return invoice?.invoiceItems;
+    }
+    if (isAddInvoice) {
+      return [
+        { id: uuidv4(), name: "", quantity: "", price: "", total: "0.00" },
+      ];
+    }
+  });
+
   const {
     register,
     handleSubmit,
@@ -108,7 +123,7 @@ const InvoiceForm = ({
               name="senderStreet"
               id="senderStreet"
               placeholder="1600 Amphitheatre Parkway, Mountain View"
-              value={invoice ? invoice.billFromStreetAddress : ""}
+              defaultValue={invoice ? invoice.billFromStreetAddress : ""}
               {...register("senderStreet", {})}
               className={`${
                 errors.senderStreet ? "border-red" : ""
@@ -136,7 +151,7 @@ const InvoiceForm = ({
                   name="senderCity"
                   id="senderCity"
                   placeholder="CA"
-                  value={invoice ? invoice.billFromCity : ""}
+                  defaultValue={invoice ? invoice.billFromCity : ""}
                   {...register("senderCity", {
                     pattern: {
                       value:
@@ -166,7 +181,7 @@ const InvoiceForm = ({
                   name="senderZipCode"
                   id="senderZipCode"
                   placeholder="94043"
-                  value={invoice ? invoice.billFromPostalCode : ""}
+                  defaultValue={invoice ? invoice.billFromPostalCode : ""}
                   {...register("senderZipCode", {
                     pattern: {
                       value: /^\s*?\d{5}(?:[-\s]\d{4})?\s*?$/,
@@ -196,7 +211,7 @@ const InvoiceForm = ({
                 name="senderCountry"
                 id="senderCountry"
                 placeholder="US"
-                value={invoice ? invoice.billFromCountry : ""}
+                defaultValue={invoice ? invoice.billFromCountry : ""}
                 {...register("senderCountry", {
                   pattern: {
                     value: /[a-zA-Z]{2,}/,
@@ -230,7 +245,7 @@ const InvoiceForm = ({
               id="name"
               autoComplete="on"
               placeholder="Naughty Cat"
-              value={invoice ? invoice.billToName : ""}
+              defaultValue={invoice ? invoice.billToName : ""}
               {...register("name", {})}
               className={`${errors.name ? "border-red" : ""} form-input`}
             />
@@ -249,7 +264,7 @@ const InvoiceForm = ({
               id="email"
               autoComplete="on"
               placeholder="support@naughty-cat.com"
-              value={invoice ? invoice.billToEmail : ""}
+              defaultValue={invoice ? invoice.billToEmail : ""}
               {...register("email", {
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
@@ -274,7 +289,7 @@ const InvoiceForm = ({
               name="clientStreet"
               id="clientStreet"
               placeholder="2406 Columbus Ln, Madison"
-              value={invoice ? invoice.billToStreetAddress : ""}
+              defaultValue={invoice ? invoice.billToStreetAddress : ""}
               {...register("clientStreet", {})}
               className={`${
                 errors.clientStreet ? "border-red" : ""
@@ -302,7 +317,7 @@ const InvoiceForm = ({
                   name="clientCity"
                   id="clientCity"
                   placeholder="WI"
-                  value={invoice ? invoice.billToCity : ""}
+                  defaultValue={invoice ? invoice.billToCity : ""}
                   {...register("clientCity", {
                     pattern: {
                       value:
@@ -332,7 +347,7 @@ const InvoiceForm = ({
                   name="clientZipCode"
                   id="clientZipCode"
                   placeholder="53704"
-                  value={invoice ? invoice.billToPostalCode : ""}
+                  defaultValue={invoice ? invoice.billToPostalCode : ""}
                   {...register("clientZipCode", {
                     pattern: {
                       value: /^\s*?\d{5}(?:[-\s]\d{4})?\s*?$/,
@@ -362,7 +377,7 @@ const InvoiceForm = ({
                 name="clientCountry"
                 id="clientCountry"
                 placeholder="US"
-                value={invoice ? invoice.billToCountry : ""}
+                defaultValue={invoice ? invoice.billToCountry : ""}
                 {...register("clientCountry", {
                   pattern: {
                     value: /[a-zA-Z]{2,}/,
@@ -394,9 +409,7 @@ const InvoiceForm = ({
             <div className="form-control basis-1/2 relative md:w-1/2">
               <span className="bodyText mb-[10px]">Payment Terms</span>
               <PaymentTerms
-                selectedTerm={
-                  invoice ? findPaymentTerms(invoice.paymentTerms) : terms[3]
-                }
+                selectedTerm={selectedTerm}
                 setSelectedTerm={setSelectedTerm}
               />
             </div>
@@ -415,7 +428,7 @@ const InvoiceForm = ({
               name="projectDescription"
               id="projectDescription"
               placeholder="Graphic Design Service"
-              value={invoice ? invoice.projectDescription : ""}
+              defaultValue={invoice ? invoice.projectDescription : ""}
               {...register("projectDescription", {})}
               className={`${
                 errors.projectDescription ? "border-red" : ""
@@ -433,7 +446,8 @@ const InvoiceForm = ({
             Item List
           </h2>
           <ItemListArray
-            array={invoice?.items}
+            itemArray={itemArray}
+            setItemArray={setItemArray}
             isAddInvoice={isAddInvoice}
             isEditInvoice={isEditInvoice}
             {...{ control, register, errors }}

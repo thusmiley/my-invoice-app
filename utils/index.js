@@ -44,19 +44,13 @@ export const findPaymentDueDate = (date, days) => {
 export const Schema = yup.object().shape({
   senderStreet: yup.string().required("can't be empty"),
   senderCity: yup.string().required("can't be empty"),
-  senderZipCode: yup
-    .number()
-    .typeError("can't be empty")
-    .required("can't be empty"),
+  senderZipCode: yup.string().required("can't be empty"),
   senderCountry: yup.string().required("can't be empty"),
   name: yup.string().required("can't be empty"),
   email: yup.string().email("invalid").required("can't be empty"),
   clientStreet: yup.string().required("can't be empty"),
   clientCity: yup.string().required("can't be empty"),
-  clientZipCode: yup
-    .number()
-    .typeError("can't be empty")
-    .required("can't be empty"),
+  clientZipCode: yup.string().required("can't be empty"),
   clientCountry: yup.string().required("can't be empty"),
   projectDescription: yup.string().required("can't be empty"),
 });

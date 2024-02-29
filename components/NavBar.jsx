@@ -46,7 +46,6 @@ const NavBar = () => {
     setDarkMode(!darkMode);
   };
 
-
   return (
     <header className="fixed top-0 w-full z-10 xl:h-screen xl:w-[103px]">
       <nav className="bg-[#373B53] dark:bg-darkGrey flex justify-between items-center xl:flex-col xl:justify-start xl:fixed xl:top-0 xl:rounded-r-[30px] xl:items-stretch xl:h-full">
@@ -141,18 +140,18 @@ const NavBar = () => {
             alt="profile photo"
             className={`${
               pathname === "/login" ? "hidden" : ""
-            } w-8 h-auto object-cover object-center rounded-full xl:w-10`}
+            } w-8 h-auto object-cover object-center rounded-full xl:w-10 cursor-pointer`}
             priority={false}
             onClick={() => setIsProfileOpen(!isProfileOpen)}
           />
           {isProfileOpen && (
-            <>
+            <div className="">
               <div
                 className="fixed w-full h-full top-[72px] bottom-0 left-0 right-0 md:top-[80px] xl:top-0 xl:left-[103px]"
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
               />
               <div className="fixed top-[80px] right-6 bg-white dark:bg-darkGrey rounded-[8px] px-6 py-3 cursor-pointer box-shadow-invoiceCard slideup md:top-[88px] md:right-[48px] xl:bottom-6 xl:left-[111px] xl:top-auto xl:right-auto">
-                {isDemo && (
+                {isDemo === true && (
                   <Link
                     href={`https://api.invoice-app.naughty-cat.com/authentication/github`}
                     className="bodyText font-bold hover:text-purple"
@@ -163,7 +162,7 @@ const NavBar = () => {
                     Sign in with Github
                   </Link>
                 )}
-                {isLoggedin === true && (
+                {isLoggedin  && (
                   <button
                     className="bodyText font-bold hover:text-purple"
                     onClick={() => {
@@ -175,7 +174,7 @@ const NavBar = () => {
                   </button>
                 )}
               </div>
-            </>
+            </div>
           )}
         </div>
       </nav>

@@ -17,7 +17,7 @@
     "billToCountry": "United Kingdom",
     "invoiceItems": [
       {
-        "id": 0,
+        "id": "0",
         "name": "Brand Guidelines",
         "quantity": 1,
         "price": 1800.9,
@@ -44,14 +44,14 @@
     "billToCountry": "United Kingdom",
     "invoiceItems": [
       {
-        "id": 1,
+        "id": "1",
         "name": "Banner Design",
         "quantity": 1,
         "price": 156.0,
         "total": 156.0
       },
       {
-        "id": 2,
+        "id": "2",
         "name": "Email Design",
         "quantity": 2,
         "price": 200.0,
@@ -78,7 +78,7 @@
     "billToCountry": "United Kingdom",
     "invoiceItems": [
       {
-        "id": 3,
+        "id": "3",
         "name": "Website Redesign",
         "quantity": 1,
         "price": 14002.33,
@@ -105,7 +105,7 @@
     "billToCountry": "United Kingdom",
     "invoiceItems": [
       {
-        "id": 4,
+        "id": "4",
         "name": "Logo Sketches",
         "quantity": 1,
         "price": 102.04,
@@ -133,14 +133,14 @@
     "billToCountry": "United Kingdom",
     "invoiceItems": [
       {
-        "id": 5,
+        "id": "5",
         "name": "New Logo",
         "quantity": 1,
         "price": 1532.33,
         "total": 1532.33
       },
       {
-        "id": 6,
+        "id": "6",
         "name": "Brand Guidelines",
         "quantity": 1,
         "price": 2500.0,
@@ -167,7 +167,7 @@
     "billToCountry": "United States of America",
     "invoiceItems": [
       {
-        "id": 7,
+        "id": "7",
         "name": "Web Design",
         "quantity": 1,
         "price": 6155.91,
@@ -194,7 +194,7 @@
     "billToCountry": "",
     "invoiceItems": [
       {
-        "id": 8,
+        "id": "8",
         "name": "Logo Re-design",
         "quantity": 1,
         "price": 3102.04,

@@ -3,57 +3,63 @@ import { formatCurrency } from "@/utils";
 import { useState, useEffect } from "react";
 
 const ItemComponent = ({
+  itemName,
+  setItemName,
+  itemQty,
+  setItemQty,
+  itemPrice,
+  setItemPrice,
+  itemTotal,
+  setItemTotal,
   item,
-  index,
+  id,
   isAddInvoice,
   isEditInvoice,
   control,
   register,
   errors,
 }) => {
-  const [itemName, setItemName] = useState(() => {
-    if (isAddInvoice) {
-      return "";
-    }
-    if (isEditInvoice) {
-      return item.name;
-    }
-  });
-  const [itemQty, setItemQty] = useState(() => {
-    if (isAddInvoice) {
-      return "";
-    }
-    if (isEditInvoice) {
-      return item.quantity;
-    }
-  });
-  const [itemPrice, setItemPrice] = useState(() => {
-    if (isAddInvoice) {
-      return "";
-    }
-    if (isEditInvoice) {
-      return item.price;
-    }
-  });
-  const [itemTotal, setItemTotal] = useState(() => {
-    if (isAddInvoice && itemQty && itemPrice) {
-      return formatCurrency(itemQty * itemPrice);
-    }
-    if (isEditInvoice) {
-      return formatCurrency(item.total);
-    }
-  });
+  //   const [itemName, setItemName] = useState(() => {
+  //     if (isAddInvoice) {
+  //       return "";
+  //     }
+  //     if (isEditInvoice) {
+  //       return item.name;
+  //     }
+  //   });
+  //   const [itemQty, setItemQty] = useState(() => {
+  //     if (isAddInvoice) {
+  //       return "";
+  //     }
+  //     if (isEditInvoice) {
+  //       return item.quantity;
+  //     }
+  //   });
+  //   const [itemPrice, setItemPrice] = useState(() => {
+  //     if (isAddInvoice) {
+  //       return "";
+  //     }
+  //     if (isEditInvoice) {
+  //       return item.price;
+  //     }
+  //   });
+  //   const [itemTotal, setItemTotal] = useState(() => {
+  //     if (isAddInvoice && itemQty && itemPrice) {
+  //       return formatCurrency(itemQty * itemPrice);
+  //     } else {
+  //       return item.total;
+  //     }
 
-  console.log(itemName);
-  console.log(itemQty);
-  console.log(itemPrice);
-  console.log(itemTotal);
+  //     if (isEditInvoice) {
+  //       return formatCurrency(item.total);
+  //     }
+  //   });
 
   return (
     <li className="space-y-6 pb-[48px] md:flex md:space-y-0 md:space-x-4">
       <div className="form-control md:w-[40%]">
         <label
-          htmlFor={`itemName${index}`}
+          htmlFor={`itemName${id}`}
           className={`${errors.itemName ? "text-red" : ""} bodyText mb-[10px]`}
         >
           Item Name
@@ -61,8 +67,8 @@ const ItemComponent = ({
         <input
           type="text"
           name="itemName"
-          id={`itemName${index}`}
-          value={itemName}
+          id={`itemName${id}`}
+          defaultValue={itemName}
           placeholder="New Item"
           {...register("itemName", {
             required: "can't be empty",
@@ -79,7 +85,7 @@ const ItemComponent = ({
       <div className="flex space-x-4 w-full md:w-[60%]">
         <div className="form-control w-[20%]">
           <label
-            htmlFor={`qty${index}`}
+            htmlFor={`qty${id}`}
             className={`${errors.qty ? "text-red" : ""} bodyText mb-[10px]`}
           >
             Qty.
@@ -87,9 +93,9 @@ const ItemComponent = ({
           <input
             type="text"
             name="qty"
-            id={`qty${index}`}
+            id={`qty${id}`}
             placeholder="0"
-            value={itemQty}
+            defaultValue={itemQty}
             {...register(`qty`, {
               required: "Required",
             })}
@@ -100,7 +106,7 @@ const ItemComponent = ({
         </div>
         <div className="form-control w-[35%]">
           <label
-            htmlFor={`price${index}`}
+            htmlFor={`price${id}`}
             className={`${errors.price ? "text-red" : ""} bodyText mb-[10px]`}
           >
             Price
@@ -108,9 +114,9 @@ const ItemComponent = ({
           <input
             type="number"
             name="price"
-            id={`price${index}`}
+            id={`price${id}`}
             placeholder="0"
-            value={item.price}
+            defaultValue={item.price}
             {...register(`price`, {
               required: "Required",
             })}
