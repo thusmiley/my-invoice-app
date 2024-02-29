@@ -13,10 +13,10 @@ const ItemListArray = ({
   register,
   errors,
 }) => {
-  const [itemName, setItemName] = useState("");
-  const [itemQty, setItemQty] = useState("");
-  const [itemPrice, setItemPrice] = useState("");
-  const [itemTotal, setItemTotal] = useState("0.00");
+  const [itemName, setItemName] = useState();
+  const [itemQty, setItemQty] = useState();
+  const [itemPrice, setItemPrice] = useState();
+  const [itemTotal, setItemTotal] = useState();
 
   return (
     <>
@@ -25,18 +25,14 @@ const ItemListArray = ({
           return (
             <div key={item.id} className="relative">
               <ItemComponent
-                itemName={itemName}
-                setItemName={isEditInvoice ? item.name : itemName}
-                itemQty={itemQty}
-                setItemQty={isEditInvoice ? item.quantity : itemQty}
-                itemPrice={itemPrice}
-                setItemPrice={isEditInvoice ? item.price : itemPrice}
-                itemTotal={itemTotal}
-                setItemTotal={
-                  isEditInvoice
-                    ? item.total
-                    : formatCurrency(itemQty * itemPrice)
-                }
+                itemName={isEditInvoice ? item.name : ""}
+                setItemName={setItemName}
+                itemQty={isEditInvoice ? item.quantity : ""}
+                setItemQty={setItemQty}
+                itemPrice={isEditInvoice ? item.price : ""}
+                setItemPrice={setItemPrice}
+                itemTotal={item.total}
+                setItemTotal={setItemTotal}
                 item={item}
                 id={item.id}
                 isAddInvoice={isAddInvoice}

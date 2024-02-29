@@ -19,48 +19,14 @@ const ItemComponent = ({
   register,
   errors,
 }) => {
-  //   const [itemName, setItemName] = useState(() => {
-  //     if (isAddInvoice) {
-  //       return "";
-  //     }
-  //     if (isEditInvoice) {
-  //       return item.name;
-  //     }
-  //   });
-  //   const [itemQty, setItemQty] = useState(() => {
-  //     if (isAddInvoice) {
-  //       return "";
-  //     }
-  //     if (isEditInvoice) {
-  //       return item.quantity;
-  //     }
-  //   });
-  //   const [itemPrice, setItemPrice] = useState(() => {
-  //     if (isAddInvoice) {
-  //       return "";
-  //     }
-  //     if (isEditInvoice) {
-  //       return item.price;
-  //     }
-  //   });
-  //   const [itemTotal, setItemTotal] = useState(() => {
-  //     if (isAddInvoice && itemQty && itemPrice) {
-  //       return formatCurrency(itemQty * itemPrice);
-  //     } else {
-  //       return item.total;
-  //     }
-
-  //     if (isEditInvoice) {
-  //       return formatCurrency(item.total);
-  //     }
-  //   });
-
   return (
     <li className="space-y-6 pb-[48px] md:flex md:space-y-0 md:space-x-4">
       <div className="form-control md:w-[40%]">
         <label
           htmlFor={`itemName${id}`}
-          className={`${errors.itemName ? "text-red" : ""} bodyText mb-[10px]`}
+          className={`${
+            errors.itemNameid ? "text-red" : ""
+          } bodyText mb-[10px]`}
         >
           Item Name
         </label>
@@ -70,23 +36,23 @@ const ItemComponent = ({
           id={`itemName${id}`}
           defaultValue={itemName}
           placeholder="New Item"
-          {...register("itemName", {
+          {...register(`itemName${id}`, {
             required: "can't be empty",
           })}
           className={`${
-            errors.itemName ? "border-red" : ""
+            errors.itemNameid ? "border-red" : ""
           } form-input truncate`}
           onChange={(e) => setItemName(e.target.value)}
         />
-        {errors.itemName && (
-          <p className="errorMsg">{errors.itemName.message}</p>
+        {errors.itemNameid && (
+          <p className="errorMsg">{errors.itemNameid.message}</p>
         )}
       </div>
       <div className="flex space-x-4 w-full md:w-[60%]">
         <div className="form-control w-[20%]">
           <label
             htmlFor={`qty${id}`}
-            className={`${errors.qty ? "text-red" : ""} bodyText mb-[10px]`}
+            className={`${errors.qtyid ? "text-red" : ""} bodyText mb-[10px]`}
           >
             Qty.
           </label>
@@ -96,18 +62,18 @@ const ItemComponent = ({
             id={`qty${id}`}
             placeholder="0"
             defaultValue={itemQty}
-            {...register(`qty`, {
+            {...register(`qty${id}`, {
               required: "Required",
             })}
-            className={`${errors.qty ? "border-red" : ""} form-input`}
+            className={`${errors.qtyid ? "border-red" : ""} form-input`}
             onChange={(e) => setItemQty(e.target.value)}
           />
-          {errors.qty && <p className="errorMsg">{errors.qty.message}</p>}
+          {errors.qtyid && <p className="errorMsg">{errors.qtyid.message}</p>}
         </div>
         <div className="form-control w-[35%]">
           <label
             htmlFor={`price${id}`}
-            className={`${errors.price ? "text-red" : ""} bodyText mb-[10px]`}
+            className={`${errors.priceid ? "text-red" : ""} bodyText mb-[10px]`}
           >
             Price
           </label>
@@ -116,18 +82,23 @@ const ItemComponent = ({
             name="price"
             id={`price${id}`}
             placeholder="0"
-            defaultValue={item.price}
-            {...register(`price`, {
+            defaultValue={itemPrice}
+            {...register(`price${id}`, {
               required: "Required",
             })}
-            className={`${errors.price ? "border-red" : ""} form-input`}
+            className={`${errors.priceid ? "border-red" : ""} form-input`}
             onChange={(e) => setItemPrice(e.target.value)}
           />
-          {errors.price && <p className="errorMsg">{errors.price.message}</p>}
+          {errors.priceid && (
+            <p className="errorMsg">{errors.priceid.message}</p>
+          )}
         </div>
         <div className="form-control w-[35%]">
           <span className="bodyText mb-[10px]">Total</span>
-          <p className="py-4 bodyText font-bold text-lightGrey">{itemTotal}</p>
+
+          <p className="py-4 bodyText font-bold text-lightGrey">
+            {itemTotal !== '0.00' ? itemTotal : formatCurrency(itemQty * itemPrice)}
+          </p>
         </div>
       </div>
     </li>

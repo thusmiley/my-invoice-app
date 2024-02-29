@@ -67,7 +67,7 @@ export function InvoiceProvider({ children }) {
   }, [filteredData, isDemo]);
 
   const handleLogin = () => {
-    fetch(`https://api.invoice-app.naughty-cat.com/authentication/github`)
+    fetch(`https://api.invoice-app.naughty-cat.com/authentication/github/`)
       .then((response) => response.json())
       .then((response) => {
         setIsLoggedin(true);
@@ -77,7 +77,7 @@ export function InvoiceProvider({ children }) {
   };
 
   const handleSignout = () => {
-    fetch(`https://api.invoice-app.naughty-cat.com/authentication/logout`, {
+    fetch(`https://api.invoice-app.naughty-cat.com/authentication/logout/`, {
       method: "POST",
     })
       .then((response) => response.json())
