@@ -5,8 +5,15 @@ import Link from "next/link";
 
 import { useInvoiceContext } from "@/context/InvoiceContext";
 
+import "dotenv/config";
+
 export default function Login() {
   const { setIsDemo, setIsLoggedin } = useInvoiceContext();
+
+  useEffect(() => {
+    setIsDemo(false);
+    setIsLoggedin(false);
+  }, []);
 
   return (
     <main className="flex justify-center items-center min-h-dvh mb-[90px] px-6 mx-auto md:px-[48px] md:max-w-[550px]">
@@ -31,12 +38,12 @@ export default function Login() {
             View as Demo
           </Link>
           <Link
-            href={`https://api.invoice-app.naughty-cat.com/authentication/github`}
+            href={`${process.env.BACK_END_URL}/authentication/github`}
             className="w-full bg-purple font-bold text-white animation-effect rounded-full py-3 px-6 hover:bg-lightPurple flex items-center justify-center md:w-auto"
-            // onClick={() => {
-            //   setIsLoggedin(true);
-            //   setIsDemo(false);
-            // }}
+            onClick={() => {
+              setIsLoggedin(true);
+              setIsDemo(false);
+            }}
           >
             Sign in with Github
             <svg

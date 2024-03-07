@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import avatar from "../public/image-avatar.jpg";
 import { useInvoiceContext } from "@/context/InvoiceContext";
+import "dotenv/config";
 
 const NavBar = () => {
   const [darkMode, setDarkMode] = useState(true);
@@ -152,10 +153,12 @@ const NavBar = () => {
               <div className="fixed top-[80px] right-6 bg-white dark:bg-darkGrey rounded-[8px] px-6 py-3 cursor-pointer box-shadow-invoiceCard slideup md:top-[88px] md:right-[48px] xl:bottom-6 xl:left-[111px] xl:top-auto xl:right-auto">
                 {isDemo === true && (
                   <Link
-                    href={`https://api.invoice-app.naughty-cat.com/authentication/github`}
+                    href={`${process.env.BACK_END_URL}/authentication/github`}
                     className="bodyText font-bold hover:text-purple"
                     onClick={() => {
                       setIsProfileOpen(!isProfileOpen);
+                      setIsDemo(true);
+                      setIsLoggedin(false);
                     }}
                   >
                     Sign in with Github
@@ -163,13 +166,13 @@ const NavBar = () => {
                 )}
                 {isLoggedin && (
                   <form
-                    action="https://api.invoice-app.naughty-cat.com/authentication/logout"
+                    action={`${process.env.BACK_END_URL}/authentication/logout`}
                     method="POST"
                   >
                     <button
                       type="submit"
                       className="bodyText font-bold hover:text-purple"
-                      onClick={() => setIsProfileOpen(!isProfileOpen)}
+                      //   onClick={() => setIsProfileOpen(!isProfileOpen)}
                     >
                       Sign Out
                     </button>

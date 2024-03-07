@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import exampleData from "../utils/data.json";
+import "dotenv/config";
 
 const InvoiceContext = createContext({
   invoices: [],
@@ -47,24 +48,26 @@ export function InvoiceProvider({ children }) {
         }
       }
 
-      //   localStorage.setItem("localIsLoggedin", isLoggedin);
-      // if (isLoggedin === true) {
-      //   fetch(`https://api.invoice-app.naughty-cat.com/user`)
-      //     .then((response) => response.json())
-      //     .then((response) => {
-      //       setUserData(response);
-      //       console.log(response);
-      //     })
-      //     .catch((error) => {
-      //       console.log(error);
-      //     });
-      //   fetch(`https://api.invoice-app.naughty-cat.com/invoices/all`)
-      //     .then((response) => response.json())
-      //     .then((response) => {
-      //       setInvoices(response);
-      //     })
-      //     .catch((err) => console.log(err));setInvoices([]);
-      // }
+      localStorage.setItem("localIsLoggedin", isLoggedin);
+      if (isLoggedin === true) {
+        fetch(`${process.env.BACK_END_URL}/user`)
+          .then((response) => response.json())
+          .then((response) => {
+            setUserData(response);
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        fetch(`${process.env.BACK_END_URL}/invoices/all`)
+          .then((response) => response.json())
+          .then((response) => {
+            setInvoices(response);
+            console.lgo(response);
+          })
+          .catch((err) => console.log(err));
+        setInvoices([]);
+      }
     };
     fetchInvoices();
   }, [isDemo, isLoggedin]);
