@@ -33,10 +33,10 @@ export default function Login() {
           <Link
             href={`https://api.invoice-app.naughty-cat.com/authentication/github`}
             className="w-full bg-purple font-bold text-white animation-effect rounded-full py-3 px-6 hover:bg-lightPurple flex items-center justify-center md:w-auto"
-            onClick={() => {
-              setIsLoggedin(true);
-              setIsDemo(false);
-            }}
+            // onClick={() => {
+            //   setIsLoggedin(true);
+            //   setIsDemo(false);
+            // }}
           >
             Sign in with Github
             <svg

@@ -7,18 +7,23 @@ import {
   formatDate,
   formatCurrency,
   terms,
-  data,getValues,
   findPaymentTerms,
+  findPaymentDueDate,
   Schema,
   DraftSchema,
+  emptyInvoice,
 } from "@/utils";
+import {
+  createInvoiceNum,
+  uniqueInvoiceNum,
+} from "@/utils/createUniqueInvoiceNum";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { v4 as uuidv4 } from "uuid";
 
 import Datepicker from "./DatePicker";
 import PaymentTerms from "./PaymentTerms";
 import ItemListArray from "./ItemListArray";
+import { useInvoiceContext } from "@/context/InvoiceContext";
 
 const InvoiceForm = ({
   invoice,
@@ -26,20 +31,32 @@ const InvoiceForm = ({
   setIsAddInvoice,
   isEditInvoice,
   setIsEditInvoice,
-  getValues,
 }) => {
-  const [selectedTerm, setSelectedTerm] = useState(
-    invoice ? findPaymentTerms(invoice.paymentTerms) : terms[3]
+  const { invoices, editInvoice, addInvoice } = useInvoiceContext();
+  const [data, setData] = useState(invoice || emptyInvoice);
+
+  const [items, setItems] = useState(
+    invoice?.invoiceItems || [{ name: "", quantity: "", price: "", total: "" }]
   );
 
-  const [itemArray, setItemArray] = useState(() => {
-    if (isEditInvoice) {
-      return invoice?.invoiceItems;
-    }
-    if (isAddInvoice) {
-      return [{ id: uuidv4(), name: "", quantity: "", price: "", total: "" }];
-    }
-  });
+  useEffect(() => {
+    setData((prev) => ({
+      ...prev,
+      items,
+      amountDue: items
+        .map((item) => +item.total)
+        .reduce((acc, val) => (acc += val)),
+    }));
+  }, [items]);
+
+  useEffect(() => {
+    setData((prev) => ({
+      ...prev,
+      paymentDue: formatDate(
+        findPaymentDueDate(data?.date, data?.paymentTerms)
+      ),
+    }));
+  }, [data.paymentTerms]);
 
   const {
     register,
@@ -54,24 +71,76 @@ const InvoiceForm = ({
     resolver: yupResolver(Schema),
   });
 
-  const onSubmit = handleSubmit((_data) => {
-    console.log("Schema valid!");
-    setIsAddInvoice(false);
+  const onSubmit = handleSubmit((values) => {
+    console.log(values);
+    console.log("Default schema is valid!");
+    if (!data.invoiceNum) {
+      let invoiceNum = createInvoiceNum();
+      const invoiceNums = invoices.map((item) => item.invoiceNum);
+
+      while (!uniqueInvoiceNum(invoiceNum, invoiceNums)) {
+        invoiceNum = createInvoiceNum();
+      }
+
+      setData((prev) => ({ ...prev, invoiceNum, status: "pending" }));
+      addInvoice({ ...data, status: "pending", invoiceNum });
+      return quitAndReset();
+    }
+
+    if (isEditInvoice) {
+      editInvoice(data.invoiceNum, { ...data, status: "pending" });
+      setData({ ...data, status: "pending" });
+      return quitAndReset();
+    } else {
+      addInvoice({ ...data, status: "pending" });
+      setData({ ...data, status: "pending" });
+      return quitAndReset();
+    }
   });
 
   const saveDraft = async () => {
-    const data = getValues();
-
     try {
       await DraftSchema.validate(data, { abortEarly: false });
       console.log("Draft schema valid!");
-      setIsAddInvoice(false);
+      console.log(data);
+
+      if (!data.invoiceNum) {
+        let invoiceNum = createInvoiceNum();
+        const invoiceNums = invoices.map((item) => item.invoiceNum);
+        while (!uniqueInvoiceNum(invoiceNum, invoiceNums)) {
+          invoiceNum = createInvoiceNum();
+        }
+
+        addInvoice({ ...data, invoiceNum });
+      } else {
+        addInvoice(data);
+      }
+
+      return quitAndReset();
     } catch (error) {
-      error.inner?.map((inner, index) => {
-        const { type, path, errors } = inner;
-        return setError(path, { type, message: errors[index] });
-      });
+      console.log(error);
     }
+  };
+
+  const quitAndReset = () => {
+    setIsAddInvoice(false);
+    setIsEditInvoice(false);
+    setData(emptyInvoice);
+    setItems([{ name: "", quantity: "", price: "", total: "" }]);
+    return;
+  };
+
+  const handleCancel = () => {
+    if (invoice) {
+      setData(invoice);
+    }
+    if (isAddInvoice) {
+      setIsAddInvoice(false);
+    }
+    if (isEditInvoice) {
+      setIsEditInvoice(false);
+    }
+    return;
   };
 
   return (
@@ -101,7 +170,7 @@ const InvoiceForm = ({
         {isEditInvoice && (
           <h1 className="priceText text-[28px]">
             Edit <span className="text-[#777F98]">#</span>
-            {invoice?.id}
+            {invoice?.invoiceNum}
           </h1>
         )}
         {/* bill from  */}
@@ -121,11 +190,17 @@ const InvoiceForm = ({
               name="senderStreet"
               id="senderStreet"
               placeholder="1600 Amphitheatre Parkway, Mountain View"
-              defaultValue={invoice ? invoice.billFromStreetAddress : ""}
+              value={data.billFromStreetAddress}
               {...register("senderStreet", {})}
               className={`${
                 errors.senderStreet ? "border-red" : ""
               } form-input truncate`}
+              onChange={(e) =>
+                setData((prev) => ({
+                  ...prev,
+                  billFromStreetAddress: e.target.value,
+                }))
+              }
             />
             {errors.senderStreet && (
               <p className="errorMsg">{errors.senderStreet.message}</p>
@@ -149,7 +224,7 @@ const InvoiceForm = ({
                   name="senderCity"
                   id="senderCity"
                   placeholder="CA"
-                  defaultValue={invoice ? invoice.billFromCity : ""}
+                  value={data.billFromCity}
                   {...register("senderCity", {
                     pattern: {
                       value:
@@ -160,6 +235,12 @@ const InvoiceForm = ({
                   className={`${
                     errors.senderCity ? "border-red" : ""
                   } form-input`}
+                  onChange={(e) =>
+                    setData((prev) => ({
+                      ...prev,
+                      billFromCity: e.target.value,
+                    }))
+                  }
                 />
                 {errors.senderCity && (
                   <p className="errorMsg">{errors.senderCity.message}</p>
@@ -179,7 +260,7 @@ const InvoiceForm = ({
                   name="senderZipCode"
                   id="senderZipCode"
                   placeholder="94043"
-                  defaultValue={invoice ? invoice.billFromPostalCode : ""}
+                  value={data.billFromPostalCode}
                   {...register("senderZipCode", {
                     pattern: {
                       value: /^\s*?\d{5}(?:[-\s]\d{4})?\s*?$/,
@@ -189,6 +270,12 @@ const InvoiceForm = ({
                   className={`${
                     errors.senderZipCode ? "border-red" : ""
                   } form-input`}
+                  onChange={(e) =>
+                    setData((prev) => ({
+                      ...prev,
+                      billFromPostalCode: e.target.value,
+                    }))
+                  }
                 />
                 {errors.senderZipCode && (
                   <p className="errorMsg">{errors.senderZipCode.message}</p>
@@ -209,7 +296,7 @@ const InvoiceForm = ({
                 name="senderCountry"
                 id="senderCountry"
                 placeholder="US"
-                defaultValue={invoice ? invoice.billFromCountry : ""}
+                value={data.billFromCountry}
                 {...register("senderCountry", {
                   pattern: {
                     value: /[a-zA-Z]{2,}/,
@@ -219,6 +306,12 @@ const InvoiceForm = ({
                 className={`${
                   errors.senderCountry ? "border-red" : ""
                 } form-input`}
+                onChange={(e) =>
+                  setData((prev) => ({
+                    ...prev,
+                    billFromCountry: e.target.value,
+                  }))
+                }
               />
               {errors.senderCountry && (
                 <p className="errorMsg">{errors.senderCountry.message}</p>
@@ -243,9 +336,15 @@ const InvoiceForm = ({
               id="name"
               autoComplete="on"
               placeholder="Naughty Cat"
-              defaultValue={invoice ? invoice.billToName : ""}
+              value={data.billToName}
               {...register("name", {})}
               className={`${errors.name ? "border-red" : ""} form-input`}
+              onChange={(e) =>
+                setData((prev) => ({
+                  ...prev,
+                  billToName: e.target.value,
+                }))
+              }
             />
             {errors.name && <p className="errorMsg">{errors.name.message}</p>}
           </div>
@@ -262,7 +361,7 @@ const InvoiceForm = ({
               id="email"
               autoComplete="on"
               placeholder="support@naughty-cat.com"
-              defaultValue={invoice ? invoice.billToEmail : ""}
+              value={data.billToEmail}
               {...register("email", {
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
@@ -270,6 +369,12 @@ const InvoiceForm = ({
                 },
               })}
               className={`${errors.email ? "border-red" : ""} form-input`}
+              onChange={(e) =>
+                setData((prev) => ({
+                  ...prev,
+                  billToEmail: e.target.value,
+                }))
+              }
             />
             {errors.email && <p className="errorMsg">{errors.email.message}</p>}
           </div>
@@ -287,11 +392,17 @@ const InvoiceForm = ({
               name="clientStreet"
               id="clientStreet"
               placeholder="2406 Columbus Ln, Madison"
-              defaultValue={invoice ? invoice.billToStreetAddress : ""}
+              value={data.billToStreetAddress}
               {...register("clientStreet", {})}
               className={`${
                 errors.clientStreet ? "border-red" : ""
               } form-input truncate`}
+              onChange={(e) =>
+                setData((prev) => ({
+                  ...prev,
+                  billToStreetAddress: e.target.value,
+                }))
+              }
             />
             {errors.clientStreet && (
               <p className="errorMsg">{errors.clientStreet.message}</p>
@@ -315,7 +426,7 @@ const InvoiceForm = ({
                   name="clientCity"
                   id="clientCity"
                   placeholder="WI"
-                  defaultValue={invoice ? invoice.billToCity : ""}
+                  value={data.billToCity}
                   {...register("clientCity", {
                     pattern: {
                       value:
@@ -326,6 +437,12 @@ const InvoiceForm = ({
                   className={`${
                     errors.clientCity ? "border-red" : ""
                   } form-input`}
+                  onChange={(e) =>
+                    setData((prev) => ({
+                      ...prev,
+                      billToCity: e.target.value,
+                    }))
+                  }
                 />
                 {errors.clientCity && (
                   <p className="errorMsg">{errors.clientCity.message}</p>
@@ -345,7 +462,7 @@ const InvoiceForm = ({
                   name="clientZipCode"
                   id="clientZipCode"
                   placeholder="53704"
-                  defaultValue={invoice ? invoice.billToPostalCode : ""}
+                  value={data.billToPostalCode}
                   {...register("clientZipCode", {
                     pattern: {
                       value: /^\s*?\d{5}(?:[-\s]\d{4})?\s*?$/,
@@ -355,6 +472,12 @@ const InvoiceForm = ({
                   className={`${
                     errors.clientZipCode ? "border-red" : ""
                   } form-input`}
+                  onChange={(e) =>
+                    setData((prev) => ({
+                      ...prev,
+                      billToPostalCode: e.target.value,
+                    }))
+                  }
                 />
                 {errors.clientZipCode && (
                   <p className="errorMsg">{errors.clientZipCode.message}</p>
@@ -375,7 +498,7 @@ const InvoiceForm = ({
                 name="clientCountry"
                 id="clientCountry"
                 placeholder="US"
-                defaultValue={invoice ? invoice.billToCountry : ""}
+                value={data.billToCountry}
                 {...register("clientCountry", {
                   pattern: {
                     value: /[a-zA-Z]{2,}/,
@@ -385,6 +508,12 @@ const InvoiceForm = ({
                 className={`${
                   errors.clientCountry ? "border-red" : ""
                 } form-input`}
+                onChange={(e) =>
+                  setData((prev) => ({
+                    ...prev,
+                    billToCountry: e.target.value,
+                  }))
+                }
               />
               {errors.clientCountry && (
                 <p className="errorMsg">{errors.clientCountry.message}</p>
@@ -399,7 +528,8 @@ const InvoiceForm = ({
             <div className="form-control md:w-1/2">
               <span className="bodyText mb-[10px]">Invoice Date</span>
               <Datepicker
-                date={invoice ? invoice.date : new Date()}
+                date={data.date}
+                setData={setData}
                 isAddInvoice={isAddInvoice}
                 isEditInvoice={isEditInvoice}
               />
@@ -407,8 +537,8 @@ const InvoiceForm = ({
             <div className="form-control basis-1/2 relative md:w-1/2">
               <span className="bodyText mb-[10px]">Payment Terms</span>
               <PaymentTerms
-                selectedTerm={selectedTerm}
-                setSelectedTerm={setSelectedTerm}
+                paymentTerms={data.paymentTerms}
+                setData={setData}
               />
             </div>
           </div>
@@ -426,11 +556,17 @@ const InvoiceForm = ({
               name="projectDescription"
               id="projectDescription"
               placeholder="Graphic Design Service"
-              defaultValue={invoice ? invoice.projectDescription : ""}
+              value={data.projectDescription}
               {...register("projectDescription", {})}
               className={`${
                 errors.projectDescription ? "border-red" : ""
               } form-input truncate`}
+              onChange={(e) =>
+                setData((prev) => ({
+                  ...prev,
+                  projectDescription: e.target.value,
+                }))
+              }
             />
             {errors.projectDescription && (
               <p className="errorMsg">{errors.projectDescription.message}</p>
@@ -444,11 +580,11 @@ const InvoiceForm = ({
             Item List
           </h2>
           <ItemListArray
-            itemArray={itemArray}
-            setItemArray={setItemArray}
+            items={items}
+            setItems={setItems}
             isAddInvoice={isAddInvoice}
             isEditInvoice={isEditInvoice}
-            {...{ control, register, errors, getValues }}
+            {...{ control, register, errors }}
           />
         </div>
 
@@ -456,20 +592,13 @@ const InvoiceForm = ({
           <div className="h-[64px] -mx-6 linear-bg overflow-hidden md:hidden"></div>
           <div
             className={`${isAddInvoice ? "justify-between" : ""} ${
-              isEditInvoice ? "justify-end space-x-2" : ""
-            } bg-white -mx-6 overflow-hidden dark:bg-darkGrey p-6 flex  dark:md:bg-darkestGrey md:py-8`}
+              isEditInvoice ? "justify-end" : ""
+            } bg-white -mx-6 overflow-hidden dark:bg-darkGrey p-6 flex space-x-2  dark:md:bg-darkestGrey md:py-8`}
           >
             <button
               type="button"
               className="bodyText text-[12px] md:text-[16px] font-bold py-3 px-6 text-blueGrey bg-[#F9FAFE] dark:bg-grey dark:text-lightestGrey rounded-full hover:bg-lightestGrey dark:hover:text-grey dark:hover:bg-white animation-effect"
-              onClick={() => {
-                if (isAddInvoice) {
-                  setIsAddInvoice(false);
-                }
-                if (isEditInvoice) {
-                  setIsEditInvoice(false);
-                }
-              }}
+              onClick={handleCancel}
             >
               {isAddInvoice && "Discard"}
               {isEditInvoice && "Cancel"}

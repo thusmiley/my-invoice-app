@@ -28,10 +28,22 @@ export const findPaymentTerms = (term) => {
       return terms[0];
     case 7:
       return terms[1];
-    case 4:
+    case 14:
       return terms[2];
     case 30:
       return terms[3];
+  }
+};
+export const findPaymentTermsId = (id) => {
+  switch (id) {
+    case 0:
+      return 1;
+    case 1:
+      return 7;
+    case 2:
+      return 14;
+    case 3:
+      return 30;
   }
 };
 
@@ -68,3 +80,22 @@ export const DraftSchema = yup.object().shape({
   clientCountry: yup.string(),
   projectDescription: yup.string(),
 });
+
+export const emptyInvoice = {
+  date: new Date(),
+  projectDescription: "",
+  paymentTerms: 7,
+  billToName: "",
+  billToEmail: "",
+  status: "draft",
+  billFromStreetAddress: "",
+  billFromCity: "",
+  billFromPostalCode: "",
+  billFromCountry: "",
+  billToStreetAddress: "",
+  billToCity: "",
+  billToPostalCode: "",
+  billToCountry: "",
+  invoiceItems: [],
+  amountDue: 0.0,
+};

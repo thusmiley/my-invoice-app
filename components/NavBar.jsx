@@ -140,7 +140,7 @@ const NavBar = () => {
             className={`${
               pathname === "/login" ? "hidden" : ""
             } w-8 h-auto object-cover object-center rounded-full xl:w-10 cursor-pointer`}
-            priority={false}
+            priority={true}
             onClick={() => setIsProfileOpen(!isProfileOpen)}
           />
           {isProfileOpen && (

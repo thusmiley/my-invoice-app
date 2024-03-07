@@ -1,16 +1,21 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import exampleData from "../utils/data.json";
 
-const InvoiceContext = createContext();
+const InvoiceContext = createContext({
+  invoices: [],
+  deleteInvoice: (invoiceNum) => {},
+  addInvoice: (newInvoice) => {},
+  editInvoice: (invoiceNum, edited) => {},
+  isDemo: false,
+});
 
 export function useInvoiceContext() {
   return useContext(InvoiceContext);
 }
 
 export function InvoiceProvider({ children }) {
-  const [filteredData, setFilteredData] = useState();
+  const [invoices, setInvoices] = useState([]);
   const [filterStatus, setFilterStatus] = useState("all");
   const [isAddInvoice, setIsAddInvoice] = useState(false);
   const [isEditInvoice, setIsEditInvoice] = useState(false);
@@ -29,45 +34,110 @@ export function InvoiceProvider({ children }) {
   const [userData, setUserData] = useState();
 
   useEffect(() => {
-    localStorage.setItem("localIsDemo", isDemo);
-    if (isDemo === true) {
-      const localStoredInvoices = localStorage.getItem("localInvoices");
-      if (localStoredInvoices) {
-        setFilteredData(JSON.parse(localStoredInvoices));
-      } else {
-        setFilteredData(exampleData);
+    const fetchInvoices = async () => {
+      localStorage.setItem("localIsDemo", isDemo);
+      if (isDemo) {
+        const localStoredInvoices = localStorage.getItem("localInvoices");
+        if (localStoredInvoices) {
+          setInvoices(JSON.parse(localStoredInvoices));
+          return;
+        } else {
+          setInvoices(exampleData);
+          return;
+        }
       }
-    }
 
-    localStorage.setItem("localIsLoggedin", isLoggedin);
-    if (isLoggedin === true) {
-      fetch(`https://api.invoice-app.naughty-cat.com/user`)
-        .then((response) => response.json())
-        .then((response) => {
-          setUserData(response);
-          console.log(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      fetch(`https://api.invoice-app.naughty-cat.com/invoices/all`)
-        .then((response) => response.json())
-        .then((response) => {
-          setFilteredData(response);
-        })
-        .catch((err) => console.error(err));
-    }
+      //   localStorage.setItem("localIsLoggedin", isLoggedin);
+      // if (isLoggedin === true) {
+      //   fetch(`https://api.invoice-app.naughty-cat.com/user`)
+      //     .then((response) => response.json())
+      //     .then((response) => {
+      //       setUserData(response);
+      //       console.log(response);
+      //     })
+      //     .catch((error) => {
+      //       console.log(error);
+      //     });
+      //   fetch(`https://api.invoice-app.naughty-cat.com/invoices/all`)
+      //     .then((response) => response.json())
+      //     .then((response) => {
+      //       setInvoices(response);
+      //     })
+      //     .catch((err) => console.log(err));setInvoices([]);
+      // }
+    };
+    fetchInvoices();
   }, [isDemo, isLoggedin]);
 
   useEffect(() => {
-    const checkInvoices = JSON.stringify(filteredData);
-    if (isDemo && checkInvoices) {
-      localStorage.setItem("localInvoices", checkInvoices);
+    const stringInvoices = JSON.stringify(invoices);
+    if (isDemo === true && stringInvoices) {
+      localStorage.setItem("localInvoices", stringInvoices);
     }
-  }, [filteredData, isDemo]);
+  }, [invoices, isDemo]);
 
   const handleFilterClick = (e) => {
     setFilterStatus(e.target.value);
+  };
+
+  const deleteInvoice = async (invoiceNum) => {
+    setInvoices((prev) =>
+      prev.filter((invoice) => invoice.invoiceNum !== invoiceNum)
+    );
+    if (isDemo) return;
+
+    // try {
+    //   await fetch("/api/invoices/delete", {
+    //     method: "POST",
+    //     body: JSON.stringify({
+    //       id,
+    //     }),
+    //   });
+    // } catch (err) {
+    //   console.log(err);
+
+    // }
+  };
+
+  const addInvoice = async (newInvoice) => {
+    setInvoices((prev) => [...prev, newInvoice]);
+    if (isDemo) return;
+
+    //    try {
+    //      await fetch("/api/invoices/add", {
+    //        method: "POST",
+    //        body: JSON.stringify({
+    //          invoice: newInvoice,
+    //        }),
+    //      });
+    //    } catch (err) {
+    //      console.log(err);
+    //    }
+  };
+
+  const editInvoice = async (invoiceNum, edited) => {
+    setInvoices((prev) =>
+      prev.map((invoice) => {
+        if (invoice.invoiceNum === invoiceNum) {
+          return edited;
+        }
+
+        return invoice;
+      })
+    );
+
+    if (isDemo) return;
+
+    // try {
+    //   await fetch("/api/invoices/update", {
+    //     method: "POST",
+    //     body: JSON.stringify({
+    //       invoice: edited,
+    //     }),
+    //   });
+    // } catch (err) {
+    //   console.log(err);
+    // }
   };
 
   return (
@@ -75,8 +145,8 @@ export function InvoiceProvider({ children }) {
       value={{
         filterStatus,
         setFilterStatus,
-        filteredData,
-        setFilteredData,
+        invoices,
+        setInvoices,
         handleFilterClick,
         isAddInvoice,
         setIsAddInvoice,
@@ -88,6 +158,9 @@ export function InvoiceProvider({ children }) {
         setIsLoggedin,
         userData,
         setUserData,
+        editInvoice,
+        addInvoice,
+        deleteInvoice,
       }}
     >
       {children}

@@ -1,6 +1,6 @@
 [
   {
-    "id": "3080",
+    "invoiceNum": "RT3080",
     "date": "2021-08-18",
     "projectDescription": "Re-branding",
     "paymentTerms": 1,
@@ -27,7 +27,7 @@
     "amountDue": 1800.9
   },
   {
-    "id": "9141",
+    "invoiceNum": "XM9141",
     "date": "2021-08-21",
     "projectDescription": "Graphic Design",
     "paymentTerms": 30,
@@ -44,14 +44,12 @@
     "billToCountry": "United Kingdom",
     "invoiceItems": [
       {
-        "id": "1",
         "name": "Banner Design",
         "quantity": 1,
         "price": 156.0,
         "total": 156.0
       },
       {
-        "id": "2",
         "name": "Email Design",
         "quantity": 2,
         "price": 200.0,
@@ -61,7 +59,7 @@
     "amountDue": 556.0
   },
   {
-    "id": "0314",
+    "invoiceNum": "RG0314",
     "date": "2021-09-24",
     "projectDescription": "Website Redesign",
     "paymentTerms": 7,
@@ -78,7 +76,6 @@
     "billToCountry": "United Kingdom",
     "invoiceItems": [
       {
-        "id": "3",
         "name": "Website Redesign",
         "quantity": 1,
         "price": 14002.33,
@@ -88,7 +85,7 @@
     "amountDue": 14002.33
   },
   {
-    "id": "2080",
+    "invoiceNum": "RT2080",
     "date": "2021-10-11",
     "projectDescription": "Logo Concept",
     "paymentTerms": 1,
@@ -105,7 +102,6 @@
     "billToCountry": "United Kingdom",
     "invoiceItems": [
       {
-        "id": "4",
         "name": "Logo Sketches",
         "quantity": 1,
         "price": 102.04,
@@ -115,7 +111,7 @@
     "amountDue": 102.04
   },
   {
-    "id": "1449",
+    "invoiceNum": "AA1449",
     "date": "2021-10-7",
     "projectDescription": "Re-branding",
     "paymentTerms": 7,
@@ -133,14 +129,12 @@
     "billToCountry": "United Kingdom",
     "invoiceItems": [
       {
-        "id": "5",
         "name": "New Logo",
         "quantity": 1,
         "price": 1532.33,
         "total": 1532.33
       },
       {
-        "id": "6",
         "name": "Brand Guidelines",
         "quantity": 1,
         "price": 2500.0,
@@ -150,7 +144,7 @@
     "amountDue": 4032.33
   },
   {
-    "id": "9142",
+    "invoiceNum": "TY9141",
     "date": "2021-10-01",
     "projectDescription": "Landing Page Design",
     "paymentTerms": 30,
@@ -167,7 +161,6 @@
     "billToCountry": "United States of America",
     "invoiceItems": [
       {
-        "id": "7",
         "name": "Web Design",
         "quantity": 1,
         "price": 6155.91,
@@ -177,7 +170,7 @@
     "amountDue": 6155.91
   },
   {
-    "id": "2353",
+    "invoiceNum": "YK2353",
     "date": "2021-11-05",
     "projectDescription": "Logo Re-design",
     "paymentTerms": 7,
@@ -194,7 +187,6 @@
     "billToCountry": "",
     "invoiceItems": [
       {
-        "id": "8",
         "name": "Logo Re-design",
         "quantity": 1,
         "price": 3102.04,

@@ -4,32 +4,32 @@ import { useState, useEffect } from "react";
 
 const ItemComponent = ({
   item,
-  id,
+  index,
   isAddInvoice,
   isEditInvoice,
   control,
   register,
   errors,
-  getValues,
+  onNameChange,
+  onQuantityChange,
+  onPriceChange,
+  onDelete,
 }) => {
-  const [itemName, setItemName] = useState(item.name ? item.name : "");
-  const [itemQty, setItemQty] = useState(item.quantity ? item.quantity : "");
-  const [itemPrice, setItemPrice] = useState(item.price ? item.price : "");
-  const [itemTotal, setItemTotal] = useState(
-    item.total ? formatCurrency(item.total) : "0.00"
-  );
+  const [itemQty, setItemQty] = useState(item.quantity);
+  const [itemPrice, setItemPrice] = useState(item.price);
+  const [itemTotal, setItemTotal] = useState(+itemPrice * itemQty);
 
   useEffect(() => {
-    setItemTotal(formatCurrency(itemQty * itemPrice));
+    setItemTotal(formatCurrency(+itemPrice * itemQty));
   }, [itemQty, itemPrice]);
 
   return (
-    <li className="space-y-6 pb-[48px] md:flex md:space-y-0 md:space-x-4">
+    <div className="relative space-y-6 pb-[48px] md:flex md:space-y-0 md:space-x-4">
       <div className="form-control md:w-[40%]">
         <label
-          htmlFor={`itemName${id}`}
+          htmlFor={`itemName${index}`}
           className={`${
-            errors.itemNameid ? "text-red" : ""
+            errors.itemNameindex ? "text-red" : ""
           } bodyText mb-[10px]`}
         >
           Item Name
@@ -37,76 +37,116 @@ const ItemComponent = ({
         <input
           type="text"
           name="itemName"
-          id={`itemName${id}`}
-          defaultValue={itemName}
+          id={`itemName${index}`}
+          value={item.name}
           placeholder="New Item"
-          {...register(`itemName${id}`, {
+          {...register(`itemName${index}`, {
             required: "can't be empty",
           })}
           className={`${
-            errors.itemNameid ? "border-red" : ""
+            errors.itemNameindex ? "border-red" : ""
           } form-input truncate`}
-          onChange={(e) => setItemName(e.target.value)}
+          onChange={onNameChange}
         />
-        {errors.itemNameid && (
-          <p className="errorMsg">{errors.itemNameid.message}</p>
+        {errors.itemNameindex && (
+          <p className="errorMsg">{errors.itemNameindex.message}</p>
         )}
       </div>
       <div className="flex space-x-4 w-full md:w-[60%]">
         <div className="form-control w-[20%]">
           <label
-            htmlFor={`qty${id}`}
-            className={`${errors.qtyid ? "text-red" : ""} bodyText mb-[10px]`}
+            htmlFor={`qty${index}`}
+            className={`${
+              errors.qtyindex ? "text-red" : ""
+            } bodyText mb-[10px]`}
           >
             Qty.
           </label>
           <input
             type="number"
             name="qty"
-            id={`qty${id}`}
+            id={`qty${index}`}
             placeholder="0"
-            defaultValue={itemQty}
-            {...register(`qty${id}`, {
+            value={itemQty}
+            {...register(`qty${index}`, {
               required: "Required",
             })}
-            className={`${errors.qtyid ? "border-red" : ""} form-input`}
+            className={`${errors.qtyindex ? "border-red" : ""} form-input`}
             onChange={(e) => {
-              setItemQty(e.target.value);
-             
+              setItemQty(+e.target.value);
+              onQuantityChange(e);
             }}
           />
-          {errors.qtyid && <p className="errorMsg">{errors.qtyid.message}</p>}
+          {errors.qtyindex && (
+            <p className="errorMsg">{errors.qtyindex.message}</p>
+          )}
         </div>
         <div className="form-control w-[35%]">
           <label
-            htmlFor={`price${id}`}
-            className={`${errors.priceid ? "text-red" : ""} bodyText mb-[10px]`}
+            htmlFor={`price${index}`}
+            className={`${
+              errors.priceindex ? "text-red" : ""
+            } bodyText mb-[10px]`}
           >
             Price
           </label>
           <input
-            type="number"
+            type="text"
             name="price"
-            id={`price${id}`}
+            id={`price${index}`}
             placeholder="0"
-            defaultValue={itemPrice}
-            {...register(`price${id}`, {
+            value={formatCurrency(itemPrice)}
+            {...register(`price${index}`, {
               required: "Required",
             })}
-            className={`${errors.priceid ? "border-red" : ""} form-input`}
-            onChange={(e) => setItemPrice(e.target.value)}
+            className={`${errors.priceindex ? "border-red" : ""} form-input`}
+            onChange={(e) => {
+              setItemPrice(e.target.value);
+              onPriceChange(e);
+            }}
+            onBlur={() => setItemPrice((prev) => +formatCurrency(prev))}
           />
-          {errors.priceid && (
-            <p className="errorMsg">{errors.priceid.message}</p>
+          {errors.priceindex && (
+            <p className="errorMsg">{errors.priceindex.message}</p>
           )}
         </div>
-        <div className="form-control w-[35%]">
-          <span className="bodyText mb-[10px]">Total</span>
-
-          <p className="py-4 bodyText font-bold text-lightGrey">{itemTotal}</p>
+        <div className="form-control w-[35%] pr-5">
+          <label htmlFor={`total${index}`} className="bodyText mb-[10px]">
+            Total
+          </label>
+          <input
+            type="text"
+            name="total"
+            id={`total${index}`}
+            placeholder="0.00"
+            value={formatCurrency(itemTotal)}
+            {...register(`total${index}`)}
+            className="py-4 pr-5 text-almostBlack bodyText font-bold bg-transparent placeholder:text-lightGrey outline-none truncate"
+            // onChange={(e) => setItemPrice(e.target.value)}
+            disabled
+          />
         </div>
       </div>
-    </li>
+      <button
+        type="button"
+        onClick={onDelete}
+        className="cursor-pointer absolute right-0 bottom-[70px] animation-effect"
+      >
+        <svg
+          width="13"
+          height="16"
+          alt=""
+          className="deleteIcon"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M11.583 3.556v10.666c0 .982-.795 1.778-1.777 1.778H2.694a1.777 1.777 0 01-1.777-1.778V3.556h10.666zM8.473 0l.888.889h3.111v1.778H.028V.889h3.11L4.029 0h4.444z"
+            fill="#888EB0"
+            fillRule="nonzero"
+          />
+        </svg>
+      </button>
+    </div>
   );
 };
 

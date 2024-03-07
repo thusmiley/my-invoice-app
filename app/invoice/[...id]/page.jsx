@@ -14,15 +14,21 @@ import Head from "next/head";
 const Invoice = ({ params }) => {
   const router = useRouter();
   const {
-    filteredData,
+    invoices,
     isAddInvoice,
     setIsAddInvoice,
     isEditInvoice,
     setIsEditInvoice,
     isDemo,
+    deleteInvoice,
+    editInvoice,
   } = useInvoiceContext();
 
-  let invoice = filteredData?.filter((item) => item.id === params.id[0])[0];
+  const [invoice, setInvoice] = useState(
+    invoices?.filter((item) => item.invoiceNum === params.id[0])[0]
+  );
+
+  const [isDelete, setIsDelete] = useState(false);
 
   return (
     <main className="min-h-screen pt-[72px] relative px-6 mx-auto pb-[120px] md:pb-[50px] xl:max-w-[730px]">
@@ -50,17 +56,33 @@ const Invoice = ({ params }) => {
             <StatusButton status={invoice?.status} />
           </div>
 
-          <div className="bg-white dark:bg-darkGrey p-6 flex justify-between items-center absolute bottom-0 w-full left-0 right-0 md:relative md:justify-end md:p-0 md:space-x-2">
+          <div className="bg-white dark:bg-darkGrey p-6 flex justify-between items-center absolute bottom-0 w-full left-0 right-0 md:relative md:justify-end md:p-0 space-x-2">
             <button
               className="bodyText font-bold py-3 px-6 bg-[#F9FAFE] dark:bg-grey rounded-full hover:bg-lightestGrey dark:hover:text-blueGrey dark:hover:bg-white animation-effect"
               onClick={() => setIsEditInvoice(!isEditInvoice)}
             >
               Edit
             </button>
-            <button className="bodyText font-bold py-3 px-6 bg-red rounded-full text-white hover:bg-lightRed animation-effect">
+            <button
+              className="bodyText font-bold py-3 px-6 bg-red rounded-full text-white hover:bg-lightRed animation-effect"
+              onClick={() => setIsDelete(!isDelete)}
+            >
               Delete
             </button>
-            <button className="bodyText font-bold py-3 px-6 bg-purple rounded-full text-white hover:bg-lightPurple animation-effect">
+            <button
+              className={`${
+                invoice?.status === "paid" ? "hidden" : ""
+              } bodyText font-bold py-3 px-6 bg-purple rounded-full text-white hover:bg-lightPurple animation-effect`}
+              onClick={() => {
+                if (invoice) {
+                  editInvoice(invoice.invoiceNum, {
+                    ...invoice,
+                    status: "paid",
+                  });
+                  setInvoice({ ...invoice, status: "paid" });
+                }
+              }}
+            >
               Mark as Paid
             </button>
           </div>
@@ -73,7 +95,7 @@ const Invoice = ({ params }) => {
               <div className="">
                 <h2 className="headingText">
                   <span className="text-lightGrey">#</span>
-                  {invoice?.id}
+                  {invoice?.invoiceNum}
                 </h2>
                 {invoice?.invoiceItems?.map((obj, index) => (
                   <span key={index} className="bodyText mt-1">
@@ -132,6 +154,7 @@ const Invoice = ({ params }) => {
         </div>
       </section>
 
+      {/* edit invoice modal */}
       <Transition show={isEditInvoice}>
         <Transition.Child
           enter="transition ease-in-out duration-300 transform"
@@ -163,6 +186,44 @@ const Invoice = ({ params }) => {
           />
         </Transition.Child>
       </Transition>
+
+      {/* confirm deletion popup */}
+      <div
+        className={`${
+          isDelete ? "" : "hidden"
+        } fixed w-full h-full top-0 bottom-0 left-0 right-0 z-20 bg-black/50`}
+        onClick={() => setIsDelete(!isDelete)}
+      />
+      <div
+        className={`${
+          isDelete ? "" : "hidden"
+        } z-20 fixed top-[50%] left-[50%] w-full  px-6 mx-auto -translate-x-[50%] -translate-y-[50%] max-w-[480px]`}
+      >
+        <div className="p-8 bg-white dark:bg-darkestGrey rounded-[8px] ">
+          <h2 className="priceText">Confirm Deletion</h2>
+          <p className="bodyText text-lightGrey dark:text-lightGrey mt-2 mb-6">
+            Are you sure you want to delete invoice #XM9141? This action cannot
+            be undone.
+          </p>
+          <div className="space-x-2 flex justify-end">
+            <button
+              className="bodyText font-bold py-3 px-6 bg-[#F9FAFE] dark:bg-grey rounded-full hover:bg-lightestGrey dark:hover:text-blueGrey dark:hover:bg-white animation-effect"
+              onClick={() => setIsDelete(!isDelete)}
+            >
+              Cancel
+            </button>
+            <button
+              className="bodyText font-bold py-3 px-6 bg-red rounded-full text-white hover:bg-lightRed animation-effect"
+              onClick={() => {
+                deleteInvoice(invoice.invoiceNum);
+                router.replace("/dashboard");
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
     </main>
   );
 };

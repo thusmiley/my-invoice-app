@@ -2,84 +2,103 @@
 import { formatCurrency } from "@/utils";
 import ItemComponent from "./ItemComponent";
 import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 const ItemListArray = ({
-  itemArray,
-  setItemArray,
+  items,
+  setItems,
   isAddInvoice,
   isEditInvoice,
   control,
   register,
   errors,
-  getValues,
 }) => {
+  const handleItemAdd = () => {
+    setItems((prev) => [
+      ...prev,
+      {
+        name: "",
+        quantity: "",
+        price: "",
+        total: "",
+      },
+    ]);
+  };
+
+  const handleItemDelete = (index) => {
+    setItems((prev) => prev.filter((item, i) => i !== index));
+  };
+
+  const handleQuantityChange = (e, index) => {
+    setItems((prev) =>
+      prev.map((item, i) => {
+        if (index === i) {
+          return {
+            ...item,
+            quantity: +e.target.value,
+            total: +e.target.value * item.price,
+          };
+        } else {
+          return item;
+        }
+      })
+    );
+  };
+
+  const handlePriceChange = (e, index) => {
+    setItems((prev) =>
+      prev.map((item, i) => {
+        if (index === i) {
+          return {
+            ...item,
+            quantity: +e.target.value,
+            total: +e.target.value * item.price,
+          };
+        } else {
+          return item;
+        }
+      })
+    );
+  };
+
+  const handleNameChange = (e, index) => {
+    setItems((prev) =>
+      prev.map((item, i) => {
+        if (index === i) {
+          return {
+            ...item,
+            name: e.target.value,
+          };
+        } else {
+          return item;
+        }
+      })
+    );
+  };
 
   return (
-    <>
-      <ul>
-        {itemArray?.map((item) => {
-          return (
-            <div key={item.id} className="relative">
-              <ItemComponent
-                item={item}
-                id={item.id}
-                isAddInvoice={isAddInvoice}
-                isEditInvoice={isEditInvoice}
-                {...{ control, register, errors, getValues }}
-              />
-              {itemArray.length > 1 ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (itemArray.length > 1) {
-                      setItemArray(
-                        itemArray.filter((card) => card.id !== item.id)
-                      );
-                    }
-                  }}
-                  className="cursor-pointer absolute right-5 bottom-[70px] animation-effect"
-                >
-                  <svg
-                    width="13"
-                    height="16"
-                    alt=""
-                    className="deleteIcon"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M11.583 3.556v10.666c0 .982-.795 1.778-1.777 1.778H2.694a1.777 1.777 0 01-1.777-1.778V3.556h10.666zM8.473 0l.888.889h3.111v1.778H.028V.889h3.11L4.029 0h4.444z"
-                      fill="#888EB0"
-                      fillRule="nonzero"
-                    />
-                  </svg>
-                </button>
-              ) : (
-                <div />
-              )}
-            </div>
-          );
-        })}
-      </ul>
+    <div>
+      {items?.map((item, index) => (
+        <ItemComponent
+          key={index}
+              item={item}
+              index={index}
+          isAddInvoice={isAddInvoice}
+          isEditInvoice={isEditInvoice}
+          {...{ control, register, errors }}
+          onNameChange={(e) => handleNameChange(e, index)}
+          onQuantityChange={(e) => handleQuantityChange(e, index)}
+          onPriceChange={(e) => handlePriceChange(e, index)}
+          onDelete={() => handleItemDelete(index)}
+        />
+      ))}
       <button
         type="button"
         className="bg-[#F9FAFE] dark:bg-darkGrey rounded-[24px] py-4 w-full bodyText text-blueGrey hover:text-blueGrey dark:text-lightGrey font-bold hover:bg-lightestGrey dark:hover:text-white animation-effect dark:hover:bg-grey"
-        onClick={() =>
-          setItemArray([
-            ...itemArray,
-            {
-              id: uuidv4(),
-              name: "",
-              quantity: "",
-              price: "",
-              total: "",
-            },
-          ])
-        }
+        onClick={handleItemAdd}
       >
         + Add New Item
       </button>
-    </>
+    </div>
   );
 };
 

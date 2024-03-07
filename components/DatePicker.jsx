@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef } from "react";
 import arrowLeft from "../public/icon-arrow-left.svg";
 import arrowRight from "../public/icon-arrow-right.svg";
 import Image from "next/image";
@@ -7,12 +7,10 @@ import Image from "next/image";
 import DatePicker from "react-datepicker";
 import "../app/styles/datepicker.css";
 
-const Datepicker = ({ date, isAddInvoice, isEditInvoice }) => {
-  const [invoiceDate, setInvoiceDate] = useState(date);
-
+const Datepicker = ({ date, isAddInvoice, isEditInvoice, setData }) => {
   return (
     <DatePicker
-      selected={invoiceDate}
+      selected={date}
       dateFormat="PP"
       showIcon
       icon={
@@ -25,9 +23,14 @@ const Datepicker = ({ date, isAddInvoice, isEditInvoice }) => {
           />
         </svg>
       }
-      toggleCalendarOnIconClick
+      toggleCalendarOnIconChange
       closeOnScroll={true}
-      onChange={(date) => setInvoiceDate(date)}
+      onChange={(date) =>
+        setData((prev) => ({
+          ...prev,
+          date: date,
+        }))
+      }
       onFocus={(e) => (e.target.readOnly = true)}
       readOnly={isEditInvoice ? true : false}
     />
