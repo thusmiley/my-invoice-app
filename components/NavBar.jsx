@@ -25,20 +25,22 @@ const NavBar = () => {
   const [userData, setUserData] = useState();
 
   useEffect(() => {
-    if (isLoggedin === true) {
+    if (isLoggedin) {
       fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
-        .then((response) => response.json())
         .then((response) => {
           if (response.ok) {
-            setUserData(response);
-            console.log(response);
+            return response.json();
           }
+        })
+        .then((response) => {
+          setUserData(response);
+          console.log(response);
         })
         .catch((error) => {
           console.log(error);
         });
     }
-  }, []);
+  }, [isLoggedin]);
 
   useEffect(() => {
     if (

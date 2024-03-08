@@ -29,21 +29,25 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (isLoggedin === true) {
+    if (isLoggedin) {
       fetch(`${process.env.BACK_END_URL}/invoices/all`, {
         credentials: "include",
       })
-        .then((response) => response.json())
         .then((response) => {
           if (response.ok) {
-            setInvoices(response);
-            console.log(response);
+            return response.json();
           }
         })
-        .catch((err) => console.log(err));
-      setInvoices([]);
+        .then((response) => {
+          console.log(response);
+          setInvoices(response);
+        })
+        .catch((err) => {
+          console.log(err);
+          setInvoices([]);
+        });
     }
-  }, []);
+  }, [isLoggedin]);
 
   return (
     <main className="min-h-screen z-0 pt-[72px] mb-[90px] px-6 mx-auto md:px-[48px] xl:max-w-[730px]">

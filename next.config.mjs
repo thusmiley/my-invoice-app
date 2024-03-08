@@ -3,6 +3,14 @@ const nextConfig = {
   env: {
     BACK_END_URL: process.env.BACK_END_URL,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+      },
+    ],
+  },
   async redirects() {
     return [
       {

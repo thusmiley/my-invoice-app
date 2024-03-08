@@ -32,8 +32,6 @@ export function InvoiceProvider({ children }) {
       : false
   );
 
-//   const [userData, setUserData] = useState();
-
   useEffect(() => {
     const fetchInvoices = async () => {
       localStorage.setItem("localIsDemo", isDemo);
@@ -49,31 +47,31 @@ export function InvoiceProvider({ children }) {
       }
 
       localStorage.setItem("localIsLoggedin", isLoggedin);
-    //   if (isLoggedin) {
-    //     fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
-    //       .then((response) => response.json())
-    //       .then((response) => {
-    //         if (response.ok) {
-    //           setUserData(response);
-    //           console.log(response);
-    //         }
-    //       })
-    //       .catch((error) => {
-    //         console.log(error);
-    //       });
-    //     fetch(`${process.env.BACK_END_URL}/invoices/all`, {
-    //       credentials: "include",
-    //     })
-    //       .then((response) => response.json())
-    //       .then((response) => {
-    //         if (response.ok) {
-    //           setInvoices(response);
-    //           console.log(response);
-    //         }
-    //       })
-    //       .catch((err) => console.log(err));
-    //     setInvoices([]);
-    //   }
+      //   if (isLoggedin) {
+      //     fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
+      //       .then((response) => response.json())
+      //       .then((response) => {
+      //         if (response.ok) {
+      //           setUserData(response);
+      //           console.log(response);
+      //         }
+      //       })
+      //       .catch((error) => {
+      //         console.log(error);
+      //       });
+      //     fetch(`${process.env.BACK_END_URL}/invoices/all`, {
+      //       credentials: "include",
+      //     })
+      //       .then((response) => response.json())
+      //       .then((response) => {
+      //         if (response.ok) {
+      //           setInvoices(response);
+      //           console.log(response);
+      //         }
+      //       })
+      //       .catch((err) => console.log(err));
+      //     setInvoices([]);
+      //   }
     };
     fetchInvoices();
   }, [isDemo, isLoggedin]);
@@ -165,8 +163,6 @@ export function InvoiceProvider({ children }) {
         setIsDemo,
         isLoggedin,
         setIsLoggedin,
-        // userData,
-        // setUserData,
         editInvoice,
         addInvoice,
         deleteInvoice,
