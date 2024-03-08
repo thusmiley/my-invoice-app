@@ -30,20 +30,14 @@ export default function Login() {
           <Link
             href="/dashboard"
             className="w-full text-lightGrey bg-[#373B53] hover:bg-almostBlack dark:text-lightestGrey font-bold py-3 px-6 dark:bg-[#373B53] text-center dark:hover:bg-darkGrey rounded-full dark:hover:text-lightestGrey animation-effect md:w-auto"
-            onClick={() => {
-              setIsDemo(true);
-              setIsLoggedin(false);
-            }}
+            onClick={() => setIsDemo(true)}
           >
             View as Demo
           </Link>
           <Link
             href={`${process.env.BACK_END_URL}/authentication/github`}
             className="w-full bg-purple font-bold text-white animation-effect rounded-full py-3 px-6 hover:bg-lightPurple flex items-center justify-center md:w-auto"
-            onClick={() => {
-              setIsLoggedin(true);
-              setIsDemo(false);
-            }}
+            onClick={() => setIsLoggedin(true)}
           >
             Sign in with Github
             <svg

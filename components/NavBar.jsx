@@ -11,7 +11,7 @@ import "dotenv/config";
 const NavBar = () => {
   const [darkMode, setDarkMode] = useState(true);
   const {
-    userData,
+    // userData,
     isAddInvoice,
     setIsAddInvoice,
     isDemo,
@@ -21,6 +21,24 @@ const NavBar = () => {
   } = useInvoiceContext();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const pathname = usePathname();
+
+  const [userData, setUserData] = useState();
+
+  useEffect(() => {
+    if (isLoggedin === true) {
+      fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.ok) {
+            setUserData(response);
+            console.log(response);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, []);
 
   useEffect(() => {
     if (
@@ -134,7 +152,7 @@ const NavBar = () => {
             } w-[1px] h-[72px] bg-[#494E6E] mx-6 md:mx-8 md:h-20 xl:h-[1px] xl:w-[103px] xl:mx-0 xl:my-6`}
           />
           <Image
-            src={userData ? userData.photoUrl : avatar}
+            src={userData?.photoUrl || avatar}
             width={32}
             height={32}
             alt="profile photo"
@@ -157,8 +175,8 @@ const NavBar = () => {
                     className="bodyText font-bold hover:text-purple"
                     onClick={() => {
                       setIsProfileOpen(!isProfileOpen);
-                      setIsDemo(true);
-                      setIsLoggedin(false);
+                      setIsDemo(false);
+                      setIsLoggedin(true);
                     }}
                   >
                     Sign in with Github
@@ -172,7 +190,6 @@ const NavBar = () => {
                     <button
                       type="submit"
                       className="bodyText font-bold hover:text-purple"
-                      //   onClick={() => setIsProfileOpen(!isProfileOpen)}
                     >
                       Sign Out
                     </button>

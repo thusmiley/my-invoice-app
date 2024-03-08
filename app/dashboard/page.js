@@ -15,16 +15,35 @@ export default function Home() {
   const [loadMore, setLoadMore] = useState(10);
   const {
     invoices,
+    setInvoices,
     filterStatus,
     isAddInvoice,
     setIsAddInvoice,
     isEditInvoice,
     setIsEditInvoice,
+    isLoggedin,
   } = useInvoiceContext();
 
   const handleLoadMore = () => {
     setLoadMore(loadMore + 10);
   };
+
+  useEffect(() => {
+    if (isLoggedin === true) {
+      fetch(`${process.env.BACK_END_URL}/invoices/all`, {
+        credentials: "include",
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.ok) {
+            setInvoices(response);
+            console.log(response);
+          }
+        })
+        .catch((err) => console.log(err));
+      setInvoices([]);
+    }
+  }, []);
 
   return (
     <main className="min-h-screen z-0 pt-[72px] mb-[90px] px-6 mx-auto md:px-[48px] xl:max-w-[730px]">

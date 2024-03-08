@@ -32,7 +32,7 @@ export function InvoiceProvider({ children }) {
       : false
   );
 
-  const [userData, setUserData] = useState();
+//   const [userData, setUserData] = useState();
 
   useEffect(() => {
     const fetchInvoices = async () => {
@@ -49,25 +49,31 @@ export function InvoiceProvider({ children }) {
       }
 
       localStorage.setItem("localIsLoggedin", isLoggedin);
-      if (isLoggedin === true) {
-        fetch(`${process.env.BACK_END_URL}/user`)
-          .then((response) => response.json())
-          .then((response) => {
-            setUserData(response);
-            console.log(response);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        fetch(`${process.env.BACK_END_URL}/invoices/all`)
-          .then((response) => response.json())
-          .then((response) => {
-            setInvoices(response);
-            console.lgo(response);
-          })
-          .catch((err) => console.log(err));
-        setInvoices([]);
-      }
+    //   if (isLoggedin) {
+    //     fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
+    //       .then((response) => response.json())
+    //       .then((response) => {
+    //         if (response.ok) {
+    //           setUserData(response);
+    //           console.log(response);
+    //         }
+    //       })
+    //       .catch((error) => {
+    //         console.log(error);
+    //       });
+    //     fetch(`${process.env.BACK_END_URL}/invoices/all`, {
+    //       credentials: "include",
+    //     })
+    //       .then((response) => response.json())
+    //       .then((response) => {
+    //         if (response.ok) {
+    //           setInvoices(response);
+    //           console.log(response);
+    //         }
+    //       })
+    //       .catch((err) => console.log(err));
+    //     setInvoices([]);
+    //   }
     };
     fetchInvoices();
   }, [isDemo, isLoggedin]);
@@ -159,8 +165,8 @@ export function InvoiceProvider({ children }) {
         setIsDemo,
         isLoggedin,
         setIsLoggedin,
-        userData,
-        setUserData,
+        // userData,
+        // setUserData,
         editInvoice,
         addInvoice,
         deleteInvoice,
