@@ -36,13 +36,13 @@ export const findPaymentTerms = (term) => {
 };
 export const findPaymentTermsId = (id) => {
   switch (id) {
-    case 0:
-      return 1;
     case 1:
-      return 7;
+      return 1;
     case 2:
-      return 14;
+      return 7;
     case 3:
+      return 14;
+    case 4:
       return 30;
   }
 };

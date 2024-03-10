@@ -12,13 +12,23 @@ import {
 } from "@/utils";
 import { Listbox } from "@headlessui/react";
 
-const PaymentTerms = ({ data, setData }) => {
+const PaymentTerms = ({ data, setData, onChange }) => {
   const [selectedTerm, setSelectedTerm] = useState(
     findPaymentTerms(data.paymentTerms)
   );
 
   return (
-    <Listbox value={selectedTerm} onChange={setSelectedTerm}>
+    <Listbox
+      value={selectedTerm}
+      onChange={(e) => {
+          onChange(e);
+          setSelectedTerm(e);
+          setData((prev) => ({
+            ...prev,
+            paymentTerms: findPaymentTermsId(e.id) || 7,
+          }));
+      }}
+    >
       <Listbox.Button as="div">
         <div className="bodyText font-bold cursor-pointer py-4 px-6 form-input flex justify-between items-center">
           {selectedTerm?.name}
@@ -39,12 +49,6 @@ const PaymentTerms = ({ data, setData }) => {
                 className={`${active ? "text-purple dark:text-purple" : ""} ${
                   selected ? "text-purple dark:text-purple" : ""
                 }  bodyText font-bold cursor-pointer py-4 px-6`}
-                onClick={(term) =>
-                  setData((prev) => ({
-                    ...prev,
-                    paymentTerms: findPaymentTermsId(term.id) || 7,
-                  }))
-                }
               >
                 {term.name}
               </li>
