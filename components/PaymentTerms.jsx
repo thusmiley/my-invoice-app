@@ -12,9 +12,9 @@ import {
 } from "@/utils";
 import { Listbox } from "@headlessui/react";
 
-const PaymentTerms = ({ paymentTerms, setData }) => {
+const PaymentTerms = ({ data, setData }) => {
   const [selectedTerm, setSelectedTerm] = useState(
-    findPaymentTerms(paymentTerms)
+    findPaymentTerms(data.paymentTerms)
   );
 
   return (
@@ -39,10 +39,10 @@ const PaymentTerms = ({ paymentTerms, setData }) => {
                 className={`${active ? "text-purple dark:text-purple" : ""} ${
                   selected ? "text-purple dark:text-purple" : ""
                 }  bodyText font-bold cursor-pointer py-4 px-6`}
-                onChange={(term) =>
+                onClick={(term) =>
                   setData((prev) => ({
                     ...prev,
-                    paymentTerms: findPaymentTermsId(term.id),
+                    paymentTerms: findPaymentTermsId(term.id) || 7,
                   }))
                 }
               >

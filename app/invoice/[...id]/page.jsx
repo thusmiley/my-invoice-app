@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+
 import backArrowIcon from "../../../public/icon-arrow-left.svg";
 import Image from "next/image";
 import StatusButton from "@/components/StatusButton";
@@ -10,9 +10,9 @@ import { useInvoiceContext } from "@/context/InvoiceContext";
 import { Transition } from "@headlessui/react";
 import InvoiceForm from "@/components/InvoiceForm";
 import Head from "next/head";
+import { useRouter } from "next/navigation";
 
 const Invoice = ({ params }) => {
-  const router = useRouter();
   const {
     invoices,
     isAddInvoice,
@@ -22,11 +22,23 @@ const Invoice = ({ params }) => {
     isDemo,
     deleteInvoice,
     editInvoice,
+    addInvoice,
   } = useInvoiceContext();
 
-  const [invoice, setInvoice] = useState(
-    invoices?.filter((item) => item.invoiceNum === params.id[0])[0]
-  );
+  const [invoice, setInvoice] = useState();
+  const router = useRouter();
+
+  const reRenderInvoice = () => {
+    if (!params.id) return;
+    const i = invoices?.filter((item) => item.invoiceNum === params.id[0])[0];
+    if (i) {
+      setInvoice(i);
+    }
+  };
+
+  useEffect(() => {
+    reRenderInvoice();
+  }, [params.id, invoices]);
 
   const [isDelete, setIsDelete] = useState(false);
 

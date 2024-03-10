@@ -3,20 +3,13 @@ import { createContext, useContext, useEffect, useState } from "react";
 import exampleData from "../utils/data.json";
 import "dotenv/config";
 
-const InvoiceContext = createContext({
-  invoices: [],
-  deleteInvoice: (invoiceNum) => {},
-  addInvoice: (newInvoice) => {},
-  editInvoice: (invoiceNum, edited) => {},
-  isDemo: false,
-});
+const InvoiceContext = createContext();
 
 export function useInvoiceContext() {
   return useContext(InvoiceContext);
 }
 
 export function InvoiceProvider({ children }) {
-  const [invoices, setInvoices] = useState([]);
   const [filterStatus, setFilterStatus] = useState("all");
   const [isAddInvoice, setIsAddInvoice] = useState(false);
   const [isEditInvoice, setIsEditInvoice] = useState(false);
@@ -33,52 +26,26 @@ export function InvoiceProvider({ children }) {
   );
 
   useEffect(() => {
-    const fetchInvoices = async () => {
-      localStorage.setItem("localIsDemo", isDemo);
-      if (isDemo) {
-        const localStoredInvoices = localStorage.getItem("localInvoices");
-        if (localStoredInvoices) {
-          setInvoices(JSON.parse(localStoredInvoices));
-          return;
-        } else {
-          setInvoices(exampleData);
-          return;
-        }
-      }
-
-      localStorage.setItem("localIsLoggedin", isLoggedin);
-      //   if (isLoggedin) {
-      //     fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
-      //       .then((response) => response.json())
-      //       .then((response) => {
-      //         if (response.ok) {
-      //           setUserData(response);
-      //           console.log(response);
-      //         }
-      //       })
-      //       .catch((error) => {
-      //         console.log(error);
-      //       });
-      //     fetch(`${process.env.BACK_END_URL}/invoices/all`, {
-      //       credentials: "include",
-      //     })
-      //       .then((response) => response.json())
-      //       .then((response) => {
-      //         if (response.ok) {
-      //           setInvoices(response);
-      //           console.log(response);
-      //         }
-      //       })
-      //       .catch((err) => console.log(err));
-      //     setInvoices([]);
-      //   }
-    };
-    fetchInvoices();
+    localStorage.setItem("localIsDemo", isDemo);
+    localStorage.setItem("localIsLoggedin", isLoggedin);
   }, [isDemo, isLoggedin]);
+
+  const [invoices, setInvoices] = useState(() => {
+    if (isDemo) {
+      const localStoredInvoices = localStorage.getItem("localInvoices");
+      if (localStoredInvoices) {
+        return JSON.parse(localStoredInvoices);
+      } else {
+        return exampleData;
+      }
+    } else {
+      return [];
+    }
+  });
 
   useEffect(() => {
     const stringInvoices = JSON.stringify(invoices);
-    if (isDemo === true && stringInvoices) {
+    if (isDemo && stringInvoices) {
       localStorage.setItem("localInvoices", stringInvoices);
     }
   }, [invoices, isDemo]);

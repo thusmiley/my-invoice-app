@@ -11,7 +11,6 @@ import "dotenv/config";
 const NavBar = () => {
   const [darkMode, setDarkMode] = useState(true);
   const {
-    // userData,
     isAddInvoice,
     setIsAddInvoice,
     isDemo,
@@ -22,25 +21,27 @@ const NavBar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const pathname = usePathname();
 
-  const [userData, setUserData] = useState();
+//   const [userData, setUserData] = useState();
 
-  useEffect(() => {
-    if (isLoggedin) {
-      fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-        })
-        .then((response) => {
-          setUserData(response);
-          console.log(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [isLoggedin]);
+//   useEffect(() => {
+//     if (isLoggedin) {
+//       fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
+//         .then((response) => {
+//           if (response.status === 404) {
+//             console.log("error user data 404");
+//             return;
+//           }
+//           return response.json();
+//         })
+//         .then((response) => {
+//           console.log(response);
+//           setUserData(response);
+//         })
+//         .catch((error) => {
+//           console.log(error);
+//         });
+//     }
+//   }, [isLoggedin]);
 
   useEffect(() => {
     if (
@@ -154,7 +155,8 @@ const NavBar = () => {
             } w-[1px] h-[72px] bg-[#494E6E] mx-6 md:mx-8 md:h-20 xl:h-[1px] xl:w-[103px] xl:mx-0 xl:my-6`}
           />
           <Image
-            src={userData?.photoUrl || avatar}
+            src={avatar}
+            // src={userData?.photoUrl || avatar}
             width={32}
             height={32}
             alt="profile photo"

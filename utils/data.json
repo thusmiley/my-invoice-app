@@ -17,7 +17,6 @@
     "billToCountry": "United Kingdom",
     "invoiceItems": [
       {
-        "id": "0",
         "name": "Brand Guidelines",
         "quantity": 1,
         "price": 1800.9,

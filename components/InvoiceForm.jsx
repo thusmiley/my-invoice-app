@@ -2,7 +2,9 @@
 import Image from "next/image";
 import backArrowIcon from "../public/icon-arrow-left.svg";
 import { useForm } from "react-hook-form";
-import { useEffect, useState, Fragment } from "react";
+import { useRouter } from "next/navigation";
+
+import { useEffect, useState, Fragment, useRef } from "react";
 import {
   formatDate,
   formatCurrency,
@@ -11,7 +13,6 @@ import {
   findPaymentDueDate,
   Schema,
   DraftSchema,
-  emptyInvoice,
 } from "@/utils";
 import {
   createInvoiceNum,
@@ -32,38 +33,28 @@ const InvoiceForm = ({
   isEditInvoice,
   setIsEditInvoice,
 }) => {
+  const router = useRouter();
   const { invoices, editInvoice, addInvoice } = useInvoiceContext();
-  const [data, setData] = useState(invoice || emptyInvoice);
+  const [data, setData] = useState(invoice);
 
-  const [items, setItems] = useState(
-    invoice?.invoiceItems || [{ name: "", quantity: "", price: "", total: "" }]
-  );
+  const [invoiceItems, setInvoiceItems] = useState(invoice?.invoiceItems);
 
   useEffect(() => {
     setData((prev) => ({
       ...prev,
-      items,
-      amountDue: items
+      invoiceItems,
+      amountDue: invoiceItems
         .map((item) => +item.total)
         .reduce((acc, val) => (acc += val)),
     }));
-  }, [items]);
-
-  useEffect(() => {
-    setData((prev) => ({
-      ...prev,
-      paymentDue: formatDate(
-        findPaymentDueDate(data?.date, data?.paymentTerms)
-      ),
-    }));
-  }, [data.paymentTerms]);
+  }, [invoiceItems]);
 
   const {
     register,
     handleSubmit,
     control,
     setError,
-    formState: { errors, isDirty, isValid },
+    formState: { errors },
   } = useForm({
     criteriaMode: "firstError",
     mode: "onChange",
@@ -91,11 +82,13 @@ const InvoiceForm = ({
       editInvoice(data.invoiceNum, { ...data, status: "pending" });
       setData({ ...data, status: "pending" });
       return quitAndReset();
-    } else {
-      addInvoice({ ...data, status: "pending" });
-      setData({ ...data, status: "pending" });
-      return quitAndReset();
     }
+
+    // if (isAddInvoice) {
+    //   addInvoice({ ...data, status: "pending" });
+    //   setData({ ...data, status: "pending" });
+    //   return quitAndReset();
+    // }
   });
 
   const saveDraft = async () => {
@@ -115,7 +108,6 @@ const InvoiceForm = ({
       } else {
         addInvoice(data);
       }
-
       return quitAndReset();
     } catch (error) {
       console.log(error);
@@ -126,8 +118,8 @@ const InvoiceForm = ({
     setIsAddInvoice(false);
     setIsEditInvoice(false);
     setData(emptyInvoice);
-    setItems([{ name: "", quantity: "", price: "", total: "" }]);
-    return;
+    setInvoiceItems([{ name: "", quantity: "", price: "", total: "" }]);
+    window.location.reload();
   };
 
   const handleCancel = () => {
@@ -225,13 +217,7 @@ const InvoiceForm = ({
                   id="senderCity"
                   placeholder="CA"
                   value={data.billFromCity}
-                  {...register("senderCity", {
-                    pattern: {
-                      value:
-                        /^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$/,
-                      message: "Invalid city",
-                    },
-                  })}
+                  {...register("senderCity", {})}
                   className={`${
                     errors.senderCity ? "border-red" : ""
                   } form-input`}
@@ -261,12 +247,7 @@ const InvoiceForm = ({
                   id="senderZipCode"
                   placeholder="94043"
                   value={data.billFromPostalCode}
-                  {...register("senderZipCode", {
-                    pattern: {
-                      value: /^\s*?\d{5}(?:[-\s]\d{4})?\s*?$/,
-                      message: "Invalid zipcode",
-                    },
-                  })}
+                  {...register("senderZipCode", {})}
                   className={`${
                     errors.senderZipCode ? "border-red" : ""
                   } form-input`}
@@ -297,12 +278,7 @@ const InvoiceForm = ({
                 id="senderCountry"
                 placeholder="US"
                 value={data.billFromCountry}
-                {...register("senderCountry", {
-                  pattern: {
-                    value: /[a-zA-Z]{2,}/,
-                    message: "Invalid country",
-                  },
-                })}
+                {...register("senderCountry", {})}
                 className={`${
                   errors.senderCountry ? "border-red" : ""
                 } form-input`}
@@ -362,12 +338,7 @@ const InvoiceForm = ({
               autoComplete="on"
               placeholder="support@naughty-cat.com"
               value={data.billToEmail}
-              {...register("email", {
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                  message: "Invalid email address",
-                },
-              })}
+              {...register("email", {})}
               className={`${errors.email ? "border-red" : ""} form-input`}
               onChange={(e) =>
                 setData((prev) => ({
@@ -427,13 +398,7 @@ const InvoiceForm = ({
                   id="clientCity"
                   placeholder="WI"
                   value={data.billToCity}
-                  {...register("clientCity", {
-                    pattern: {
-                      value:
-                        /^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$/,
-                      message: "Invalid city",
-                    },
-                  })}
+                  {...register("clientCity", {})}
                   className={`${
                     errors.clientCity ? "border-red" : ""
                   } form-input`}
@@ -463,12 +428,7 @@ const InvoiceForm = ({
                   id="clientZipCode"
                   placeholder="53704"
                   value={data.billToPostalCode}
-                  {...register("clientZipCode", {
-                    pattern: {
-                      value: /^\s*?\d{5}(?:[-\s]\d{4})?\s*?$/,
-                      message: "Invalid zipcode",
-                    },
-                  })}
+                  {...register("clientZipCode", {})}
                   className={`${
                     errors.clientZipCode ? "border-red" : ""
                   } form-input`}
@@ -499,12 +459,7 @@ const InvoiceForm = ({
                 id="clientCountry"
                 placeholder="US"
                 value={data.billToCountry}
-                {...register("clientCountry", {
-                  pattern: {
-                    value: /[a-zA-Z]{2,}/,
-                    message: "Invalid country",
-                  },
-                })}
+                {...register("clientCountry", {})}
                 className={`${
                   errors.clientCountry ? "border-red" : ""
                 } form-input`}
@@ -536,10 +491,7 @@ const InvoiceForm = ({
             </div>
             <div className="form-control basis-1/2 relative md:w-1/2">
               <span className="bodyText mb-[10px]">Payment Terms</span>
-              <PaymentTerms
-                paymentTerms={data.paymentTerms}
-                setData={setData}
-              />
+              <PaymentTerms data={data} setData={setData} />
             </div>
           </div>
           <div className="form-control basis-1/2">
@@ -580,8 +532,8 @@ const InvoiceForm = ({
             Item List
           </h2>
           <ItemListArray
-            items={items}
-            setItems={setItems}
+            items={invoiceItems}
+            setItems={setInvoiceItems}
             isAddInvoice={isAddInvoice}
             isEditInvoice={isEditInvoice}
             {...{ control, register, errors }}

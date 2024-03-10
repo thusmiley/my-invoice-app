@@ -9,7 +9,7 @@ export default function Custom404() {
       </Head>
       <h1 className="my-20 text-xl md:text-4xl">404 - Page Not Found</h1>
       <Link href="/" passHref>
-        <button className="rounded-md bg-app-greyish-blue p-2 px-4 hover:underline">
+        <button className="w-full bg-purple font-bold text-white animation-effect rounded-full py-3 px-6 hover:bg-lightPurple flex items-center justify-center md:w-auto">
           Go home
         </button>
       </Link>

@@ -53,19 +53,22 @@ export const findPaymentDueDate = (date, days) => {
   return result;
 };
 
-export const Schema = yup.object().shape({
-  senderStreet: yup.string().required("can't be empty"),
-  senderCity: yup.string().required("can't be empty"),
-  senderZipCode: yup.string().required("can't be empty"),
-  senderCountry: yup.string().required("can't be empty"),
-  name: yup.string().required("can't be empty"),
-  email: yup.string().email("invalid").required("can't be empty"),
-  clientStreet: yup.string().required("can't be empty"),
-  clientCity: yup.string().required("can't be empty"),
-  clientZipCode: yup.string().required("can't be empty"),
-  clientCountry: yup.string().required("can't be empty"),
-  projectDescription: yup.string().required("can't be empty"),
-});
+export const Schema = yup
+  .object()
+  .shape({
+    senderStreet: yup.string().required("can't be empty"),
+    senderCity: yup.string().required("can't be empty"),
+    senderZipCode: yup.string().required("can't be empty"),
+    senderCountry: yup.string().required("can't be empty"),
+    name: yup.string().required("can't be empty"),
+    email: yup.string().email("invalid").required("can't be empty"),
+    clientStreet: yup.string().required("can't be empty"),
+    clientCity: yup.string().required("can't be empty"),
+    clientZipCode: yup.string().required("can't be empty"),
+    clientCountry: yup.string().required("can't be empty"),
+    projectDescription: yup.string().required("can't be empty"),
+  })
+  .required();
 
 export const DraftSchema = yup.object().shape({
   senderStreet: yup.string(),
@@ -96,23 +99,6 @@ export const emptyInvoice = {
   billToCity: "",
   billToPostalCode: "",
   billToCountry: "",
-  invoiceItems: [],
-  amountDue: 0.0,
+  invoiceItems: [{ name: "", quantity: 1, price: 0, total: 0 }],
+  amountDue: 0,
 };
-
-// export const getCookie = (name) => {
-//   var cookie = document.cookie;
-//   var prefix = name + "=";
-//   var begin = cookie.indexOf("; " + prefix);
-//   if (begin == -1) {
-//     begin = cookie.indexOf(prefix);
-//     if (begin != 0) return null;
-//   } else {
-//     begin += 2;
-//     var end = document.cookie.indexOf(";", begin);
-//     if (end == -1) {
-//       end = cookie.length;
-//     }
-//   }
-//   return unescape(cookie.substring(begin + prefix.length, end));
-// };

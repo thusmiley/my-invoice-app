@@ -17,9 +17,9 @@ const ItemListArray = ({
       ...prev,
       {
         name: "",
-        quantity: "",
-        price: "",
-        total: "",
+        quantity: 1,
+        price: 0,
+        total: 0,
       },
     ]);
   };
@@ -37,9 +37,8 @@ const ItemListArray = ({
             quantity: +e.target.value,
             total: +e.target.value * item.price,
           };
-        } else {
-          return item;
         }
+        return item;
       })
     );
   };
@@ -50,12 +49,11 @@ const ItemListArray = ({
         if (index === i) {
           return {
             ...item,
-            quantity: +e.target.value,
-            total: +e.target.value * item.price,
+            price: +e.target.value,
+            total: +e.target.value * item.quantity,
           };
-        } else {
-          return item;
         }
+        return item;
       })
     );
   };
@@ -68,9 +66,8 @@ const ItemListArray = ({
             ...item,
             name: e.target.value,
           };
-        } else {
-          return item;
         }
+        return item;
       })
     );
   };
@@ -80,8 +77,8 @@ const ItemListArray = ({
       {items?.map((item, index) => (
         <ItemComponent
           key={index}
-              item={item}
-              index={index}
+          item={item}
+          index={index}
           isAddInvoice={isAddInvoice}
           isEditInvoice={isEditInvoice}
           {...{ control, register, errors }}

@@ -40,9 +40,7 @@ const ItemComponent = ({
           id={`itemName${index}`}
           value={item.name}
           placeholder="New Item"
-          {...register(`itemName${index}`, {
-            required: "can't be empty",
-          })}
+          {...register(`itemName${index}`, {})}
           className={`${
             errors.itemNameindex ? "border-red" : ""
           } form-input truncate`}
@@ -68,9 +66,7 @@ const ItemComponent = ({
             id={`qty${index}`}
             placeholder="0"
             value={itemQty}
-            {...register(`qty${index}`, {
-              required: "Required",
-            })}
+            {...register(`qty${index}`, {})}
             className={`${errors.qtyindex ? "border-red" : ""} form-input`}
             onChange={(e) => {
               setItemQty(+e.target.value);
@@ -122,7 +118,6 @@ const ItemComponent = ({
             value={formatCurrency(itemTotal)}
             {...register(`total${index}`)}
             className="py-4 pr-5 text-almostBlack bodyText font-bold bg-transparent placeholder:text-lightGrey outline-none truncate"
-            // onChange={(e) => setItemPrice(e.target.value)}
             disabled
           />
         </div>

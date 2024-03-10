@@ -22,32 +22,36 @@ export default function Home() {
     isEditInvoice,
     setIsEditInvoice,
     isLoggedin,
+    isDemo,
   } = useInvoiceContext();
 
   const handleLoadMore = () => {
     setLoadMore(loadMore + 10);
   };
 
-  useEffect(() => {
-    if (isLoggedin) {
-      fetch(`${process.env.BACK_END_URL}/invoices/all`, {
-        credentials: "include",
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-        })
-        .then((response) => {
-          console.log(response);
-          setInvoices(response);
-        })
-        .catch((err) => {
-          console.log(err);
-          setInvoices([]);
-        });
-    }
-  }, [isLoggedin]);
+  //   useEffect(() => {
+  //     if (isLoggedin) {
+  //       fetch(`${process.env.BACK_END_URL}/invoices/all`, {
+  //         credentials: "include",
+  //       })
+  //         .then((response) => {
+  //           if (response.status === 404) {
+  //             console.log("error invoices 404");
+  //             return;
+  //           }
+  //           return response.json();
+  //         })
+  //         .then((response) => {
+  //           console.log(response);
+  //           setInvoices(response);
+  //         })
+  //         .catch((err) => {
+  //           console.log(err);
+  //           setInvoices([]);
+  //         });
+  //     }
+  //     console.log(invoices);
+  //   }, [isLoggedin]);
 
   return (
     <main className="min-h-screen z-0 pt-[72px] mb-[90px] px-6 mx-auto md:px-[48px] xl:max-w-[730px]">
@@ -138,8 +142,8 @@ export default function Home() {
             There is nothing here
           </h2>
           <p className="bodyText mt-6 max-w-[221px] mx-auto">
-            Create an invoice by clicking the{" "}
-            <span className="font-bold">New</span> button and get started.
+            Create an invoice by clicking the
+            <span className="font-bold"> New</span> button and get started.
           </p>
         </section>
       ) : (
@@ -155,7 +159,7 @@ export default function Home() {
                   .filter((item) => item.status === filterStatus)
                   .slice(0, loadMore)
                   .map((invoice) => (
-                    <InvoiceCard key={invoice.id} invoice={invoice} />
+                    <InvoiceCard key={invoice.invoiceNum} invoice={invoice} />
                   ))}
           </div>
           {invoices?.length > 10 && (
