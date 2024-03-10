@@ -68,35 +68,41 @@ const Invoice = ({ params }) => {
             <StatusButton status={invoice?.status} />
           </div>
 
-          <div className="bg-white dark:bg-darkGrey p-6 flex justify-between items-center absolute bottom-0 w-full left-0 right-0 md:relative md:justify-end md:p-0 space-x-2">
-            <button
-              className="bodyText font-bold py-3 px-6 bg-[#F9FAFE] dark:bg-grey rounded-full hover:bg-lightestGrey dark:hover:text-blueGrey dark:hover:bg-white animation-effect"
-              onClick={() => setIsEditInvoice(!isEditInvoice)}
-            >
-              Edit
-            </button>
+          <div
+            className={`${
+              invoice?.status === "paid" ? "justify-end" : "justify-between"
+            } bg-white dark:bg-darkGrey p-6 flex  items-center absolute bottom-0 w-full left-0 right-0 md:relative md:justify-end md:p-0 space-x-2`}
+          >
+            {invoice?.status === "draft" && (
+              <button
+                className="bodyText font-bold py-3 px-6 bg-[#F9FAFE] dark:bg-grey rounded-full hover:bg-lightestGrey dark:hover:text-blueGrey dark:hover:bg-white animation-effect"
+                onClick={() => setIsEditInvoice(!isEditInvoice)}
+              >
+                Edit
+              </button>
+            )}
             <button
               className="bodyText font-bold py-3 px-6 bg-red rounded-full text-white hover:bg-lightRed animation-effect"
               onClick={() => setIsDelete(!isDelete)}
             >
               Delete
             </button>
-            <button
-              className={`${
-                invoice?.status === "paid" ? "hidden" : ""
-              } bodyText font-bold py-3 px-6 bg-purple rounded-full text-white hover:bg-lightPurple animation-effect`}
-              onClick={() => {
-                if (invoice) {
-                  editInvoice(invoice.invoiceNum, {
-                    ...invoice,
-                    status: "paid",
-                  });
-                  setInvoice({ ...invoice, status: "paid" });
-                }
-              }}
-            >
-              Mark as Paid
-            </button>
+            {invoice?.status === "pending" && (
+              <button
+                className={`bodyText font-bold py-3 px-6 bg-purple rounded-full text-white hover:bg-lightPurple animation-effect`}
+                onClick={() => {
+                  if (invoice) {
+                    editInvoice(invoice.invoiceNum, {
+                      ...invoice,
+                      status: "paid",
+                    });
+                    setInvoice({ ...invoice, status: "paid" });
+                  }
+                }}
+              >
+                Mark as Paid
+              </button>
+            )}
           </div>
         </div>
 
@@ -214,8 +220,8 @@ const Invoice = ({ params }) => {
         <div className="p-8 bg-white dark:bg-darkestGrey rounded-[8px] ">
           <h2 className="priceText">Confirm Deletion</h2>
           <p className="bodyText text-lightGrey dark:text-lightGrey mt-2 mb-6">
-            Are you sure you want to delete invoice #XM9141? This action cannot
-            be undone.
+            Are you sure you want to delete invoice #{invoice?.invoiceNum}? This
+            action cannot be undone.
           </p>
           <div className="space-x-2 flex justify-end">
             <button

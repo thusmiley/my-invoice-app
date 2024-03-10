@@ -614,7 +614,7 @@ const InvoiceForm = ({
               type="submit"
               className="bodyText text-[12px] md:text-[16px] text-white dark:text-white font-bold py-3 px-6 bg-purple dark:bg-purple rounded-full hover:bg-lightPurple dark:hover:bg-lightPurple animation-effect"
             >
-              {isAddInvoice && "Save"}
+              {isAddInvoice && "Save & Send"}
               {isEditInvoice && "Save Changes"}
             </button>
           </div>
