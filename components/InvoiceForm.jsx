@@ -5,7 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import DatePicker from "react-datepicker";
 import "../app/styles/datepicker.css";
-import { useEffect, useState, Fragment } from "react";
+import { useEffect, useState, Fragment, useCallback, useMemo } from "react";
 import {
   formatDate,
   formatCurrency,
@@ -54,20 +54,22 @@ const InvoiceForm = ({
   const {
     register,
     handleSubmit,
+    getValues,
     control,
     setError,
+    reset,
     formState: { errors },
   } = useForm({
-    criteriaMode: "firstError",
-    mode: "onChange",
-    shouldFocusError: true,
+    // criteriaMode: "firstError",
+    // mode: "onTouched",
+    // shouldFocusError: true,
     resolver: yupResolver(Schema),
   });
 
   const onSubmit = handleSubmit((values) => {
     console.log(values);
     console.log("Default schema is valid!");
-    if (!data.invoiceNum) {
+    if (!values.invoiceNum) {
       let invoiceNum = createInvoiceNum();
       const invoiceNums = invoices.map((item) => item.invoiceNum);
 
@@ -76,35 +78,35 @@ const InvoiceForm = ({
       }
 
       setData((prev) => ({ ...prev, invoiceNum, status: "pending" }));
-      addInvoice({ ...data, status: "pending", invoiceNum });
-      return quitAndReset();
+      addInvoice({ ...values, status: "pending", invoiceNum });
+      quitAndReset();
     }
 
     if (isEditInvoice) {
-      editInvoice(data.invoiceNum, { ...data, status: "pending" });
-      setData({ ...data, status: "pending" });
-      return quitAndReset();
+      editInvoice(values.invoiceNum, { ...values, status: "pending" });
+      setData({ ...values, status: "pending" });
+      quitAndReset();
     }
   });
 
   const saveDraft = async () => {
+    const values = getValues();
     try {
-      await DraftSchema.validate(data, { abortEarly: false });
+      await DraftSchema.validate(values, { abortEarly: false });
       console.log("Draft schema valid!");
-      console.log(data);
+      console.log(values);
 
-      //   if (!data.invoiceNum) {
-      let invoiceNum = createInvoiceNum();
-      const invoiceNums = invoices.map((item) => item.invoiceNum);
-      while (!uniqueInvoiceNum(invoiceNum, invoiceNums)) {
-        invoiceNum = createInvoiceNum();
+      if (!values.invoiceNum) {
+        let invoiceNum = createInvoiceNum();
+        const invoiceNums = invoices.map((item) => item.invoiceNum);
+        while (!uniqueInvoiceNum(invoiceNum, invoiceNums)) {
+          invoiceNum = createInvoiceNum();
+        }
+
+        addInvoice({ ...values, invoiceNum });
+      } else {
+        addInvoice(values);
       }
-
-      addInvoice({ ...data, invoiceNum });
-      //   }
-      //   else {
-      //     addInvoice(data);
-      //   }
       router.push(`/invoice/${invoiceNum}`);
     } catch (error) {
       console.log(error);
@@ -116,6 +118,7 @@ const InvoiceForm = ({
     setIsEditInvoice(false);
     setData(emptyInvoice);
     setInvoiceItems([{ name: "", quantity: "", price: "", total: "" }]);
+    reset();
     window.location.reload();
   };
 
@@ -175,12 +178,10 @@ const InvoiceForm = ({
               Address
             </label>
             <input
-              type="text"
-              name="senderStreet"
               id="senderStreet"
               placeholder="1600 Amphitheatre Parkway, Mountain View"
               value={data.billFromStreetAddress}
-              {...register("senderStreet", {})}
+              {...register("senderStreet")}
               className={`${
                 errors.senderStreet ? "border-red" : ""
               } form-input truncate`}
@@ -209,12 +210,10 @@ const InvoiceForm = ({
                   State
                 </label>
                 <input
-                  type="text"
-                  name="senderCity"
                   id="senderCity"
                   placeholder="CA"
                   value={data.billFromCity}
-                  {...register("senderCity", {})}
+                  {...register("senderCity")}
                   className={`${
                     errors.senderCity ? "border-red" : ""
                   } form-input`}
@@ -239,12 +238,10 @@ const InvoiceForm = ({
                   Zip Code
                 </label>
                 <input
-                  type="text"
-                  name="senderZipCode"
                   id="senderZipCode"
                   placeholder="94043"
                   value={data.billFromPostalCode}
-                  {...register("senderZipCode", {})}
+                  {...register("senderZipCode")}
                   className={`${
                     errors.senderZipCode ? "border-red" : ""
                   } form-input`}
@@ -270,12 +267,10 @@ const InvoiceForm = ({
                 Country
               </label>
               <input
-                type="text"
-                name="senderCountry"
                 id="senderCountry"
                 placeholder="US"
                 value={data.billFromCountry}
-                {...register("senderCountry", {})}
+                {...register("senderCountry")}
                 className={`${
                   errors.senderCountry ? "border-red" : ""
                 } form-input`}
@@ -304,13 +299,11 @@ const InvoiceForm = ({
               Client's Name
             </label>
             <input
-              type="text"
-              name="name"
               id="name"
               autoComplete="on"
               placeholder="Naughty Cat"
               value={data.billToName}
-              {...register("name", {})}
+              {...register("name")}
               className={`${errors.name ? "border-red" : ""} form-input`}
               onChange={(e) =>
                 setData((prev) => ({
@@ -329,13 +322,11 @@ const InvoiceForm = ({
               Client's Email
             </label>
             <input
-              type="email"
-              name="email"
               id="email"
               autoComplete="on"
               placeholder="support@naughty-cat.com"
               value={data.billToEmail}
-              {...register("email", {})}
+              {...register("email")}
               className={`${errors.email ? "border-red" : ""} form-input`}
               onChange={(e) =>
                 setData((prev) => ({
@@ -356,12 +347,10 @@ const InvoiceForm = ({
               Address
             </label>
             <input
-              type="text"
-              name="clientStreet"
               id="clientStreet"
               placeholder="2406 Columbus Ln, Madison"
               value={data.billToStreetAddress}
-              {...register("clientStreet", {})}
+              {...register("clientStreet")}
               className={`${
                 errors.clientStreet ? "border-red" : ""
               } form-input truncate`}
@@ -390,12 +379,10 @@ const InvoiceForm = ({
                   State
                 </label>
                 <input
-                  type="text"
-                  name="clientCity"
                   id="clientCity"
                   placeholder="WI"
                   value={data.billToCity}
-                  {...register("clientCity", {})}
+                  {...register("clientCity")}
                   className={`${
                     errors.clientCity ? "border-red" : ""
                   } form-input`}
@@ -420,12 +407,10 @@ const InvoiceForm = ({
                   Zip Code
                 </label>
                 <input
-                  type="text"
-                  name="clientZipCode"
                   id="clientZipCode"
                   placeholder="53704"
                   value={data.billToPostalCode}
-                  {...register("clientZipCode", {})}
+                  {...register("clientZipCode")}
                   className={`${
                     errors.clientZipCode ? "border-red" : ""
                   } form-input`}
@@ -451,12 +436,10 @@ const InvoiceForm = ({
                 Country
               </label>
               <input
-                type="text"
-                name="clientCountry"
                 id="clientCountry"
                 placeholder="US"
                 value={data.billToCountry}
-                {...register("clientCountry", {})}
+                {...register("clientCountry")}
                 className={`${
                   errors.clientCountry ? "border-red" : ""
                 } form-input`}
@@ -550,12 +533,10 @@ const InvoiceForm = ({
               Project Description
             </label>
             <input
-              type="text"
-              name="projectDescription"
               id="projectDescription"
               placeholder="Graphic Design Service"
               value={data.projectDescription}
-              {...register("projectDescription", {})}
+              {...register("projectDescription")}
               className={`${
                 errors.projectDescription ? "border-red" : ""
               } form-input truncate`}

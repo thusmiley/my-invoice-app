@@ -27,27 +27,23 @@ const ItemComponent = ({
     <div className="relative space-y-6 pb-[48px] md:flex md:space-y-0 md:space-x-4">
       <div className="form-control md:w-[40%]">
         <label
-          htmlFor={`itemName${index}`}
-          className={`${
-            errors.itemNameindex ? "text-red" : ""
-          } bodyText mb-[10px]`}
+          htmlFor={`name${index}`}
+          className={`${errors.nameindex ? "text-red" : ""} bodyText mb-[10px]`}
         >
           Item Name
         </label>
         <input
-          type="text"
-          name="itemName"
-          id={`itemName${index}`}
+          id={`name${index}`}
           value={item.name}
           placeholder="New Item"
-          {...register(`itemName${index}`, {})}
+          {...register(`name${index}`)}
           className={`${
-            errors.itemNameindex ? "border-red" : ""
+            errors.nameindex ? "border-red" : ""
           } form-input truncate`}
           onChange={onNameChange}
         />
-        {errors.itemNameindex && (
-          <p className="errorMsg">{errors.itemNameindex.message}</p>
+        {errors.nameindex && (
+          <p className="errorMsg">{errors.nameindex.message}</p>
         )}
       </div>
       <div className="flex space-x-4 w-full md:w-[60%]">
@@ -61,12 +57,10 @@ const ItemComponent = ({
             Qty.
           </label>
           <input
-            type="number"
-            name="qty"
             id={`qty${index}`}
             placeholder="0"
             value={itemQty}
-            {...register(`qty${index}`, {})}
+            {...register(`qty${index}`)}
             className={`${errors.qtyindex ? "border-red" : ""} form-input`}
             onChange={(e) => {
               setItemQty(+e.target.value);
@@ -87,14 +81,10 @@ const ItemComponent = ({
             Price
           </label>
           <input
-            type="text"
-            name="price"
             id={`price${index}`}
             placeholder="0"
             value={formatCurrency(itemPrice)}
-            {...register(`price${index}`, {
-              required: "Required",
-            })}
+            {...register(`price${index}`)}
             className={`${errors.priceindex ? "border-red" : ""} form-input`}
             onChange={(e) => {
               setItemPrice(e.target.value);
@@ -111,8 +101,6 @@ const ItemComponent = ({
             Total
           </label>
           <input
-            type="text"
-            name="total"
             id={`total${index}`}
             placeholder="0.00"
             value={formatCurrency(itemTotal)}

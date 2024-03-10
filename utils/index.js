@@ -53,22 +53,42 @@ export const findPaymentDueDate = (date, days) => {
   return result;
 };
 
-export const Schema = yup
-  .object()
-  .shape({
-    senderStreet: yup.string().required("can't be empty"),
-    senderCity: yup.string().required("can't be empty"),
-    senderZipCode: yup.string().required("can't be empty"),
-    senderCountry: yup.string().required("can't be empty"),
-    name: yup.string().required("can't be empty"),
-    email: yup.string().email("invalid").required("can't be empty"),
-    clientStreet: yup.string().required("can't be empty"),
-    clientCity: yup.string().required("can't be empty"),
-    clientZipCode: yup.string().required("can't be empty"),
-    clientCountry: yup.string().required("can't be empty"),
-    projectDescription: yup.string().required("can't be empty"),
-  })
-  .required();
+export const Schema = yup.object().shape({
+  senderStreet: yup.string().required("can't be empty"),
+  senderCity: yup.string().required("can't be empty"),
+  senderZipCode: yup
+    .string()
+    .required("can't be empty")
+    .matches(/^\d{5}(?:[-\s]\d{4})?$/, "invalid"),
+  senderCountry: yup
+    .string()
+    .required("can't be empty")
+    .matches(/[a-zA-Z]{2,}/, "invalid"),
+  name: yup.string().required("can't be empty"),
+  email: yup
+    .string()
+    .required("can't be empty")
+    .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, "invalid"),
+  clientStreet: yup.string().required("can't be empty"),
+  clientCity: yup.string().required("can't be empty"),
+  clientZipCode: yup
+    .string()
+    .required("can't be empty")
+    .matches(/^\d{5}(?:[-\s]\d{4})?$/, "invalid"),
+  clientCountry: yup
+    .string()
+    .required("can't be empty")
+    .matches(/[a-zA-Z]{2,}/, "invalid"),
+  projectDescription: yup.string().required("can't be empty"),
+  invoiceItems: yup
+    .array().of(
+      yup.object().shape({
+        name: yup.string().required("can't be empty"),
+        quantity: yup.string().required("can't be empty"),
+        price: yup.string().required("can't be empty"),
+      })
+    )
+});
 
 export const DraftSchema = yup.object().shape({
   senderStreet: yup.string(),
@@ -76,12 +96,13 @@ export const DraftSchema = yup.object().shape({
   senderZipCode: yup.string(),
   senderCountry: yup.string(),
   name: yup.string(),
-  email: yup.string().email(),
+  email: yup.string(),
   clientStreet: yup.string(),
   clientCity: yup.string(),
   clientZipCode: yup.string(),
   clientCountry: yup.string(),
   projectDescription: yup.string(),
+  //   invoiceItems: yup.array().of(yup.object().shape({})).required(),
 });
 
 export const emptyInvoice = {
