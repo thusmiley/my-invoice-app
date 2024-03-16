@@ -2,17 +2,15 @@
 import { formatCurrency } from "@/utils";
 import ItemComponent from "./ItemComponent";
 import { useEffect, useState } from "react";
+import { useFieldArray } from "react-hook-form";
 
-const ItemListArray = ({
-  items,
-  setItems,
-  isAddInvoice,
-  isEditInvoice,
-  control,
-  register,
-  errors,
-}) => {
+const ItemListArray = ({ items, setItems, isAddInvoice, isEditInvoice }) => {
+  const { fields, append, remove } = useFieldArray({
+    name: "invoiceItems",
+  });
+
   const handleItemAdd = () => {
+    append({ name: "", quantity: 1, price: 0, total: 0 });
     setItems((prev) => [
       ...prev,
       {
@@ -25,6 +23,7 @@ const ItemListArray = ({
   };
 
   const handleItemDelete = (index) => {
+    remove(index);
     setItems((prev) => prev.filter((item, i) => i !== index));
   };
 
@@ -74,20 +73,21 @@ const ItemListArray = ({
 
   return (
     <div>
-      {items?.map((item, index) => (
-        <ItemComponent
-          key={index}
-          item={item}
-          index={index}
-          isAddInvoice={isAddInvoice}
-          isEditInvoice={isEditInvoice}
-          {...{ control, register, errors }}
-          onNameChange={(e) => handleNameChange(e, index)}
-          onQuantityChange={(e) => handleQuantityChange(e, index)}
-          onPriceChange={(e) => handlePriceChange(e, index)}
-          onDelete={() => handleItemDelete(index)}
-        />
-      ))}
+      {fields.map((item, index) => {
+        return (
+          <ItemComponent
+            key={index}
+            item={item}
+            index={index}
+            isAddInvoice={isAddInvoice}
+            isEditInvoice={isEditInvoice}
+            onNameChange={(e) => handleNameChange(e, index)}
+            onQuantityChange={(e) => handleQuantityChange(e, index)}
+            onPriceChange={(e) => handlePriceChange(e, index)}
+                onDelete={() => handleItemDelete(index)}
+          />
+        );
+      })}
       <button
         type="button"
         className="bg-[#F9FAFE] dark:bg-darkGrey rounded-[24px] py-4 w-full bodyText text-blueGrey hover:text-blueGrey dark:text-lightGrey font-bold hover:bg-lightestGrey dark:hover:text-white animation-effect dark:hover:bg-grey"

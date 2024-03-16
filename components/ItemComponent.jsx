@@ -1,20 +1,20 @@
 "use client";
 import { formatCurrency } from "@/utils";
 import { useState, useEffect } from "react";
+import { useFormContext } from "react-hook-form";
 
 const ItemComponent = ({
   item,
   index,
   isAddInvoice,
   isEditInvoice,
-  control,
-  register,
-  errors,
   onNameChange,
   onQuantityChange,
   onPriceChange,
   onDelete,
+//   errors,
 }) => {
+  const methods = useFormContext();
   const [itemQty, setItemQty] = useState(item.quantity);
   const [itemPrice, setItemPrice] = useState(item.price);
   const [itemTotal, setItemTotal] = useState(+itemPrice * itemQty);
@@ -26,75 +26,60 @@ const ItemComponent = ({
   return (
     <div className="relative space-y-6 pb-[48px] md:flex md:space-y-0 md:space-x-4">
       <div className="form-control md:w-[40%]">
-        <label
-          htmlFor={`name${index}`}
-          className={`${errors.nameindex ? "text-red" : ""} bodyText mb-[10px]`}
-        >
+        <label htmlFor={`name${index}`} className={`bodyText mb-[10px]`}>
           Item Name
         </label>
         <input
           id={`name${index}`}
-          value={item.name}
+          defaultValue={item.name}
           placeholder="New Item"
-          {...register(`name${index}`)}
-          className={`${
-            errors.nameindex ? "border-red" : ""
-          } form-input truncate`}
+          {...methods.register(`invoiceItems.${index}.name`)}
+          className={`form-input truncate`}
           onChange={onNameChange}
         />
-        {errors.nameindex && (
-          <p className="errorMsg">{errors.nameindex.message}</p>
-        )}
+        {/* {errors.invoiceItems && (
+          <p className="errorMsg">{errors.invoiceItems.message}</p>
+        )} */}
       </div>
       <div className="flex space-x-4 w-full md:w-[60%]">
         <div className="form-control w-[20%]">
-          <label
-            htmlFor={`qty${index}`}
-            className={`${
-              errors.qtyindex ? "text-red" : ""
-            } bodyText mb-[10px]`}
-          >
+          <label htmlFor={`qty${index}`} className={` bodyText mb-[10px]`}>
             Qty.
           </label>
           <input
             id={`qty${index}`}
             placeholder="0"
-            value={itemQty}
-            {...register(`qty${index}`)}
-            className={`${errors.qtyindex ? "border-red" : ""} form-input`}
+            defaultValue={itemQty}
+            {...methods.register(`invoiceItems.${index}.quantity`)}
+            className={` form-input`}
             onChange={(e) => {
               setItemQty(+e.target.value);
               onQuantityChange(e);
             }}
           />
-          {errors.qtyindex && (
-            <p className="errorMsg">{errors.qtyindex.message}</p>
-          )}
+          {/* {errors.invoiceItems && (
+            <p className="errorMsg">{errors.invoiceItems.message}</p>
+          )} */}
         </div>
         <div className="form-control w-[35%]">
-          <label
-            htmlFor={`price${index}`}
-            className={`${
-              errors.priceindex ? "text-red" : ""
-            } bodyText mb-[10px]`}
-          >
+          <label htmlFor={`price${index}`} className={`bodyText mb-[10px]`}>
             Price
           </label>
           <input
             id={`price${index}`}
             placeholder="0"
-            value={formatCurrency(itemPrice)}
-            {...register(`price${index}`)}
-            className={`${errors.priceindex ? "border-red" : ""} form-input`}
+            defaultValue={formatCurrency(itemPrice)}
+            {...methods.register(`invoiceItems.${index}.price`)}
+            className={` form-input`}
             onChange={(e) => {
               setItemPrice(e.target.value);
               onPriceChange(e);
             }}
             onBlur={() => setItemPrice((prev) => +formatCurrency(prev))}
           />
-          {errors.priceindex && (
-            <p className="errorMsg">{errors.priceindex.message}</p>
-          )}
+          {/* {errors.invoiceItems && (
+            <p className="errorMsg">{errors.invoiceItems.message}</p>
+          )} */}
         </div>
         <div className="form-control w-[35%] pr-5">
           <label htmlFor={`total${index}`} className="bodyText mb-[10px]">
@@ -104,7 +89,7 @@ const ItemComponent = ({
             id={`total${index}`}
             placeholder="0.00"
             value={formatCurrency(itemTotal)}
-            {...register(`total${index}`)}
+            {...methods.register(`invoiceItems.${index}.total`)}
             className="py-4 pr-5 text-almostBlack bodyText font-bold bg-transparent placeholder:text-lightGrey outline-none truncate"
             disabled
           />

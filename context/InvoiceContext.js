@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import exampleData from "../utils/data.json";
-import "dotenv/config";
+// import "dotenv/config";
 
 const InvoiceContext = createContext();
 

@@ -2,6 +2,7 @@
 import Image from "next/image";
 import downArrowIcon from "../public/icon-arrow-down.svg";
 import { useEffect, useState, Fragment } from "react";
+import { useFormContext } from "react-hook-form";
 import {
   formatDate,
   formatCurrency,
@@ -13,6 +14,7 @@ import {
 import { Listbox } from "@headlessui/react";
 
 const PaymentTerms = ({ data, setData, onChange }) => {
+  const { register } = useFormContext();
   const [selectedTerm, setSelectedTerm] = useState(
     findPaymentTerms(data.paymentTerms)
   );
@@ -21,12 +23,12 @@ const PaymentTerms = ({ data, setData, onChange }) => {
     <Listbox
       value={selectedTerm}
       onChange={(e) => {
-          onChange(e);
-          setSelectedTerm(e);
-          setData((prev) => ({
-            ...prev,
-            paymentTerms: findPaymentTermsId(e.id) || 7,
-          }));
+        onChange(e);
+        setSelectedTerm(e);
+        setData((prev) => ({
+          ...prev,
+          paymentTerms: findPaymentTermsId(e.id) || 7,
+        }));
       }}
     >
       <Listbox.Button as="div">

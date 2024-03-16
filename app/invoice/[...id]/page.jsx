@@ -210,7 +210,7 @@ const Invoice = ({ params }) => {
         className={`${
           isDelete ? "" : "hidden"
         } fixed w-full h-full top-0 bottom-0 left-0 right-0 z-20 bg-black/50`}
-        onClick={() => setIsDelete(!isDelete)}
+        // onClick={() => setIsDelete(!isDelete)}
       />
       <div
         className={`${

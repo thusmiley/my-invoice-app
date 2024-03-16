@@ -53,56 +53,57 @@ export const findPaymentDueDate = (date, days) => {
   return result;
 };
 
-export const Schema = yup.object().shape({
-  senderStreet: yup.string().required("can't be empty"),
-  senderCity: yup.string().required("can't be empty"),
-  senderZipCode: yup
+export const saveAndSendSchema = yup.object().shape({
+  billFromStreetAddress: yup.string().required("can't be empty"),
+  billFromCity: yup.string().required("can't be empty"),
+  billFromPostalCode: yup
     .string()
     .required("can't be empty")
     .matches(/^\d{5}(?:[-\s]\d{4})?$/, "invalid"),
-  senderCountry: yup
+  billFromCountry: yup
     .string()
     .required("can't be empty")
     .matches(/[a-zA-Z]{2,}/, "invalid"),
-  name: yup.string().required("can't be empty"),
-  email: yup
+  billToName: yup.string().required("can't be empty"),
+  billToEmail: yup
     .string()
     .required("can't be empty")
     .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, "invalid"),
-  clientStreet: yup.string().required("can't be empty"),
-  clientCity: yup.string().required("can't be empty"),
-  clientZipCode: yup
+  billToStreetAddress: yup.string().required("can't be empty"),
+  billToCity: yup.string().required("can't be empty"),
+  billToPostalCode: yup
     .string()
     .required("can't be empty")
     .matches(/^\d{5}(?:[-\s]\d{4})?$/, "invalid"),
-  clientCountry: yup
+  billToCountry: yup
     .string()
     .required("can't be empty")
     .matches(/[a-zA-Z]{2,}/, "invalid"),
   projectDescription: yup.string().required("can't be empty"),
-  invoiceItems: yup
-    .array().of(
-      yup.object().shape({
-        name: yup.string().required("can't be empty"),
-        quantity: yup.string().required("can't be empty"),
-        price: yup.string().required("can't be empty"),
-      })
-    )
+  invoiceItems: yup.object().shape({
+    name: yup.string().required("can't be empty"),
+    quantity: yup.string().required("can't be empty"),
+    price: yup.string().required("can't be empty"),
+  }),
 });
 
-export const DraftSchema = yup.object().shape({
-  senderStreet: yup.string(),
-  senderCity: yup.string(),
-  senderZipCode: yup.string(),
-  senderCountry: yup.string(),
-  name: yup.string(),
-  email: yup.string(),
-  clientStreet: yup.string(),
-  clientCity: yup.string(),
-  clientZipCode: yup.string(),
-  clientCountry: yup.string(),
+export const saveAsDraftSchema = yup.object().shape({
+  billFromStreetAddress: yup.string(),
+  billFromCity: yup.string(),
+  billFromPostalCode: yup.string(),
+  billFromCountry: yup.string(),
+  billToName: yup.string(),
+  billToEmail: yup.string(),
+  billToStreetAddress: yup.string(),
+  billToCity: yup.string(),
+  billToPostalCode: yup.string(),
+  billToCountry: yup.string(),
   projectDescription: yup.string(),
-  //   invoiceItems: yup.array().of(yup.object().shape({})).required(),
+  invoiceItems: yup.object().shape({
+    name: yup.string(),
+    quantity: yup.string(),
+    price: yup.string(),
+  }),
 });
 
 export const emptyInvoice = {

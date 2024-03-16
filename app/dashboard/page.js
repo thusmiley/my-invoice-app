@@ -119,10 +119,10 @@ export default function Home() {
             >
               <div
                 className="fixed w-full h-full top-[72px] bottom-0 left-0 right-0 z-10 bg-black/50 md:top-[80px] xl:top-0 xl:left-[103px]"
-                onClick={() => {
-                  setIsEditInvoice(false);
-                  setIsAddInvoice(false);
-                }}
+                // onClick={() => {
+                //   setIsEditInvoice(false);
+                //   setIsAddInvoice(false);
+                // }}
               />
             </Transition.Child>
           </Transition>
