@@ -1,7 +1,7 @@
 "use client";
 import { formatCurrency } from "@/utils";
 import { useState, useEffect } from "react";
-import { useFormContext } from "react-hook-form";
+// import { useFormContext } from "react-hook-form";
 
 const ItemComponent = ({
   item,
@@ -12,9 +12,14 @@ const ItemComponent = ({
   onQuantityChange,
   onPriceChange,
   onDelete,
-//   errors,
+  register,
+  errors,
+  getValues,
+  setValue,
+  control,
+  //   errors,
 }) => {
-  const methods = useFormContext();
+//   const methods = useFormContext();
   const [itemQty, setItemQty] = useState(item.quantity);
   const [itemPrice, setItemPrice] = useState(item.price);
   const [itemTotal, setItemTotal] = useState(+itemPrice * itemQty);
@@ -33,7 +38,7 @@ const ItemComponent = ({
           id={`name${index}`}
           defaultValue={item.name}
           placeholder="New Item"
-          {...methods.register(`invoiceItems.${index}.name`)}
+          {...register(`invoiceItems.${index}.name`)}
           className={`form-input truncate`}
           onChange={onNameChange}
         />
@@ -50,7 +55,7 @@ const ItemComponent = ({
             id={`qty${index}`}
             placeholder="0"
             defaultValue={itemQty}
-            {...methods.register(`invoiceItems.${index}.quantity`)}
+            {...register(`invoiceItems.${index}.quantity`)}
             className={` form-input`}
             onChange={(e) => {
               setItemQty(+e.target.value);
@@ -69,7 +74,7 @@ const ItemComponent = ({
             id={`price${index}`}
             placeholder="0"
             defaultValue={formatCurrency(itemPrice)}
-            {...methods.register(`invoiceItems.${index}.price`)}
+            {...register(`invoiceItems.${index}.price`)}
             className={` form-input`}
             onChange={(e) => {
               setItemPrice(e.target.value);
@@ -89,7 +94,7 @@ const ItemComponent = ({
             id={`total${index}`}
             placeholder="0.00"
             value={formatCurrency(itemTotal)}
-            {...methods.register(`invoiceItems.${index}.total`)}
+            {...register(`invoiceItems.${index}.total`)}
             className="py-4 pr-5 text-almostBlack bodyText font-bold bg-transparent placeholder:text-lightGrey outline-none truncate"
             disabled
           />

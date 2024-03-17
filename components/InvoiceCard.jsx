@@ -21,9 +21,7 @@ const InvoiceCard = ({ invoice }) => {
           </h2>
           <p className="bodyText mt-8 md:mt-0">
             Due&nbsp;
-            {formatDate(
-              findPaymentDueDate(invoice.date, invoice.paymentTerms)
-            )}
+            {formatDate(findPaymentDueDate(invoice.date, invoice.paymentTerms))}
           </p>
         </div>
         <h3 className="bodyText">{invoice.billToName}</h3>

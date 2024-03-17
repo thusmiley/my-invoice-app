@@ -10,9 +10,6 @@ export function useInvoiceContext() {
 }
 
 export function InvoiceProvider({ children }) {
-  const [filterStatus, setFilterStatus] = useState("all");
-  const [isAddInvoice, setIsAddInvoice] = useState(false);
-  const [isEditInvoice, setIsEditInvoice] = useState(false);
   const [isDemo, setIsDemo] = useState(
     typeof window !== "undefined" && window.localStorage.getItem("localIsDemo")
       ? window.localStorage.getItem("localIsDemo")
@@ -24,24 +21,24 @@ export function InvoiceProvider({ children }) {
       ? window.localStorage.getItem("localIsLoggedin")
       : false
   );
+  const [invoices, setInvoices] = useState();
+  const [isAddInvoice, setIsAddInvoice] = useState(false);
+  const [isEditInvoice, setIsEditInvoice] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("localIsDemo", isDemo);
     localStorage.setItem("localIsLoggedin", isLoggedin);
-  }, [isDemo, isLoggedin]);
-
-  const [invoices, setInvoices] = useState(() => {
     if (isDemo) {
       const localStoredInvoices = localStorage.getItem("localInvoices");
       if (localStoredInvoices) {
-        return JSON.parse(localStoredInvoices);
+        setInvoices(JSON.parse(localStoredInvoices));
       } else {
-        return exampleData;
+        return setInvoices(exampleData);
       }
     } else {
-      return [];
+      return setInvoices([]);
     }
-  });
+  }, [isDemo, isLoggedin]);
 
   useEffect(() => {
     const stringInvoices = JSON.stringify(invoices);
@@ -50,11 +47,7 @@ export function InvoiceProvider({ children }) {
     }
   }, [invoices, isDemo]);
 
-  const handleFilterClick = (e) => {
-    setFilterStatus(e.target.value);
-  };
-
-  const deleteInvoice = async (invoiceNum) => {
+  const deleteInvoice = (invoiceNum) => {
     setInvoices((prev) =>
       prev.filter((invoice) => invoice.invoiceNum !== invoiceNum)
     );
@@ -73,7 +66,7 @@ export function InvoiceProvider({ children }) {
     // }
   };
 
-  const addInvoice = async (newInvoice) => {
+  const addInvoice = (newInvoice) => {
     setInvoices((prev) => [...prev, newInvoice]);
     if (isDemo) return;
 
@@ -89,17 +82,15 @@ export function InvoiceProvider({ children }) {
     //    }
   };
 
-  const editInvoice = async (invoiceNum, edited) => {
+  const editInvoice = (invoiceNum, newInvoice) => {
     setInvoices((prev) =>
       prev.map((invoice) => {
         if (invoice.invoiceNum === invoiceNum) {
-          return edited;
+          return newInvoice;
         }
-
         return invoice;
       })
     );
-
     if (isDemo) return;
 
     // try {
@@ -117,11 +108,8 @@ export function InvoiceProvider({ children }) {
   return (
     <InvoiceContext.Provider
       value={{
-        filterStatus,
-        setFilterStatus,
         invoices,
         setInvoices,
-        handleFilterClick,
         isAddInvoice,
         setIsAddInvoice,
         isEditInvoice,

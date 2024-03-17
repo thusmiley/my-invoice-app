@@ -3,11 +3,8 @@ import Image from "next/image";
 import arrowDownIcon from "../public/icon-arrow-down.svg";
 import { useState, useEffect, useRef } from "react";
 import { Transition } from "@headlessui/react";
-import { useInvoiceContext } from "@/context/InvoiceContext";
 
-const Filter = () => {
-  const { filterStatus, setFilterStatus, handleFilterClick } =
-    useInvoiceContext();
+const Filter = ({ filterStatus, setFilterStatus, handleFilterClick }) => {
   const [filterIsOpen, setFilterIsOpen] = useState(false);
   const dropdown = useRef(null);
 

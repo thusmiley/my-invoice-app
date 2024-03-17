@@ -12,11 +12,11 @@ import Head from "next/head";
 import { emptyInvoice } from "@/utils";
 
 export default function Home() {
+  const [filterStatus, setFilterStatus] = useState("all");
   const [loadMore, setLoadMore] = useState(10);
   const {
     invoices,
     setInvoices,
-    filterStatus,
     isAddInvoice,
     setIsAddInvoice,
     isEditInvoice,
@@ -25,33 +25,44 @@ export default function Home() {
     isDemo,
   } = useInvoiceContext();
 
+//   useEffect(() => {
+//     if (isLoggedin) {
+//           fetch(`${process.env.BACK_END_URL}/invoices/all`, {
+//             credentials: "include",
+//           })
+//             .then((response) => {
+//               if (response.status === 404) {
+//                 console.log("error invoices 404");
+//                 return;
+//               }
+//               return response.json();
+//             })
+//             .then((response) => {
+//               console.log(response);
+//               setInvoices(response);
+//             })
+//             .catch((err) => {
+//               console.log(err);
+//               setInvoices([]);
+//             });
+//         }
+//         console.log(invoices);
+//   }, [isDemo, isLoggedin]);
+
+  useEffect(() => {
+    const stringInvoices = JSON.stringify(invoices);
+    if (isDemo && stringInvoices) {
+      localStorage.setItem("localInvoices", stringInvoices);
+    }
+  }, [invoices, isDemo]);
+
+  const handleFilterClick = (e) => {
+    setFilterStatus(e.target.value);
+  };
+
   const handleLoadMore = () => {
     setLoadMore(loadMore + 10);
   };
-
-  //   useEffect(() => {
-  //     if (isLoggedin) {
-  //       fetch(`${process.env.BACK_END_URL}/invoices/all`, {
-  //         credentials: "include",
-  //       })
-  //         .then((response) => {
-  //           if (response.status === 404) {
-  //             console.log("error invoices 404");
-  //             return;
-  //           }
-  //           return response.json();
-  //         })
-  //         .then((response) => {
-  //           console.log(response);
-  //           setInvoices(response);
-  //         })
-  //         .catch((err) => {
-  //           console.log(err);
-  //           setInvoices([]);
-  //         });
-  //     }
-  //     console.log(invoices);
-  //   }, [isLoggedin]);
 
   return (
     <main className="min-h-screen z-0 pt-[72px] mb-[90px] px-6 mx-auto md:px-[48px] xl:max-w-[730px]">
@@ -87,7 +98,11 @@ export default function Home() {
           )}
         </div>
         <div className="flex items-center">
-          <Filter />
+          <Filter
+            filterStatus={filterStatus}
+            setFilterStatus={setFilterStatus}
+            handleFilterClick={handleFilterClick}
+          />
           <AddNewButton
             isAddInvoice={isAddInvoice}
             setIsAddInvoice={setIsAddInvoice}
@@ -117,13 +132,7 @@ export default function Home() {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <div
-                className="fixed w-full h-full top-[72px] bottom-0 left-0 right-0 z-10 bg-black/50 md:top-[80px] xl:top-0 xl:left-[103px]"
-                // onClick={() => {
-                //   setIsEditInvoice(false);
-                //   setIsAddInvoice(false);
-                // }}
-              />
+              <div className="fixed w-full h-full top-[72px] bottom-0 left-0 right-0 z-10 bg-black/50 md:top-[80px] xl:top-0 xl:left-[103px]" />
             </Transition.Child>
           </Transition>
         </div>

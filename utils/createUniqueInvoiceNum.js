@@ -37,7 +37,7 @@ const letters = [
   "z",
 ];
 
-export const createInvoiceNum = (invoiceNums) => {
+export const createInvoiceNum = () => {
   let invoiceNum = "";
 
   for (let i = 0; i < 2; i++) {
@@ -54,5 +54,5 @@ export const createInvoiceNum = (invoiceNums) => {
 };
 
 export const uniqueInvoiceNum = (invoiceNum, invoiceNums) => {
-  return !invoiceNum.includes(invoiceNum);
+  return !invoiceNums.includes(invoiceNum);
 };

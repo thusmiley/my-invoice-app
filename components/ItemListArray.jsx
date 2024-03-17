@@ -4,17 +4,28 @@ import ItemComponent from "./ItemComponent";
 import { useEffect, useState } from "react";
 import { useFieldArray } from "react-hook-form";
 
-const ItemListArray = ({ items, setItems, isAddInvoice, isEditInvoice }) => {
+const ItemListArray = ({
+  items,
+  setItems,
+  isAddInvoice,
+  isEditInvoice,
+  register,
+  errors,
+  getValues,
+  setValue,
+  control,
+}) => {
   const { fields, append, remove } = useFieldArray({
+    control,
     name: "invoiceItems",
   });
 
   const handleItemAdd = () => {
-    append({ name: "", quantity: 1, price: 0, total: 0 });
+    append({ name: "New Item", quantity: 1, price: 0, total: 0 });
     setItems((prev) => [
       ...prev,
       {
-        name: "",
+        name: "New Item",
         quantity: 1,
         price: 0,
         total: 0,
@@ -84,7 +95,8 @@ const ItemListArray = ({ items, setItems, isAddInvoice, isEditInvoice }) => {
             onNameChange={(e) => handleNameChange(e, index)}
             onQuantityChange={(e) => handleQuantityChange(e, index)}
             onPriceChange={(e) => handlePriceChange(e, index)}
-                onDelete={() => handleItemDelete(index)}
+            onDelete={() => handleItemDelete(index)}
+            {...{ register, errors, getValues, setValue, control }}
           />
         );
       })}

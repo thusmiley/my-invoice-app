@@ -6,7 +6,7 @@
     "paymentTerms": 1,
     "billToName": "Jensen Huang",
     "billToEmail": "jensenh@mail.com",
-    "status": "paid",
+    "status": "pending",
     "billFromStreetAddress": "19 Union Terrace",
     "billFromCity": "London",
     "billFromPostalCode": "E1 3EZ",
