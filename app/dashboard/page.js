@@ -118,10 +118,6 @@ export default function Home() {
             >
               <InvoiceForm
                 invoice={emptyInvoice}
-                isAddInvoice={isAddInvoice}
-                setIsAddInvoice={setIsAddInvoice}
-                isEditInvoice={isEditInvoice}
-                setIsEditInvoice={setIsEditInvoice}
               />
             </Transition.Child>
             <Transition.Child
@@ -171,7 +167,7 @@ export default function Home() {
                     <InvoiceCard key={invoice.invoiceNum} invoice={invoice} />
                   ))}
           </div>
-          {invoices?.length > 10 && (
+          {invoices?.length > 10 && invoices?.length > loadMore &&  (
             <button
               type="button"
               className="bg-purple text-white mt-12 animation-effect rounded-full py-[6px] px-5 hover:bg-lightPurple"

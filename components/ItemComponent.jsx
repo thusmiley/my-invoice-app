@@ -1,7 +1,6 @@
 "use client";
 import { formatCurrency } from "@/utils";
 import { useState, useEffect } from "react";
-// import { useFormContext } from "react-hook-form";
 
 const ItemComponent = ({
   item,
@@ -14,12 +13,9 @@ const ItemComponent = ({
   onDelete,
   register,
   errors,
-  getValues,
   setValue,
   control,
-  //   errors,
 }) => {
-//   const methods = useFormContext();
   const [itemQty, setItemQty] = useState(item.quantity);
   const [itemPrice, setItemPrice] = useState(item.price);
   const [itemTotal, setItemTotal] = useState(+itemPrice * itemQty);

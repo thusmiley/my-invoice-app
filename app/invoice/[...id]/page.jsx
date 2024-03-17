@@ -73,7 +73,7 @@ const Invoice = ({ params }) => {
               invoice?.status === "paid" ? "justify-end" : "justify-between"
             } bg-white dark:bg-darkGrey p-6 flex  items-center absolute bottom-0 w-full left-0 right-0 md:relative md:justify-end md:p-0 space-x-2`}
           >
-            {invoice?.status === "draft" && (
+            {invoice?.status !== "paid" && (
               <button
                 className="bodyText font-bold py-3 px-6 bg-[#F9FAFE] dark:bg-grey rounded-full hover:bg-lightestGrey dark:hover:text-blueGrey dark:hover:bg-white animation-effect"
                 onClick={() => setIsEditInvoice(!isEditInvoice)}
@@ -184,10 +184,6 @@ const Invoice = ({ params }) => {
         >
           <InvoiceForm
             invoice={invoice}
-            isAddInvoice={isAddInvoice}
-            setIsAddInvoice={setIsAddInvoice}
-            isEditInvoice={isEditInvoice}
-            setIsEditInvoice={setIsEditInvoice}
           />
         </Transition.Child>
         <Transition.Child

@@ -11,7 +11,6 @@ const ItemListArray = ({
   isEditInvoice,
   register,
   errors,
-  getValues,
   setValue,
   control,
 }) => {
@@ -96,7 +95,7 @@ const ItemListArray = ({
             onQuantityChange={(e) => handleQuantityChange(e, index)}
             onPriceChange={(e) => handlePriceChange(e, index)}
             onDelete={() => handleItemDelete(index)}
-            {...{ register, errors, getValues, setValue, control }}
+            {...{ register, errors, setValue, control }}
           />
         );
       })}

@@ -12,6 +12,7 @@ const NavBar = () => {
   const [darkMode, setDarkMode] = useState(true);
   const {
     isAddInvoice,
+    isEditInvoice,
     setIsAddInvoice,
     isDemo,
     setIsDemo,
@@ -21,27 +22,27 @@ const NavBar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const pathname = usePathname();
 
-//   const [userData, setUserData] = useState();
+  //   const [userData, setUserData] = useState();
 
-//   useEffect(() => {
-//     if (isLoggedin) {
-//       fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
-//         .then((response) => {
-//           if (response.status === 404) {
-//             console.log("error user data 404");
-//             return;
-//           }
-//           return response.json();
-//         })
-//         .then((response) => {
-//           console.log(response);
-//           setUserData(response);
-//         })
-//         .catch((error) => {
-//           console.log(error);
-//         });
-//     }
-//   }, [isLoggedin]);
+  //   useEffect(() => {
+  //     if (isLoggedin) {
+  //       fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
+  //         .then((response) => {
+  //           if (response.status === 404) {
+  //             console.log("error user data 404");
+  //             return;
+  //           }
+  //           return response.json();
+  //         })
+  //         .then((response) => {
+  //           console.log(response);
+  //           setUserData(response);
+  //         })
+  //         .catch((error) => {
+  //           console.log(error);
+  //         });
+  //     }
+  //   }, [isLoggedin]);
 
   useEffect(() => {
     if (
@@ -72,6 +73,11 @@ const NavBar = () => {
       <nav className="bg-[#373B53] dark:bg-darkGrey flex justify-between items-center xl:flex-col xl:justify-start xl:fixed xl:top-0 xl:rounded-r-[30px] xl:items-stretch xl:h-full">
         <Link
           href={pathname === "/login" ? "/login" : "/dashboard"}
+          className={`${
+            isAddInvoice || isEditInvoice
+              ? "pointer-events-none"
+              : "cursor-pointer"
+          }`}
           onClick={() => setIsAddInvoice(false)}
         >
           <svg
@@ -160,8 +166,10 @@ const NavBar = () => {
             width={32}
             height={32}
             alt="profile photo"
-            className={`${
-              pathname === "/login" ? "hidden" : ""
+            className={`${pathname === "/login" ? "hidden" : ""} ${
+              isAddInvoice || isEditInvoice
+                ? "pointer-events-none"
+                : "cursor-pointer"
             } w-8 h-auto object-cover object-center rounded-full xl:w-10 cursor-pointer`}
             priority={true}
             onClick={() => setIsProfileOpen(!isProfileOpen)}

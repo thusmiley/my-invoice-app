@@ -2,19 +2,10 @@
 import Image from "next/image";
 import downArrowIcon from "../public/icon-arrow-down.svg";
 import { useEffect, useState, Fragment } from "react";
-// import { useFormContext } from "react-hook-form";
-import {
-  formatDate,
-  formatCurrency,
-  terms,
-  data,
-  findPaymentTerms,
-  findPaymentTermsId,
-} from "@/utils";
+import { terms, findPaymentTerms, findPaymentTermsId } from "@/utils";
 import { Listbox } from "@headlessui/react";
 
 const PaymentTerms = ({ data, setData, onChange }) => {
-//   const { register } = useFormContext();
   const [selectedTerm, setSelectedTerm] = useState(
     findPaymentTerms(data.paymentTerms)
   );

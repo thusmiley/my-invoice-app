@@ -1,5 +1,3 @@
-import * as yup from "yup";
-
 export const formatDate = (str) => {
   return new Date(str).toLocaleDateString("en-us", {
     year: "numeric",
@@ -53,61 +51,9 @@ export const findPaymentDueDate = (date, days) => {
   return result;
 };
 
-export const saveAndSendSchema = yup.object().shape({
-  billFromStreetAddress: yup.string().required("can't be empty"),
-  billFromCity: yup.string().required("can't be empty"),
-  billFromPostalCode: yup
-    .string()
-    .required("can't be empty"),
-    // .matches(/^\d{5}(?:[-\s]\d{4})?$/, "invalid"),
-  billFromCountry: yup
-    .string()
-    .required("can't be empty"),
-    // .matches(/[a-zA-Z]{2,}/, "invalid"),
-  billToName: yup.string().required("can't be empty"),
-  billToEmail: yup
-    .string()
-    .required("can't be empty"),
-    // .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, "invalid"),
-  billToStreetAddress: yup.string().required("can't be empty"),
-  billToCity: yup.string().required("can't be empty"),
-  billToPostalCode: yup
-    .string()
-    .required("can't be empty"),
-    // .matches(/^\d{5}(?:[-\s]\d{4})?$/, "invalid"),
-  billToCountry: yup
-    .string()
-    .required("can't be empty"),
-    // .matches(/[a-zA-Z]{2,}/, "invalid"),
-  projectDescription: yup.string().required("can't be empty"),
-//   invoiceItems: yup.object().shape({
-//     name: yup.string().required("can't be empty"),
-//     quantity: yup.string().required("can't be empty"),
-//     price: yup.string().required("can't be empty"),
-//   }),
-});
-
-export const saveAsDraftSchema = yup.object().shape({
-  billFromStreetAddress: yup.string(),
-  billFromCity: yup.string(),
-  billFromPostalCode: yup.string(),
-  billFromCountry: yup.string(),
-  billToName: yup.string(),
-  billToEmail: yup.string(),
-  billToStreetAddress: yup.string(),
-  billToCity: yup.string(),
-  billToPostalCode: yup.string(),
-  billToCountry: yup.string(),
-  projectDescription: yup.string(),
-//   invoiceItems: yup.object().shape({
-//     name: yup.string(),
-//     quantity: yup.string(),
-//     price: yup.string(),
-//   }),
-});
-
+const today = new Date();
 export const emptyInvoice = {
-  date: new Date(),
+  date: today.toISOString().split("T")[0],
   projectDescription: "",
   paymentTerms: 7,
   billToName: "",

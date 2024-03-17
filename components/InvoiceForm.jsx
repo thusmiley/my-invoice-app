@@ -1,46 +1,34 @@
 "use client";
 import Image from "next/image";
 import backArrowIcon from "../public/icon-arrow-left.svg";
-import {
-  useForm,
-  Controller,
-} from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import DatePicker from "react-datepicker";
 import "../app/styles/datepicker.css";
-import { useEffect, useState, Fragment } from "react";
-import {
-  formatDate,
-  formatCurrency,
-  terms,
-  findPaymentTerms,
-  findPaymentDueDate,
-  saveAndSendSchema,
-  saveAsDraftSchema,
-  emptyInvoice,
-} from "@/utils";
+import { useEffect, useState } from "react";
+import { emptyInvoice } from "@/utils";
 import {
   createInvoiceNum,
   uniqueInvoiceNum,
 } from "@/utils/createUniqueInvoiceNum";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 
 import PaymentTerms from "./PaymentTerms";
 import ItemListArray from "./ItemListArray";
 import { useInvoiceContext } from "@/context/InvoiceContext";
 
-const InvoiceForm = ({
-  invoice,
-  isAddInvoice,
-  setIsAddInvoice,
-  isEditInvoice,
-  setIsEditInvoice,
-}) => {
+const InvoiceForm = ({ invoice }) => {
   const router = useRouter();
-  const { invoices, editInvoice, addInvoice } = useInvoiceContext();
-  const [data, setData] = useState(invoice);
+  const {
+    invoices,
+    editInvoice,
+    addInvoice,
+    isAddInvoice,
+    setIsAddInvoice,
+    isEditInvoice,
+    setIsEditInvoice,
+  } = useInvoiceContext();
 
+  const [data, setData] = useState(invoice);
   const [invoiceItems, setInvoiceItems] = useState(invoice?.invoiceItems);
 
   useEffect(() => {
@@ -56,8 +44,8 @@ const InvoiceForm = ({
   const {
     register,
     formState: { errors },
-    getValues,
     setValue,
+    getValues,
     control,
     setError,
     reset,
@@ -66,26 +54,12 @@ const InvoiceForm = ({
     criteriaMode: "firstError",
     mode: "all",
     shouldFocusError: true,
-    resolver: yupResolver(saveAndSendSchema),
     defaultValues: {
       invoiceItems: invoiceItems,
     },
   });
 
-  //   const {
-  //     register,
-  //     formState: { errors },
-  //     getValues,
-  //     setValue,
-  //     control,
-  //     setError,
-  //     reset,
-  //     handleSubmit,
-  //   } = methods;
-
-  const onSubmit = (data, event) => {
-    console.log(data);
-    console.log("Default schema is valid!");
+  const onSubmit = () => {
     if (!data.invoiceNum) {
       let invoiceNum = createInvoiceNum();
       const invoiceNums = invoices.map((item) => item.invoiceNum);
@@ -94,44 +68,30 @@ const InvoiceForm = ({
       }
       setData((prev) => ({ ...prev, invoiceNum, status: "pending" }));
       addInvoice({ ...data, status: "pending", invoiceNum });
-      event.preventDefault();
       return quitAndReset();
     }
     if (isEditInvoice) {
       editInvoice(data.invoiceNum, { ...data, status: "pending" });
       setData({ ...data, status: "pending" });
-      event.preventDefault();
       return quitAndReset();
     }
     if (isAddInvoice) {
       addInvoice({ ...data, status: "pending" });
       setData({ ...data, status: "pending" });
-      event.preventDefault();
       return quitAndReset();
     }
   };
 
-  const saveDraft = async () => {
-    const data = getValues();
-    try {
-      await DraftSchema.validate(data, { abortEarly: false });
-      console.log("Draft schema valid!");
-      console.log(data);
-      if (!data.invoiceNum) {
-        let invoiceNum = createInvoiceNum();
-        const invoiceNums = invoices.map((item) => item.invoiceNum);
-        while (!uniqueInvoiceNum(invoiceNum, invoiceNums)) {
-          invoiceNum = createInvoiceNum();
-        }
-        addInvoice({ ...data, invoiceNum });
-      } else {
-        addInvoice(data);
+  const saveDraft = () => {
+    if (!data.invoiceNum) {
+      let invoiceNum = createInvoiceNum();
+      const invoiceNums = invoices.map((item) => item.invoiceNum);
+      while (!uniqueInvoiceNum(invoiceNum, invoiceNums)) {
+        invoiceNum = createInvoiceNum();
       }
-    } catch (error) {
-      error.inner?.map((inner, index) => {
-        const { type, path, errors } = inner;
-        return setError(path, { type, message: errors[index] });
-      });
+      addInvoice({ ...data, invoiceNum });
+    } else {
+      addInvoice(data);
     }
     return quitAndReset();
   };
@@ -177,7 +137,6 @@ const InvoiceForm = ({
         />
         Go back
       </button>
-      {/* <FormProvider {...methods}> */}
       <form
         className="relative md:mt-[56px] md:px-[56px]"
         onSubmit={handleSubmit(onSubmit)}
@@ -203,7 +162,9 @@ const InvoiceForm = ({
               id="billFromStreetAddress"
               placeholder="1600 Amphitheatre Parkway, Mountain View"
               value={data?.billFromStreetAddress}
-              {...register("billFromStreetAddress")}
+              {...register("billFromStreetAddress", {
+                required: "can't be empty",
+              })}
               className={`${
                 errors.billFromStreetAddress ? "border-red" : ""
               } form-input truncate`}
@@ -230,8 +191,10 @@ const InvoiceForm = ({
                 <input
                   id="billFromCity"
                   placeholder="CA"
-                  value={data.billFromCity}
-                  {...register("billFromCity")}
+                  value={data?.billFromCity}
+                  {...register("billFromCity", {
+                    required: "can't be empty",
+                  })}
                   className={`${
                     errors.billFromCity ? "border-red" : ""
                   } form-input`}
@@ -257,8 +220,10 @@ const InvoiceForm = ({
                 <input
                   id="billFromPostalCode"
                   placeholder="94043"
-                  value={data.billFromPostalCode}
-                  {...register("billFromPostalCode")}
+                  value={data?.billFromPostalCode}
+                  {...register("billFromPostalCode", {
+                    required: "can't be empty",
+                  })}
                   className={`${
                     errors.billFromPostalCode ? "border-red" : ""
                   } form-input`}
@@ -285,7 +250,9 @@ const InvoiceForm = ({
                 id="billFromCountry"
                 placeholder="US"
                 value={data.billFromCountry}
-                {...register("billFromCountry")}
+                {...register("billFromCountry", {
+                  required: "can't be empty",
+                })}
                 className={`${
                   errors.billFromCountry ? "border-red" : ""
                 } form-input`}
@@ -316,7 +283,9 @@ const InvoiceForm = ({
               autoComplete="on"
               placeholder="Naughty Cat"
               value={data.billToName}
-              {...register("billToName")}
+              {...register("billToName", {
+                required: "can't be empty",
+              })}
               className={`${errors.billToName ? "border-red" : ""} form-input`}
               onChange={(e) => {
                 setData((prev) => ({
@@ -339,7 +308,13 @@ const InvoiceForm = ({
               autoComplete="on"
               placeholder="support@naughty-cat.com"
               value={data.billToEmail}
-              {...register("billToEmail")}
+              {...register("billToEmail", {
+                required: "can't be empty",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                  message: "invalid",
+                },
+              })}
               className={`${errors.billToEmail ? "border-red" : ""} form-input`}
               onChange={(e) => {
                 setData((prev) => ({
@@ -364,7 +339,9 @@ const InvoiceForm = ({
               id="billToStreetAddress"
               placeholder="2406 Columbus Ln, Madison"
               value={data.billToStreetAddress}
-              {...register("billToStreetAddress")}
+              {...register("billToStreetAddress", {
+                required: "can't be empty",
+              })}
               className={`${
                 errors.billToStreetAddress ? "border-red" : ""
               } form-input truncate`}
@@ -392,7 +369,9 @@ const InvoiceForm = ({
                   id="billToCity"
                   placeholder="WI"
                   value={data.billToCity}
-                  {...register("billToCity")}
+                  {...register("billToCity", {
+                    required: "can't be empty",
+                  })}
                   className={`${
                     errors.billToCity ? "border-red" : ""
                   } form-input`}
@@ -419,7 +398,9 @@ const InvoiceForm = ({
                   id="billToPostalCode"
                   placeholder="53704"
                   value={data.billToPostalCode}
-                  {...register("billToPostalCode")}
+                  {...register("billToPostalCode", {
+                    required: "can't be empty",
+                  })}
                   className={`${
                     errors.billToPostalCode ? "border-red" : ""
                   } form-input`}
@@ -444,7 +425,9 @@ const InvoiceForm = ({
                 id="billToCountry"
                 placeholder="US"
                 value={data.billToCountry}
-                {...register("billToCountry")}
+                {...register("billToCountry", {
+                  required: "can't be empty",
+                })}
                 className={`${
                   errors.billToCountry ? "border-red" : ""
                 } form-input`}
@@ -471,7 +454,6 @@ const InvoiceForm = ({
               <Controller
                 control={control}
                 name="date"
-                id="date"
                 render={({ field }) => (
                   <DatePicker
                     selected={data.date}
@@ -502,7 +484,7 @@ const InvoiceForm = ({
                       }));
                     }}
                     onFocus={(e) => (e.target.readOnly = true)}
-                    readOnly={isEditInvoice ? true : false}
+                    // readOnly={isEditInvoice ? true : false}
                   />
                 )}
               />
@@ -535,7 +517,9 @@ const InvoiceForm = ({
               id="projectDescription"
               placeholder="Graphic Design Service"
               value={data.projectDescription}
-              {...register("projectDescription")}
+              {...register("projectDescription", {
+                required: "can't be empty",
+              })}
               className={`${
                 errors.projectDescription ? "border-red" : ""
               } form-input truncate`}
@@ -563,7 +547,7 @@ const InvoiceForm = ({
             setItems={setInvoiceItems}
             isAddInvoice={isAddInvoice}
             isEditInvoice={isEditInvoice}
-            {...{ register, errors, getValues, setValue, control }}
+            {...{ register, errors, setValue, control }}
           />
         </div>
 
@@ -591,6 +575,7 @@ const InvoiceForm = ({
                 Save as Draft
               </button>
             )}
+
             <button
               type="submit"
               className="bodyText text-[12px] md:text-[16px] text-white dark:text-white font-bold py-3 px-6 bg-purple dark:bg-purple rounded-full hover:bg-lightPurple dark:hover:bg-lightPurple animation-effect"
@@ -601,7 +586,6 @@ const InvoiceForm = ({
           </div>
         </div>
       </form>
-      {/* </FormProvider> */}
     </div>
   );
 };
