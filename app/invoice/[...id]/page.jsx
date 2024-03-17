@@ -46,6 +46,11 @@ const Invoice = ({ params }) => {
     <main className="min-h-screen pt-[72px] relative px-6 mx-auto pb-[120px] md:pb-[50px] xl:max-w-[730px]">
       <Head>
         <title>Invoice #{params.id} | My Invoice App</title>
+        <meta
+          name="description"
+          content="Made by Thu Smiley @Naughty Cat"
+          key="desc"
+        />
       </Head>
       <button
         className="flex items-center bodyText font-bold text-almostBlack my-8 md:mt-[48px] hover:text-lightGrey animation-effect"
@@ -182,9 +187,7 @@ const Invoice = ({ params }) => {
           leaveFrom="translate-x-0 opacity-100"
           leaveTo="-translate-x-full opacity-0"
         >
-          <InvoiceForm
-            invoice={invoice}
-          />
+          <InvoiceForm invoice={invoice} />
         </Transition.Child>
         <Transition.Child
           enter="transition-opacity ease-linear duration-300"
@@ -194,9 +197,7 @@ const Invoice = ({ params }) => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div
-            className="fixed w-full h-full top-[72px] bottom-0 left-0 right-0 z-10 bg-black/50 md:top-[80px] xl:top-0 xl:left-[103px]"
-          />
+          <div className="fixed w-full h-full top-[72px] bottom-0 left-0 right-0 z-10 bg-black/50 md:top-[80px] xl:top-0 xl:left-[103px]" />
         </Transition.Child>
       </Transition>
 

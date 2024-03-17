@@ -11,7 +11,11 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="icon" type="image/svg" href="/logo.svg" />
         <meta property="og:image" content="/preview.jpg" />
-
+        <meta
+          name="description"
+          content="Made by Thu Smiley @Naughty Cat"
+          key="desc"
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"

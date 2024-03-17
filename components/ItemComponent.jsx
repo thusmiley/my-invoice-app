@@ -99,7 +99,7 @@ const ItemComponent = ({
             placeholder="0.00"
             value={formatCurrency(itemTotal)}
             {...register(`invoiceItems.${index}.total`)}
-            className="py-4 pr-5 text-almostBlack bodyText font-bold bg-transparent placeholder:text-lightGrey outline-none truncate"
+            className="py-4 pr-5 text-lightGrey dark:text-lightestGrey bodyText font-bold bg-transparent placeholder:text-lightGrey  dark:placeholder:text-lightestGrey outline-none truncate"
             disabled
           />
         </div>

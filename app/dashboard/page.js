@@ -68,6 +68,11 @@ export default function Home() {
     <main className="min-h-screen z-0 pt-[72px] mb-[90px] px-6 mx-auto md:px-[48px] max-w-[830px]">
       <Head>
         <title>Dashboard | My Invoice App</title>
+        <meta
+          name="description"
+          content="Made by Thu Smiley @Naughty Cat"
+          key="desc"
+        />
       </Head>
       <section className="flex items-center justify-between my-[34px] md:my-[56px]">
         <div>
@@ -116,9 +121,7 @@ export default function Home() {
               leaveFrom="translate-x-0 opacity-100"
               leaveTo="-translate-x-full opacity-0"
             >
-              <InvoiceForm
-                invoice={emptyInvoice}
-              />
+              <InvoiceForm invoice={emptyInvoice} />
             </Transition.Child>
             <Transition.Child
               enter="transition-opacity ease-linear duration-300"
@@ -167,7 +170,7 @@ export default function Home() {
                     <InvoiceCard key={invoice.invoiceNum} invoice={invoice} />
                   ))}
           </div>
-          {invoices?.length > 10 && invoices?.length > loadMore &&  (
+          {invoices?.length > 10 && invoices?.length > loadMore && (
             <button
               type="button"
               className="bg-purple text-white mt-12 animation-effect rounded-full py-[6px] px-5 hover:bg-lightPurple"
