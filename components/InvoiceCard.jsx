@@ -28,7 +28,7 @@ const InvoiceCard = ({ invoice }) => {
       </div>
 
       <div className="flex justify-between items-end -mt-4 md:mt-0 md:items-center md:justify-end">
-        <h4 className="priceText -mb-2 md:mb-0 md:mr-10">
+        <h4 className="priceText truncate -mb-2 md:mb-0 md:mr-10">
           ${formatCurrency(invoice.amountDue)}
         </h4>
         <StatusButton status={invoice.status} />

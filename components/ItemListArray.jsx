@@ -17,7 +17,12 @@ const ItemListArray = ({
   const { fields, append, remove } = useFieldArray({
     control,
     name: "invoiceItems",
+    rules: {
+      required: { value: true, message: "can't be empty" },
+    },
   });
+
+  const numOfItems = fields.length;
 
   const handleItemAdd = () => {
     append({ name: "New Item", quantity: 1, price: 0, total: 0 });
@@ -91,6 +96,7 @@ const ItemListArray = ({
             index={index}
             isAddInvoice={isAddInvoice}
             isEditInvoice={isEditInvoice}
+            numOfItems={numOfItems}
             onNameChange={(e) => handleNameChange(e, index)}
             onQuantityChange={(e) => handleQuantityChange(e, index)}
             onPriceChange={(e) => handlePriceChange(e, index)}

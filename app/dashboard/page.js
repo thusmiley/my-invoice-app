@@ -65,7 +65,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen z-0 pt-[72px] mb-[90px] px-6 mx-auto md:px-[48px] xl:max-w-[730px]">
+    <main className="min-h-screen z-0 pt-[72px] mb-[90px] px-6 mx-auto md:px-[48px] max-w-[830px]">
       <Head>
         <title>Dashboard | My Invoice App</title>
       </Head>
@@ -93,7 +93,7 @@ export default function Home() {
               {filterStatus === "paid" && (
                 <span className="hidden md:inline">&nbsp;paid</span>
               )}
-              &nbsp;invoices
+              &nbsp;invoice(s)
             </p>
           )}
         </div>

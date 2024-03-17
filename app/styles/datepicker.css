@@ -3,16 +3,16 @@
 @tailwind utilities;
 
 .react-datepicker__input-container {
-  @apply bg-white dark:bg-darkGrey border-[1px] border-lightestGrey dark:border-grey rounded-[4px] py-4 px-5 text-almostBlack  dark:text-lightestGrey text-[16px] leading-[20px] tracking-[-0.25px] font-bold placeholder:text-lightGrey cursor-pointer hover:border-purple focus:border-purple dark:hover:border-purple dark:focus:border-purple outline-none inline-block relative w-full;
+  @apply bg-white dark:bg-darkGrey border-[1px] border-lightestGrey dark:border-grey rounded-[4px] py-4 px-5 text-almostBlack  dark:text-lightestGrey text-[16px] leading-[20px] tracking-[-0.25px] font-bold placeholder:text-lightGrey cursor-default hover:border-purple focus:border-purple dark:hover:border-purple dark:focus:border-purple outline-none inline-block relative w-full;
 }
 
 .react-datepicker__input-container .react-datepicker__calendar-icon {
-  @apply absolute top-4 right-6;
+  @apply absolute top-4 right-6 cursor-default;
   box-sizing: content-box;
 }
 
 .react-datepicker__view-calendar-icon input {
-  @apply bg-white dark:bg-darkGrey shrink-0 outline-none appearance-none border-none focus:border-none focus:outline-none hover:border-none;
+  @apply cursor-pointer w-full bg-white dark:bg-darkGrey shrink-0 outline-none appearance-none border-none focus:border-none focus:outline-none hover:border-none;
 }
 .react-datepicker__navigation-icon::before {
   @apply border-purple block h-2 absolute bottom-0 w-2 z-10;
