@@ -25,29 +25,29 @@ export default function Home() {
     isDemo,
   } = useInvoiceContext();
 
-//   useEffect(() => {
-//     if (isLoggedin) {
-//           fetch(`${process.env.BACK_END_URL}/invoices/all`, {
-//             credentials: "include",
-//           })
-//             .then((response) => {
-//               if (response.status === 404) {
-//                 console.log("error invoices 404");
-//                 return;
-//               }
-//               return response.json();
-//             })
-//             .then((response) => {
-//               console.log(response);
-//               setInvoices(response);
-//             })
-//             .catch((err) => {
-//               console.log(err);
-//               setInvoices([]);
-//             });
-//         }
-//         console.log(invoices);
-//   }, [isDemo, isLoggedin]);
+  //   useEffect(() => {
+  //     if (isLoggedin) {
+  //           fetch(`${process.env.BACK_END_URL}/invoices/all`, {
+  //             credentials: "include",
+  //           })
+  //             .then((response) => {
+  //               if (response.status === 404) {
+  //                 console.log("error invoices 404");
+  //                 return;
+  //               }
+  //               return response.json();
+  //             })
+  //             .then((response) => {
+  //               console.log(response);
+  //               setInvoices(response);
+  //             })
+  //             .catch((err) => {
+  //               console.log(err);
+  //               setInvoices([]);
+  //             });
+  //         }
+  //         console.log(invoices);
+  //   }, [isDemo, isLoggedin]);
 
   useEffect(() => {
     const stringInvoices = JSON.stringify(invoices);
@@ -63,6 +63,9 @@ export default function Home() {
   const handleLoadMore = () => {
     setLoadMore(loadMore + 10);
   };
+
+  console.log(`isDemo: ${isDemo}`);
+  console.log(`isLoggedin: ${isLoggedin}`);
 
   return (
     <main className="min-h-screen z-0 pt-[72px] mb-[90px] px-6 mx-auto md:px-[48px] max-w-[830px]">

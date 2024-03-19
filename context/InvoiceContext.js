@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import exampleData from "../utils/data.json";
-// import "dotenv/config";
+import "dotenv/config";
 
 const InvoiceContext = createContext();
 
@@ -24,21 +24,60 @@ export function InvoiceProvider({ children }) {
   const [invoices, setInvoices] = useState();
   const [isAddInvoice, setIsAddInvoice] = useState(false);
   const [isEditInvoice, setIsEditInvoice] = useState(false);
+  const [userData, setUserData] = useState();
 
   useEffect(() => {
     localStorage.setItem("localIsDemo", isDemo);
     localStorage.setItem("localIsLoggedin", isLoggedin);
-    if (isDemo) {
-      const localStoredInvoices = localStorage.getItem("localInvoices");
-      if (localStoredInvoices) {
-        setInvoices(JSON.parse(localStoredInvoices));
-      } else {
-        return setInvoices(exampleData);
-      }
-    } else {
-      return setInvoices([]);
-    }
   }, [isDemo, isLoggedin]);
+
+  const handleDemo = () => {
+    setIsDemo(true);
+    const localStoredInvoices = localStorage.getItem("localInvoices");
+    if (localStoredInvoices) {
+      setInvoices(JSON.parse(localStoredInvoices));
+    } else {
+      return setInvoices(exampleData);
+    }
+  };
+
+    const handleLogIn = () => {
+      setIsLoggedin(true);
+      fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
+        .then((response) => {
+          if (response.status === 404) {
+            console.log("error user data 404");
+          }
+          return response.json();
+        })
+        .then((response) => {
+          console.log(response);
+          setUserData(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      fetch(`${process.env.BACK_END_URL}/invoices/all`, {
+        credentials: "include",
+      })
+        .then((response) => {
+          if (response.status === 404) {
+            console.log("error invoices 404");
+            setInvoices([]);
+          } else {
+            setInvoices(response);
+          }
+          return response.json();
+        })
+        .then((response) => {
+          console.log(invoices);
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+  };
 
   useEffect(() => {
     const stringInvoices = JSON.stringify(invoices);
@@ -121,6 +160,9 @@ export function InvoiceProvider({ children }) {
         editInvoice,
         addInvoice,
         deleteInvoice,
+        userData,
+        handleDemo,
+        handleLogIn,
       }}
     >
       {children}

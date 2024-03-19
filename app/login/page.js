@@ -8,7 +8,8 @@ import { useInvoiceContext } from "@/context/InvoiceContext";
 import "dotenv/config";
 
 export default function Login() {
-  const { setIsDemo, setIsLoggedin } = useInvoiceContext();
+  const { setIsDemo, setIsLoggedin, handleDemo, handleLogIn } =
+    useInvoiceContext();
 
   useEffect(() => {
     setIsDemo(false);
@@ -35,14 +36,14 @@ export default function Login() {
           <Link
             href="/dashboard"
             className="w-full text-lightGrey bg-[#373B53] hover:bg-almostBlack dark:text-lightestGrey font-bold py-3 px-6 dark:bg-[#373B53] text-center dark:hover:bg-darkGrey rounded-full dark:hover:text-lightestGrey animation-effect md:w-auto"
-            onClick={() => setIsDemo(true)}
+            onClick={handleDemo}
           >
             View as Demo
           </Link>
           <Link
             href={`${process.env.BACK_END_URL}/authentication/github`}
             className="w-full bg-purple font-bold text-white animation-effect rounded-full py-3 px-6 hover:bg-lightPurple flex items-center justify-center md:w-auto"
-            onClick={() => setIsLoggedin(true)}
+            onClick={handleLogIn}
           >
             Sign in with Github
             <svg

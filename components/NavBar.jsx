@@ -18,31 +18,10 @@ const NavBar = () => {
     setIsDemo,
     isLoggedin,
     setIsLoggedin,
+    userData,
   } = useInvoiceContext();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const pathname = usePathname();
-
-  //   const [userData, setUserData] = useState();
-
-  //   useEffect(() => {
-  //     if (isLoggedin) {
-  //       fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
-  //         .then((response) => {
-  //           if (response.status === 404) {
-  //             console.log("error user data 404");
-  //             return;
-  //           }
-  //           return response.json();
-  //         })
-  //         .then((response) => {
-  //           console.log(response);
-  //           setUserData(response);
-  //         })
-  //         .catch((error) => {
-  //           console.log(error);
-  //         });
-  //     }
-  //   }, [isLoggedin]);
 
   useEffect(() => {
     if (
@@ -160,20 +139,56 @@ const NavBar = () => {
               pathname === "/login" ? "hidden" : ""
             } w-[1px] h-[72px] bg-[#494E6E] mx-6 md:mx-8 md:h-20 xl:h-[1px] xl:w-[103px] xl:mx-0 xl:my-6`}
           />
-          <Image
-            src={avatar}
-            // src={userData?.photoUrl || avatar}
-            width={32}
-            height={32}
-            alt="profile photo"
-            className={`${pathname === "/login" ? "hidden" : ""} ${
-              isAddInvoice || isEditInvoice
-                ? "pointer-events-none"
-                : "cursor-pointer"
-            } w-8 h-auto object-cover object-center rounded-full xl:w-10 cursor-pointer`}
-            priority={true}
-            onClick={() => setIsProfileOpen(!isProfileOpen)}
-          />
+          {isDemo ? (
+            <Image
+              src={avatar}
+              width={32}
+              height={32}
+              alt="profile photo"
+              className={`${
+                isAddInvoice || isEditInvoice
+                  ? "pointer-events-none"
+                  : "cursor-pointer"
+              } ${
+                pathname === "/login" ? "hidden" : ""
+              } w-8 h-auto object-cover object-center rounded-full xl:w-10 `}
+              priority={true}
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
+            />
+          ) : isLoggedin ? (
+            <Image
+              src={userData?.photoUrl}
+              width={32}
+              height={32}
+              alt="profile photo"
+              className={`${
+                isAddInvoice || isEditInvoice
+                  ? "pointer-events-none"
+                  : "cursor-pointer"
+              } ${
+                pathname === "/login" ? "hidden" : ""
+              } w-8 h-auto object-cover object-center rounded-full xl:w-10 `}
+              priority={true}
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
+            />
+          ) : (
+            <Image
+              src={avatar}
+              width={32}
+              height={32}
+              alt="profile photo"
+              className={`${
+                isAddInvoice || isEditInvoice
+                  ? "pointer-events-none"
+                  : "cursor-pointer"
+              } ${
+                pathname === "/login" ? "hidden" : ""
+              } w-8 h-auto object-cover object-center rounded-full xl:w-10 `}
+              priority={true}
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
+            />
+          )}
+
           {isProfileOpen && (
             <div className="">
               <div
@@ -181,7 +196,7 @@ const NavBar = () => {
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
               />
               <div className="fixed top-[80px] right-6 bg-white dark:bg-darkGrey rounded-[8px] px-6 py-3 cursor-pointer box-shadow-invoiceCard slideup md:top-[88px] md:right-[48px] xl:bottom-6 xl:left-[111px] xl:top-auto xl:right-auto">
-                {isDemo === true && (
+                {isDemo && (
                   <Link
                     href={`${process.env.BACK_END_URL}/authentication/github`}
                     className="bodyText font-bold hover:text-purple"
