@@ -31,93 +31,63 @@ export function InvoiceProvider({ children }) {
     localStorage.setItem("localIsLoggedin", isLoggedin);
   }, [isDemo, isLoggedin]);
 
-  useEffect(() => {
-    const handleLogIn = async () => {
-      if (isDemo) {
-        const localStoredInvoices = localStorage.getItem("localInvoices");
-        if (localStoredInvoices) {
-          setInvoices(JSON.parse(localStoredInvoices));
-        } else {
-          setInvoices(exampleData);
-        }
-      }
+  //   useEffect(() => {
+  //     const handleLogIn = () => {
+  //       if (isDemo) {
+  //         const localStoredInvoices = localStorage.getItem("localInvoices");
+  //         if (localStoredInvoices) {
+  //           setInvoices(JSON.parse(localStoredInvoices));
+  //         } else {
+  //           setInvoices(exampleData);
+  //         }
+  //       }
 
-      if (isLoggedin) {
-        try {
-          const response = await fetch(`${process.env.BACK_END_URL}/user`, {
-            credentials: "include",
-          });
-          if (response.status !== 200) {
-            throw new Error();
-          } else {
-            const data = await response.json();
-            setInvoices(data);
-          }
-        } catch (e) {
-          setInvoices([]);
-          console.log(e);
-        }
+  //       if (isLoggedin) {
+  //         fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
+  //           .then((response) => {
+  //             if (response.status === 404) {
+  //               console.log("error user data 404");
+  //             }
+  //             return response.json();
+  //           })
+  //           .then((response) => {
+  //             console.log(response);
+  //             setUserData(response);
+  //           })
+  //           .catch((error) => {
+  //             console.log(error);
+  //           });
 
-        try {
-          const response = await fetch(`${process.env.BACK_END_URL}/user`, {
-            credentials: "include",
-          });
-          if (response.status !== 200) {
-            throw new Error();
-          } else {
-            const data = await response.json();
-            setUserData(data);
-          }
-        } catch (e) {
-          console.log(e);
-        }
+  //         fetch(`${process.env.BACK_END_URL}/invoices/all`, {
+  //           credentials: "include",
+  //         })
+  //           .then((response) => {
+  //             if (response.status === 404) {
+  //               console.log("error invoices 404");
+  //               setInvoices([]);
+  //             } else {
+  //               setInvoices(response);
+  //             }
+  //             return response.json();
+  //           })
+  //           .then((response) => {
+  //             console.log(invoices);
+  //             console.log(response);
+  //           })
+  //           .catch((err) => {
+  //             console.log(err);
+  //           });
+  //       }
+  //     };
+  //     handleLogIn();
+  //   }, [isDemo, isLoggedin]);
 
-        // fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
-        //   .then((response) => {
-        //     if (response.status === 404) {
-        //       console.log("error user data 404");
-        //     }
-        //     return response.json();
-        //   })
-        //   .then((response) => {
-        //     console.log(response);
-        //     setUserData(response);
-        //   })
-        //   .catch((error) => {
-        //     console.log(error);
-        //   });
-
-        // fetch(`${process.env.BACK_END_URL}/invoices/all`, {
-        //   credentials: "include",
-        // })
-        //   .then((response) => {
-        //     if (response.status === 404) {
-        //       console.log("error invoices 404");
-        //       setInvoices([]);
-        //     } else {
-        //       setInvoices(response);
-        //     }
-        //     return response.json();
-        //   })
-        //   .then((response) => {
-        //     console.log(invoices);
-        //     console.log(response);
-        //   })
-        //   .catch((err) => {
-        //     console.log(err);
-        //   });
-      }
-    };
-
-    handleLogIn();
-  }, [isDemo, isLoggedin]);
-
-  useEffect(() => {
-    const stringInvoices = JSON.stringify(invoices);
-    if (isDemo && stringInvoices) {
-      localStorage.setItem("localInvoices", stringInvoices);
-    }
-  }, [invoices, isDemo]);
+//   useEffect(() => {
+//     const stringInvoices = JSON.stringify(invoices);
+//     if (isDemo && stringInvoices) {
+//       localStorage.setItem("localInvoices", stringInvoices);
+//     }
+//   }, [invoices, isDemo]);
 
   const deleteInvoice = (invoiceNum) => {
     setInvoices((prev) =>
@@ -194,6 +164,7 @@ export function InvoiceProvider({ children }) {
         addInvoice,
         deleteInvoice,
         userData,
+        setUserData,
       }}
     >
       {children}

@@ -18,10 +18,30 @@ const NavBar = () => {
     setIsDemo,
     isLoggedin,
     setIsLoggedin,
-    userData,
+    userData, setUserData
   } = useInvoiceContext();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    if (isLoggedin) {
+      fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
+        .then((response) => {
+          if (response.status === 404) {
+            console.log("error user data 404");
+          }
+          return response.json();
+        })
+        .then((response) => {
+          setIsLoading(false);
+          console.log(response);
+          setUserData(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, []);
 
   useEffect(() => {
     if (

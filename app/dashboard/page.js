@@ -9,11 +9,13 @@ import { useInvoiceContext } from "@/context/InvoiceContext";
 import InvoiceForm from "@/components/InvoiceForm";
 import { Transition } from "@headlessui/react";
 import Head from "next/head";
+import exampleData from "../../utils/data.json";
 import { emptyInvoice } from "@/utils";
 
 export default function Home() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [loadMore, setLoadMore] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     invoices,
     setInvoices,
@@ -23,11 +25,46 @@ export default function Home() {
     setIsEditInvoice,
     isLoggedin,
     isDemo,
+    userData,
+    setUserData,
   } = useInvoiceContext();
 
   useEffect(() => {
-    console.log(invoices);
-  }, [isDemo, isLoggedin]);
+    if (isDemo) {
+      const localStoredInvoices = localStorage.getItem("localInvoices");
+      if (localStoredInvoices) {
+        setInvoices(JSON.parse(localStoredInvoices));
+        //   return;
+      } else {
+        setInvoices(exampleData);
+        //   return;
+      }
+    }
+
+    if (isLoggedin) {
+      setIsLoading(true);
+
+      fetch(`${process.env.BACK_END_URL}/invoices/all`, {
+        credentials: "include",
+      })
+        .then((response) => {
+          if (response.status === 404) {
+            console.log("error invoices 404");
+            setInvoices([]);
+          } else {
+            setInvoices(response);
+          }
+          return response.json();
+        })
+        .then((response) => {
+          console.log(invoices);
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isDemo, isLoggedin.invoices]);
 
   useEffect(() => {
     const stringInvoices = JSON.stringify(invoices);
@@ -35,6 +72,10 @@ export default function Home() {
       localStorage.setItem("localInvoices", stringInvoices);
     }
   }, [invoices, isDemo]);
+
+  useEffect(() => {
+    console.log(invoices);
+  }, [invoices]);
 
   const handleFilterClick = (e) => {
     setFilterStatus(e.target.value);
@@ -120,6 +161,11 @@ export default function Home() {
         </div>
       </section>
 
+      {isLoading && (
+        <h2 className="mt-10 headingText text-center md:mt-[64px]">
+          Loading...
+        </h2>
+      )}
       {invoices?.length === 0 ? (
         <section className="max-w-[217px] mx-auto mt-[102px] text-center md:max-w-[242px] md:mt-[210px] xl:mt-[141px]">
           <Image
