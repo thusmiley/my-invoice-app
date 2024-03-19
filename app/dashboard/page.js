@@ -25,29 +25,9 @@ export default function Home() {
     isDemo,
   } = useInvoiceContext();
 
-  //   useEffect(() => {
-  //     if (isLoggedin) {
-  //           fetch(`${process.env.BACK_END_URL}/invoices/all`, {
-  //             credentials: "include",
-  //           })
-  //             .then((response) => {
-  //               if (response.status === 404) {
-  //                 console.log("error invoices 404");
-  //                 return;
-  //               }
-  //               return response.json();
-  //             })
-  //             .then((response) => {
-  //               console.log(response);
-  //               setInvoices(response);
-  //             })
-  //             .catch((err) => {
-  //               console.log(err);
-  //               setInvoices([]);
-  //             });
-  //         }
-  //         console.log(invoices);
-  //   }, [isDemo, isLoggedin]);
+  useEffect(() => {
+    console.log(invoices);
+  }, [isDemo, isLoggedin]);
 
   useEffect(() => {
     const stringInvoices = JSON.stringify(invoices);
