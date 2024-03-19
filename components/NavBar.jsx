@@ -18,7 +18,8 @@ const NavBar = () => {
     setIsDemo,
     isLoggedin,
     setIsLoggedin,
-    userData, setUserData
+    userData,
+    setUserData,
   } = useInvoiceContext();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const pathname = usePathname();
@@ -33,7 +34,7 @@ const NavBar = () => {
           return response.json();
         })
         .then((response) => {
-          setIsLoading(false);
+          //   setIsLoading(false);
           console.log(response);
           setUserData(response);
         })

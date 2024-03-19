@@ -12,13 +12,13 @@ export function useInvoiceContext() {
 export function InvoiceProvider({ children }) {
   const [isDemo, setIsDemo] = useState(
     typeof window !== "undefined" && window.localStorage.getItem("localIsDemo")
-      ? window.localStorage.getItem("localIsDemo")
+      ? JSON.parse(window.localStorage.getItem("localIsDemo"))
       : false
   );
   const [isLoggedin, setIsLoggedin] = useState(
     typeof window !== "undefined" &&
       window.localStorage.getItem("localIsLoggedin")
-      ? window.localStorage.getItem("localIsLoggedin")
+      ? JSON.parse(window.localStorage.getItem("localIsLoggedin"))
       : false
   );
   const [invoices, setInvoices] = useState();
@@ -27,8 +27,8 @@ export function InvoiceProvider({ children }) {
   const [userData, setUserData] = useState();
 
   useEffect(() => {
-    localStorage.setItem("localIsDemo", isDemo);
-    localStorage.setItem("localIsLoggedin", isLoggedin);
+    localStorage.setItem("localIsDemo", JSON.stringify(isDemo));
+    localStorage.setItem("localIsLoggedin", JSON.stringify(isLoggedin));
   }, [isDemo, isLoggedin]);
 
   //   useEffect(() => {
@@ -82,12 +82,12 @@ export function InvoiceProvider({ children }) {
   //     handleLogIn();
   //   }, [isDemo, isLoggedin]);
 
-//   useEffect(() => {
-//     const stringInvoices = JSON.stringify(invoices);
-//     if (isDemo && stringInvoices) {
-//       localStorage.setItem("localInvoices", stringInvoices);
-//     }
-//   }, [invoices, isDemo]);
+  //   useEffect(() => {
+  //     const stringInvoices = JSON.stringify(invoices);
+  //     if (isDemo && stringInvoices) {
+  //       localStorage.setItem("localInvoices", stringInvoices);
+  //     }
+  //   }, [invoices, isDemo]);
 
   const deleteInvoice = (invoiceNum) => {
     setInvoices((prev) =>

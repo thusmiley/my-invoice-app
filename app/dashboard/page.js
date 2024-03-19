@@ -25,12 +25,10 @@ export default function Home() {
     setIsEditInvoice,
     isLoggedin,
     isDemo,
-    userData,
-    setUserData,
   } = useInvoiceContext();
 
   useEffect(() => {
-    if (isDemo) {
+    if (isDemo === "true") {
       const localStoredInvoices = localStorage.getItem("localInvoices");
       if (localStoredInvoices) {
         setInvoices(JSON.parse(localStoredInvoices));
