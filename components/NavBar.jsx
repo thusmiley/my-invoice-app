@@ -7,35 +7,41 @@ import Link from "next/link";
 import avatar from "../public/image-avatar.jpg";
 import { useInvoiceContext } from "@/context/InvoiceContext";
 import "dotenv/config";
+import Skeleton from "@mui/material/Skeleton";
 
 const NavBar = () => {
   const [darkMode, setDarkMode] = useState(true);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const pathname = usePathname();
+  const [userData, setUserData] = useState();
   const {
     isAddInvoice,
     isEditInvoice,
-    setIsAddInvoice,
     isDemo,
     setIsDemo,
     isLoggedin,
     setIsLoggedin,
-    userData,
-    setUserData,
+    isLoading,
+    setIsLoading,
   } = useInvoiceContext();
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const pathname = usePathname();
 
   useEffect(() => {
     if (isLoggedin) {
+      setIsLoading(true);
       fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
-        .then((response) => {
+        .then(async (response) => {
           if (response.status === 404) {
-            console.log("error user data 404");
+            console.log("error invoices 404");
+            return [];
+          } else if (response.ok) {
+            return response.json();
+          } else {
+            let data = await response.json();
+            throw new Error(`${response.status}: ${data.message}`);
           }
-          return response.json();
         })
         .then((response) => {
-          //   setIsLoading(false);
-          console.log(response);
+          setIsLoading(false);
           setUserData(response);
         })
         .catch((error) => {
@@ -43,6 +49,8 @@ const NavBar = () => {
         });
     }
   }, []);
+
+  //   console.log(userData);
 
   useEffect(() => {
     if (
@@ -78,7 +86,6 @@ const NavBar = () => {
               ? "pointer-events-none"
               : "cursor-pointer"
           }`}
-          onClick={() => setIsAddInvoice(false)}
         >
           <svg
             className="h-[72px] w-auto object-cover object-center md:h-20 xl:w-[103px] xl:h-auto"
@@ -160,52 +167,24 @@ const NavBar = () => {
               pathname === "/login" ? "hidden" : ""
             } w-[1px] h-[72px] bg-[#494E6E] mx-6 md:mx-8 md:h-20 xl:h-[1px] xl:w-[103px] xl:mx-0 xl:my-6`}
           />
-          {isDemo ? (
-            <Image
-              src={avatar}
-              width={32}
-              height={32}
-              alt="profile photo"
-              className={`${
-                isAddInvoice || isEditInvoice
-                  ? "pointer-events-none"
-                  : "cursor-pointer"
-              } ${
-                pathname === "/login" ? "hidden" : ""
-              } w-8 h-auto object-cover object-center rounded-full xl:w-10 `}
-              priority={true}
-              onClick={() => setIsProfileOpen(!isProfileOpen)}
-            />
-          ) : isLoggedin ? (
-            <Image
-              src={userData?.photoUrl}
-              width={32}
-              height={32}
-              alt="profile photo"
-              className={`${
-                isAddInvoice || isEditInvoice
-                  ? "pointer-events-none"
-                  : "cursor-pointer"
-              } ${
-                pathname === "/login" ? "hidden" : ""
-              } w-8 h-auto object-cover object-center rounded-full xl:w-10 `}
-              priority={true}
-              onClick={() => setIsProfileOpen(!isProfileOpen)}
-            />
+
+          {pathname === "/login" ? (
+            <p></p>
+          ) : !isDemo && !isLoggedin ? (
+            <Skeleton variant="circular" width={32} height={32} />
           ) : (
             <Image
-              src={avatar}
+              src={isDemo ? avatar : userData?.photoUrl}
               width={32}
               height={32}
+              placeholder="empty"
               alt="profile photo"
               className={`${
                 isAddInvoice || isEditInvoice
                   ? "pointer-events-none"
                   : "cursor-pointer"
-              } ${
-                pathname === "/login" ? "hidden" : ""
               } w-8 h-auto object-cover object-center rounded-full xl:w-10 `}
-              priority={true}
+              priority={false}
               onClick={() => setIsProfileOpen(!isProfileOpen)}
             />
           )}

@@ -11,11 +11,11 @@ import { Transition } from "@headlessui/react";
 import Head from "next/head";
 import exampleData from "../../utils/data.json";
 import { emptyInvoice } from "@/utils";
+import "dotenv/config";
 
 export default function Home() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [loadMore, setLoadMore] = useState(10);
-  const [isLoading, setIsLoading] = useState(false);
   const {
     invoices,
     setInvoices,
@@ -25,17 +25,17 @@ export default function Home() {
     setIsEditInvoice,
     isLoggedin,
     isDemo,
+    isLoading,
+    setIsLoading,
   } = useInvoiceContext();
 
   useEffect(() => {
-    if (isDemo === "true") {
-      const localStoredInvoices = localStorage.getItem("localInvoices");
+    if (isDemo) {
+      const localStoredInvoices = localStorage.getItem("invoices");
       if (localStoredInvoices) {
         setInvoices(JSON.parse(localStoredInvoices));
-        //   return;
       } else {
         setInvoices(exampleData);
-        //   return;
       }
     }
 
@@ -45,29 +45,32 @@ export default function Home() {
       fetch(`${process.env.BACK_END_URL}/invoices/all`, {
         credentials: "include",
       })
-        .then((response) => {
+        .then(async (response) => {
           if (response.status === 404) {
             console.log("error invoices 404");
-            setInvoices([]);
+            return [];
+          } else if (response.ok) {
+            return response.json();
           } else {
-            setInvoices(response);
+            let data = await response.json();
+            throw new Error(`${response.status}: ${data.message}`);
           }
-          return response.json();
         })
         .then((response) => {
-          console.log(invoices);
+          setInvoices(response);
+          setIsLoading(false);
           console.log(response);
         })
         .catch((err) => {
           console.log(err);
         });
     }
-  }, [isDemo, isLoggedin.invoices]);
+  }, [isDemo, isLoggedin]);
 
   useEffect(() => {
     const stringInvoices = JSON.stringify(invoices);
     if (isDemo && stringInvoices) {
-      localStorage.setItem("localInvoices", stringInvoices);
+      localStorage.setItem("invoices", stringInvoices);
     }
   }, [invoices, isDemo]);
 
@@ -83,8 +86,8 @@ export default function Home() {
     setLoadMore(loadMore + 10);
   };
 
-  console.log(`isDemo: ${isDemo}`);
-  console.log(`isLoggedin: ${isLoggedin}`);
+  //   console.log(typeof isDemo);
+  //   console.log(typeof isLoggedin);
 
   return (
     <main className="min-h-screen z-0 pt-[72px] mb-[90px] px-6 mx-auto md:px-[48px] max-w-[830px]">
@@ -172,6 +175,7 @@ export default function Home() {
             height={200}
             alt=""
             className="w-full h-auto object-contain object-center"
+            priority={true}
           />
           <h2 className="mt-10 headingText md:mt-[64px]">
             There is nothing here
