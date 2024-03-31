@@ -10,7 +10,7 @@ import { emptyInvoice } from "@/utils";
 import {
   createInvoiceNumber,
   uniqueInvoiceNumber,
-} from "@/utils/createuniqueInvoiceNumber";
+} from "@/utils/createUniqueInvoiceNumber";
 
 import PaymentTerms from "./PaymentTerms";
 import ItemListArray from "./ItemListArray";
