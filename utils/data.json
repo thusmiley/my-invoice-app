@@ -1,6 +1,6 @@
 [
   {
-    "invoiceNum": "RT3080",
+    "invoiceNumber": "RT3080",
     "date": "2021-08-18",
     "projectDescription": "Re-branding",
     "paymentTerms": 1,
@@ -26,7 +26,7 @@
     "amountDue": 1800.9
   },
   {
-    "invoiceNum": "XM9141",
+    "invoiceNumber": "XM9141",
     "date": "2021-08-21",
     "projectDescription": "Graphic Design",
     "paymentTerms": 30,
@@ -58,7 +58,7 @@
     "amountDue": 556.0
   },
   {
-    "invoiceNum": "RG0314",
+    "invoiceNumber": "RG0314",
     "date": "2021-09-24",
     "projectDescription": "Website Redesign",
     "paymentTerms": 7,
@@ -84,7 +84,7 @@
     "amountDue": 14002.33
   },
   {
-    "invoiceNum": "RT2080",
+    "invoiceNumber": "RT2080",
     "date": "2021-10-11",
     "projectDescription": "Logo Concept",
     "paymentTerms": 1,
@@ -110,7 +110,7 @@
     "amountDue": 102.04
   },
   {
-    "invoiceNum": "AA1449",
+    "invoiceNumber": "AA1449",
     "date": "2021-10-7",
     "projectDescription": "Re-branding",
     "paymentTerms": 7,
@@ -143,7 +143,7 @@
     "amountDue": 4032.33
   },
   {
-    "invoiceNum": "TY9141",
+    "invoiceNumber": "TY9141",
     "date": "2021-10-01",
     "projectDescription": "Landing Page Design",
     "paymentTerms": 30,
@@ -169,7 +169,7 @@
     "amountDue": 6155.91
   },
   {
-    "invoiceNum": "YK2353",
+    "invoiceNumber": "YK2353",
     "date": "2021-11-05",
     "projectDescription": "Logo Re-design",
     "paymentTerms": 7,

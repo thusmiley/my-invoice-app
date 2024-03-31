@@ -21,17 +21,17 @@ const NavBar = () => {
     setIsDemo,
     isLoggedin,
     setIsLoggedin,
-    isLoading,
-    setIsLoading,
   } = useInvoiceContext();
+
+  const [isLoadingImage, setIsLoadingImage] = useState(false);
 
   useEffect(() => {
     if (isLoggedin) {
-      setIsLoading(true);
+      setIsLoadingImage(true);
       fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
         .then(async (response) => {
           if (response.status === 404) {
-            console.log("error invoices 404");
+            console.log("error user data 404");
             return [];
           } else if (response.ok) {
             return response.json();
@@ -41,7 +41,7 @@ const NavBar = () => {
           }
         })
         .then((response) => {
-          setIsLoading(false);
+          setIsLoadingImage(false);
           setUserData(response);
         })
         .catch((error) => {
@@ -49,8 +49,6 @@ const NavBar = () => {
         });
     }
   }, []);
-
-  //   console.log(userData);
 
   useEffect(() => {
     if (
@@ -168,26 +166,46 @@ const NavBar = () => {
             } w-[1px] h-[72px] bg-[#494E6E] mx-6 md:mx-8 md:h-20 xl:h-[1px] xl:w-[103px] xl:mx-0 xl:my-6`}
           />
 
-          {pathname === "/login" ? (
-            <p></p>
-          ) : !isDemo && !isLoggedin ? (
-            <Skeleton variant="circular" width={32} height={32} />
-          ) : (
-            <Image
-              src={isDemo ? avatar : userData?.photoUrl}
-              width={32}
-              height={32}
-              placeholder="empty"
-              alt="profile photo"
-              className={`${
-                isAddInvoice || isEditInvoice
-                  ? "pointer-events-none"
-                  : "cursor-pointer"
-              } w-8 h-auto object-cover object-center rounded-full xl:w-10 `}
-              priority={false}
-              onClick={() => setIsProfileOpen(!isProfileOpen)}
-            />
-          )}
+          <div className={`${pathname === "/login" ? "hidden" : ""}`}>
+            {!isDemo && !isLoggedin && (
+              <Skeleton variant="circular" width={32} height={32} />
+            )}
+            {!isLoadingImage && isDemo && (
+              <Image
+                src={avatar}
+                width={32}
+                height={32}
+                placeholder="empty"
+                alt="profile photo"
+                className={`${
+                  isAddInvoice || isEditInvoice
+                    ? "pointer-events-none"
+                    : "cursor-pointer"
+                } w-8 h-auto object-cover object-center rounded-full xl:w-10 `}
+                priority={false}
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+              />
+            )}
+            {isLoadingImage && isLoggedin && (
+              <Skeleton variant="circular" width={32} height={32} />
+            )}
+            {!isLoadingImage && isLoggedin && userData && (
+              <Image
+                src={userData?.photoUrl}
+                width={32}
+                height={32}
+                placeholder="empty"
+                alt="profile photo"
+                className={`${
+                  isAddInvoice || isEditInvoice
+                    ? "pointer-events-none"
+                    : "cursor-pointer"
+                } w-8 h-auto object-cover object-center rounded-full xl:w-10 `}
+                priority={false}
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+              />
+            )}
+          </div>
 
           {isProfileOpen && (
             <div className="">

@@ -30,40 +30,70 @@ export function InvoiceProvider({ children }) {
     localStorage.setItem("isLoggedin", JSON.stringify(isLoggedin));
   }, [isDemo, isLoggedin]);
 
-  const deleteInvoice = (invoiceNum) => {
-    setInvoices((prev) =>
-      prev.filter((invoice) => invoice.invoiceNum !== invoiceNum)
-    );
-    if (isDemo) return;
+  const fetchInvoices = () => {
+    setIsLoading(true);
 
-    if (isLoggedin) {
-      fetch(`${process.env.BACK_END_URL}/invoices/${invoiceNum}`, {
-        method: "DELETE",
-        credentials: "include",
-      }).catch((err) => {
+    fetch(`${process.env.BACK_END_URL}/invoices/all`, {
+      credentials: "include",
+    })
+      .then(async (response) => {
+        if (response.status === 404) {
+          console.log("Empty invoice array - error invoices 404");
+          return [];
+        } else if (response.ok) {
+          return response.json();
+        } else {
+          let data = await response.json();
+          throw new Error(`${response.status}: ${data.message}`);
+        }
+      })
+      .then((response) => {
+        setInvoices(response);
+        setIsLoading(false);
+        console.log(response);
+      })
+      .catch((err) => {
         console.log(err);
       });
-    }
   };
 
   const addInvoice = (newInvoice) => {
     setInvoices((prev) => [...prev, newInvoice]);
     if (isDemo) return;
 
-      if (isLoggedin) {
-      fetch(`${process.env.BACK_END_URL}/invoices/${newInvoice.invoiceNum}`, {
+    if (isLoggedin) {
+      fetch(`${process.env.BACK_END_URL}/invoices`, {
         method: "POST",
+        credentials: "include",
+        body: JSON.stringify(newInvoice),
+      }).catch((err) => {
+        console.log(err);
+      });
+      // fetchInvoices();
+    }
+  };
+
+  const deleteInvoice = (invoice) => {
+    setInvoices((prev) =>
+      prev.filter((invoice) => invoice.invoiceNumber !== invoiceNumber)
+    );
+    if (isDemo) return;
+
+    if (isLoggedin) {
+      fetch(`${process.env.BACK_END_URL}/invoices/${invoice.id}`, {
+        method: "DELETE",
         credentials: "include",
       }).catch((err) => {
         console.log(err);
       });
-      }
+      //   fetchInvoices();
+    }
   };
 
-  const editInvoice = (invoiceNum, newInvoice) => {
+  const editInvoice = (invoiceNumber, newInvoice) => {
     setInvoices((prev) =>
       prev.map((invoice) => {
-        if (invoice.invoiceNum === invoiceNum) {
+        if (invoice.invoiceNumber === invoiceNumber) {
           return newInvoice;
         }
         return invoice;
@@ -72,12 +102,13 @@ export function InvoiceProvider({ children }) {
     if (isDemo) return;
 
     if (isLoggedin) {
-      fetch(`${process.env.BACK_END_URL}/invoices/${invoiceNum}`, {
+      fetch(`${process.env.BACK_END_URL}/invoices/${invoiceNumber}`, {
         method: "PUT",
         credentials: "include",
       }).catch((err) => {
         console.log(err);
       });
+      //   fetchInvoices();
     }
   };
 
@@ -99,6 +130,7 @@ export function InvoiceProvider({ children }) {
         deleteInvoice,
         isLoading,
         setIsLoading,
+        fetchInvoices,
       }}
     >
       {children}

@@ -8,9 +8,9 @@ import "../app/styles/datepicker.css";
 import { useEffect, useState } from "react";
 import { emptyInvoice } from "@/utils";
 import {
-  createInvoiceNum,
-  uniqueInvoiceNum,
-} from "@/utils/createUniqueInvoiceNum";
+  createInvoiceNumber,
+  uniqueInvoiceNumber,
+} from "@/utils/createuniqueInvoiceNumber";
 
 import PaymentTerms from "./PaymentTerms";
 import ItemListArray from "./ItemListArray";
@@ -60,18 +60,18 @@ const InvoiceForm = ({ invoice }) => {
   });
 
   const onSubmit = () => {
-    if (!data.invoiceNum) {
-      let invoiceNum = createInvoiceNum();
-      const invoiceNums = invoices.map((item) => item.invoiceNum);
-      while (!uniqueInvoiceNum(invoiceNum, invoiceNums)) {
-        invoiceNum = createInvoiceNum();
+    if (!data.invoiceNumber) {
+      let invoiceNumber = createInvoiceNumber();
+      const invoiceNumbers = invoices.map((item) => item.invoiceNumber);
+      while (!uniqueInvoiceNumber(invoiceNumber, invoiceNumbers)) {
+        invoiceNumber = createInvoiceNumber();
       }
-      setData((prev) => ({ ...prev, invoiceNum, status: "pending" }));
-      addInvoice({ ...data, status: "pending", invoiceNum });
+      setData((prev) => ({ ...prev, invoiceNumber, status: "pending" }));
+      addInvoice({ ...data, status: "pending", invoiceNumber });
       return quitAndReset();
     }
     if (isEditInvoice) {
-      editInvoice(data.invoiceNum, { ...data, status: "pending" });
+      editInvoice(data.invoiceNumber, { ...data, status: "pending" });
       setData({ ...data, status: "pending" });
       return quitAndReset();
     }
@@ -83,13 +83,13 @@ const InvoiceForm = ({ invoice }) => {
   };
 
   const saveDraft = () => {
-    if (!data.invoiceNum) {
-      let invoiceNum = createInvoiceNum();
-      const invoiceNums = invoices.map((item) => item.invoiceNum);
-      while (!uniqueInvoiceNum(invoiceNum, invoiceNums)) {
-        invoiceNum = createInvoiceNum();
+    if (!data.invoiceNumber) {
+      let invoiceNumber = createInvoiceNumber();
+      const invoiceNumbers = invoices.map((item) => item.invoiceNumber);
+      while (!uniqueInvoiceNumber(invoiceNumber, invoiceNumbers)) {
+        invoiceNumber = createInvoiceNumber();
       }
-      addInvoice({ ...data, invoiceNum });
+      addInvoice({ ...data, invoiceNumber });
     } else {
       addInvoice(data);
     }
@@ -145,7 +145,7 @@ const InvoiceForm = ({ invoice }) => {
         {isEditInvoice && (
           <h1 className="priceText text-[28px]">
             Edit <span className="text-[#777F98]">#</span>
-            {invoice?.invoiceNum}
+            {invoice?.invoiceNumber}
           </h1>
         )}
         {/* bill from  */}
@@ -455,39 +455,39 @@ const InvoiceForm = ({ invoice }) => {
                 control={control}
                 name="date"
                 render={({ field }) => (
-                //   <label>
-                    <DatePicker
-                      selected={data.date}
-                      dateFormat="PP"
-                      showIcon
-                      icon={
-                        <svg
-                          width="16"
-                          height="16"
-                          alt=""
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M14 2h-.667V.667A.667.667 0 0012.667 0H12a.667.667 0 00-.667.667V2H4.667V.667A.667.667 0 004 0h-.667a.667.667 0 00-.666.667V2H2C.897 2 0 2.897 0 4v10c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm.667 12c0 .367-.3.667-.667.667H2A.668.668 0 011.333 14V6.693h13.334V14z"
-                            fill="#7E88C3"
-                            fillRule="nonzero"
-                            opacity=".5"
-                          />
-                        </svg>
-                      }
-                      toggleCalendarOnIconChange
-                      closeOnScroll={true}
-                      onChange={(date) => {
-                        field.onChange(date);
-                        setData((prev) => ({
-                          ...prev,
-                          date: date,
-                        }));
-                      }}
-                      onFocus={(e) => (e.target.readOnly = true)}
-                      // readOnly={isEditInvoice ? true : false}
-                    />
-                //   </label>
+                  //   <label>
+                  <DatePicker
+                    selected={data.date}
+                    dateFormat="PP"
+                    showIcon
+                    icon={
+                      <svg
+                        width="16"
+                        height="16"
+                        alt=""
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M14 2h-.667V.667A.667.667 0 0012.667 0H12a.667.667 0 00-.667.667V2H4.667V.667A.667.667 0 004 0h-.667a.667.667 0 00-.666.667V2H2C.897 2 0 2.897 0 4v10c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm.667 12c0 .367-.3.667-.667.667H2A.668.668 0 011.333 14V6.693h13.334V14z"
+                          fill="#7E88C3"
+                          fillRule="nonzero"
+                          opacity=".5"
+                        />
+                      </svg>
+                    }
+                    toggleCalendarOnIconChange
+                    closeOnScroll={true}
+                    onChange={(date) => {
+                      field.onChange(date);
+                      setData((prev) => ({
+                        ...prev,
+                        date: date,
+                      }));
+                    }}
+                    onFocus={(e) => (e.target.readOnly = true)}
+                    // readOnly={isEditInvoice ? true : false}
+                  />
+                  //   </label>
                 )}
               />
             </div>

@@ -27,6 +27,7 @@ export default function Home() {
     isDemo,
     isLoading,
     setIsLoading,
+    fetchInvoices,
   } = useInvoiceContext();
 
   useEffect(() => {
@@ -40,30 +41,7 @@ export default function Home() {
     }
 
     if (isLoggedin) {
-      setIsLoading(true);
-
-      fetch(`${process.env.BACK_END_URL}/invoices/all`, {
-        credentials: "include",
-      })
-        .then(async (response) => {
-          if (response.status === 404) {
-            console.log("error invoices 404");
-            return [];
-          } else if (response.ok) {
-            return response.json();
-          } else {
-            let data = await response.json();
-            throw new Error(`${response.status}: ${data.message}`);
-          }
-        })
-        .then((response) => {
-          setInvoices(response);
-          setIsLoading(false);
-          console.log(response);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      fetchInvoices();
     }
   }, [isDemo, isLoggedin]);
 
@@ -85,9 +63,6 @@ export default function Home() {
   const handleLoadMore = () => {
     setLoadMore(loadMore + 10);
   };
-
-  //   console.log(typeof isDemo);
-  //   console.log(typeof isLoggedin);
 
   return (
     <main className="min-h-screen z-0 pt-[72px] mb-[90px] px-6 mx-auto md:px-[48px] max-w-[830px]">
@@ -192,13 +167,19 @@ export default function Home() {
               ? invoices
                   ?.slice(0, loadMore)
                   .map((invoice) => (
-                    <InvoiceCard key={invoice.invoiceNum} invoice={invoice} />
+                    <InvoiceCard
+                      key={invoice.invoiceNumber}
+                      invoice={invoice}
+                    />
                   ))
               : invoices
                   .filter((item) => item.status === filterStatus)
                   .slice(0, loadMore)
                   .map((invoice) => (
-                    <InvoiceCard key={invoice.invoiceNum} invoice={invoice} />
+                    <InvoiceCard
+                      key={invoice.invoiceNumber}
+                      invoice={invoice}
+                    />
                   ))}
           </div>
           {invoices?.length > 10 && invoices?.length > loadMore && (

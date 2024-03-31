@@ -30,7 +30,9 @@ const Invoice = ({ params }) => {
 
   const reRenderInvoice = () => {
     if (!params.id) return;
-    const i = invoices?.filter((item) => item.invoiceNum === params.id[0])[0];
+    const i = invoices?.filter(
+      (item) => item.invoiceNumber === params.id[0]
+    )[0];
     if (i) {
       setInvoice(i);
     }
@@ -97,7 +99,7 @@ const Invoice = ({ params }) => {
                 className={`bodyText font-bold py-3 px-6 bg-purple rounded-full text-white hover:bg-lightPurple animation-effect`}
                 onClick={() => {
                   if (invoice) {
-                    editInvoice(invoice.invoiceNum, {
+                    editInvoice(invoice.invoiceNumber, {
                       ...invoice,
                       status: "paid",
                     });
@@ -118,7 +120,7 @@ const Invoice = ({ params }) => {
               <div className="">
                 <h2 className="headingText">
                   <span className="text-lightGrey">#</span>
-                  {invoice?.invoiceNum}
+                  {invoice?.invoiceNumber}
                 </h2>
                 {invoice?.invoiceItems?.map((obj, index) => (
                   <span key={index} className="bodyText mt-1">
@@ -215,8 +217,8 @@ const Invoice = ({ params }) => {
         <div className="p-8 bg-white dark:bg-darkestGrey rounded-[8px] ">
           <h2 className="priceText">Confirm Deletion</h2>
           <p className="bodyText text-lightGrey dark:text-lightGrey mt-2 mb-6">
-            Are you sure you want to delete invoice #{invoice?.invoiceNum}? This
-            action cannot be undone.
+            Are you sure you want to delete invoice #{invoice?.invoiceNumber}?
+            This action cannot be undone.
           </p>
           <div className="space-x-2 flex justify-end">
             <button
@@ -228,7 +230,7 @@ const Invoice = ({ params }) => {
             <button
               className="bodyText font-bold py-3 px-6 bg-red rounded-full text-white hover:bg-lightRed animation-effect"
               onClick={() => {
-                deleteInvoice(invoice.invoiceNum);
+                deleteInvoice(invoice);
                 router.replace("/dashboard");
               }}
             >

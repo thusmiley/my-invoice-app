@@ -37,22 +37,22 @@ const letters = [
   "z",
 ];
 
-export const createInvoiceNum = () => {
-  let invoiceNum = "";
+export const createInvoiceNumber = () => {
+  let invoiceNumber = "";
 
   for (let i = 0; i < 2; i++) {
     const index = Math.floor(Math.random() * 25);
-    invoiceNum += letters[index].toUpperCase();
+    invoiceNumber += letters[index].toUpperCase();
   }
 
   for (let i = 0; i < 4; i++) {
     const index = Math.floor(Math.random() * 9);
-    invoiceNum += index;
+    invoiceNumber += index;
   }
 
-  return invoiceNum;
+  return invoiceNumber;
 };
 
-export const uniqueInvoiceNum = (invoiceNum, invoiceNums) => {
-  return !invoiceNums.includes(invoiceNum);
+export const uniqueInvoiceNumber = (invoiceNumber, invoiceNumbers) => {
+  return !invoiceNumbers.includes(invoiceNumber);
 };
