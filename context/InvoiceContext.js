@@ -120,28 +120,34 @@ export function InvoiceProvider({ children }) {
 
   // add invoice
   const addInvoice = (newInvoice) => {
-    if (isDemo){
+    if (isDemo) {
       setInvoices((prev) => [...prev, newInvoice]);
-      return
-    } 
+      return;
+    }
     if (isLoggedin) {
       fetch(`${process.env.BACK_END_URL}/invoices`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newInvoice),
-      }).then((response) => {
-        if (response.status !== 201) {
-          throw new Error(`Unexpected server response with status code ${response.status}`)
-        }
-        return response
-      }).then((response) => {
+      })
+        .then((response) => {
+          if (response.status !== 201) {
+            throw new Error(
+              `Unexpected server response with status code ${response.status}`
+            );
+          }
+          return response;
+        })
+        .then((response) => {
           return response.json();
-      }).then(response => {
-        setInvoices((prev) => [...prev, response]);
-      }).catch((err) => {
-        console.log(err);
-      });
+        })
+        .then((response) => {
+          setInvoices((prev) => [...prev, response]);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
@@ -149,36 +155,41 @@ export function InvoiceProvider({ children }) {
   const deleteInvoice = (invoice) => {
     if (isDemo) {
       setInvoices((prev) =>
-      prev.filter((item) => item.invoiceNumber !== invoice.invoiceNumber)
+        prev.filter((item) => item.invoiceNumber !== invoice.invoiceNumber)
       );
-      return
+      return;
     }
     if (isLoggedin) {
       fetch(`${process.env.BACK_END_URL}/invoices/${invoice?.id}`, {
         method: "DELETE",
         credentials: "include",
         headers: {
-          "content-type": "application/json"
-        }
-      }).then((response) => {
-        if(response.status === 200){
-          setInvoices((prev) =>
-          prev.filter((item) => item.invoiceNumber !== invoice.invoiceNumber)
-          )
-          return response
-        }else if (response.status !== 200) {
-            throw new Error(`Unexpected server response with status code ${response.status}`)
+          "content-type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            setInvoices((prev) =>
+              prev.filter(
+                (item) => item.invoiceNumber !== invoice.invoiceNumber
+              )
+            );
+            return response;
+          } else if (response.status !== 200) {
+            throw new Error(
+              `Unexpected server response with status code ${response.status}`
+            );
           }
-      }).catch((err) => {
+        })
+        .catch((err) => {
           console.log(err);
-      });
+        });
     }
   };
 
   // edit invoice
   const editInvoice = async (invoiceNumber, newInvoice) => {
-
-    if (isDemo){
+    if (isDemo) {
       setInvoices((prev) =>
         prev.map((invoice) => {
           if (invoice.invoiceNumber === invoiceNumber) {
@@ -187,7 +198,7 @@ export function InvoiceProvider({ children }) {
           return invoice;
         })
       );
-      return
+      return;
     }
 
     if (isLoggedin) {
@@ -196,22 +207,26 @@ export function InvoiceProvider({ children }) {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newInvoice),
-      }).then((response) => {
-        if (response.status === 201){
-          setInvoices((prev) =>
-            prev.map((invoice) => {
-              if (invoice.invoiceNumber === invoiceNumber) {
-                return newInvoice;
-              }
-              return invoice;
-            })
-        );
-        }else if (response.status !== 201) {
-          throw new Error(`Unexpected server response with status code ${response.status}`)
-        }
-      }).catch((err) => {
+      })
+        .then((response) => {
+          if (response.status === 201) {
+            setInvoices((prev) =>
+              prev.map((invoice) => {
+                if (invoice.invoiceNumber === invoiceNumber) {
+                  return newInvoice;
+                }
+                return invoice;
+              })
+            );
+          } else if (response.status !== 201) {
+            throw new Error(
+              `Unexpected server response with status code ${response.status}`
+            );
+          }
+        })
+        .catch((err) => {
           console.log(err);
-      });
+        });
     }
   };
 

@@ -565,29 +565,31 @@ const InvoiceForm = ({ invoice }) => {
           >
             <button
               type="button"
-              className="bodyText text-[12px] md:text-[16px] font-bold py-3 px-6 text-blueGrey bg-[#F9FAFE] dark:bg-grey dark:text-lightestGrey rounded-full hover:bg-lightestGrey dark:hover:text-grey dark:hover:bg-white animation-effect"
+              className="bodyText h-12 text-[14px] md:text-[16px] font-bold px-4 md:px-6 text-blueGrey bg-[#F9FAFE] dark:bg-grey dark:text-lightestGrey rounded-full hover:bg-lightestGrey dark:hover:text-grey dark:hover:bg-white animation-effect"
               onClick={handleCancel}
             >
               {isAddInvoice && "Discard"}
               {isEditInvoice && "Cancel"}
             </button>
-            {isAddInvoice && (
-              <button
-                type="button"
-                className="bodyText text-[12px] md:text-[16px] text-lightGrey bg-[#373B53] hover:bg-almostBlack dark:text-lightestGrey font-bold py-3 px-6 dark:bg-[#373B53]  dark:hover:bg-darkGrey rounded-full dark:hover:text-lightestGrey animation-effect"
-                onClick={saveDraft}
-              >
-                Save as Draft
-              </button>
-            )}
+            <div className="space-x-2">
+              {isAddInvoice && (
+                <button
+                  type="button"
+                  className="bodyText h-12 text-[14px] md:text-[16px] text-lightGrey bg-[#373B53] hover:bg-almostBlack dark:text-lightestGrey font-bold px-4 md:px-6 dark:bg-[#373B53]  dark:hover:bg-darkGrey rounded-full dark:hover:text-lightestGrey animation-effect"
+                  onClick={saveDraft}
+                >
+                  Save as Draft
+                </button>
+              )}
 
-            <button
-              type="submit"
-              className="bodyText text-[12px] md:text-[16px] text-white dark:text-white font-bold py-3 px-6 bg-purple dark:bg-purple rounded-full hover:bg-lightPurple dark:hover:bg-lightPurple animation-effect"
-            >
-              {isAddInvoice && "Save & Send"}
-              {isEditInvoice && "Save Changes"}
-            </button>
+              <button
+                type="submit"
+                className="bodyText h-12 text-[14px] md:text-[16px] text-white dark:text-white font-bold px-4 md:px-6 bg-purple dark:bg-purple rounded-full hover:bg-lightPurple dark:hover:bg-lightPurple animation-effect"
+              >
+                {isAddInvoice && "Save & Send"}
+                {isEditInvoice && "Save Changes"}
+              </button>
+            </div>
           </div>
         </div>
       </form>

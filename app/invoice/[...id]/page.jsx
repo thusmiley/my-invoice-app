@@ -77,14 +77,14 @@ const Invoice = ({ params }) => {
           >
             {invoice?.status !== "paid" && (
               <button
-                className="bodyText font-bold py-3 px-6 bg-[#F9FAFE] dark:bg-grey rounded-full hover:bg-lightestGrey dark:hover:text-blueGrey dark:hover:bg-white animation-effect"
+                className="bodyText font-bold h-12 px-6 bg-[#F9FAFE] dark:bg-grey rounded-full hover:bg-lightestGrey dark:hover:text-blueGrey dark:hover:bg-white animation-effect"
                 onClick={() => setIsEditInvoice(!isEditInvoice)}
               >
                 Edit
               </button>
             )}
             <button
-              className="bodyText font-bold py-3 px-6 bg-red rounded-full text-white hover:bg-lightRed animation-effect"
+              className="bodyText font-bold h-12 px-6 bg-red rounded-full text-white hover:bg-lightRed animation-effect"
               onClick={() => setIsDelete(!isDelete)}
             >
               Delete
@@ -224,7 +224,8 @@ const Invoice = ({ params }) => {
             </button>
             <button
               className="bodyText font-bold py-3 px-6 bg-red rounded-full text-white hover:bg-lightRed animation-effect"
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 deleteInvoice(invoice);
                 router.replace("/dashboard");
               }}
