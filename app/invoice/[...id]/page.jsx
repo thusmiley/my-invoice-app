@@ -217,12 +217,14 @@ const Invoice = ({ params }) => {
           </p>
           <div className="space-x-2 flex justify-end">
             <button
+              type="button"
               className="bodyText font-bold py-3 px-6 bg-[#F9FAFE] dark:bg-grey rounded-full hover:bg-lightestGrey dark:hover:text-blueGrey dark:hover:bg-white animation-effect"
               onClick={() => setIsDelete(!isDelete)}
             >
               Cancel
             </button>
             <button
+              type="button"
               className="bodyText font-bold py-3 px-6 bg-red rounded-full text-white hover:bg-lightRed animation-effect"
               onClick={(e) => {
                 e.preventDefault();
