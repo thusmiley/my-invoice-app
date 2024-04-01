@@ -1,15 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
-import Head from "next/head";
 import Link from "next/link";
 
 import { useInvoiceContext } from "@/context/InvoiceContext";
 
-import "dotenv/config";
+// export const metadata = {
+//   title: "Login",
+// };
 
-export default function Login() {
-  const { setIsDemo, setIsLoggedin} =
-    useInvoiceContext();
+export default function Home() {
+  const { setIsDemo, setIsLoggedin } = useInvoiceContext();
 
   useEffect(() => {
     setIsDemo(false);
@@ -18,10 +18,6 @@ export default function Login() {
 
   return (
     <main className="flex justify-center items-center min-h-dvh mb-[90px] px-6 mx-auto md:px-[48px] md:max-w-[550px]">
-      {/* <Head>
-        <title>Login | My Invoice App</title>
-      </Head> */}
-
       <div className="bg-white dark:bg-darkGrey rounded-[8px] relative z-0 px-6 pt-8 pb-12 cursor-pointer box-shadow-invoiceCard md:px-8">
         <h1 className="priceText text-center text-[28px]">Login</h1>
         <p className="bodyText text-center mt-2 text-almostBlack dark:text-white md:max-w-[380px]">

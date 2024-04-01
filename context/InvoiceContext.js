@@ -85,7 +85,7 @@ export function InvoiceProvider({ children }) {
         })
         .then((response) => {
           setInvoices(response);
-          console.log(response);
+        //   console.log(response);
         })
         .catch((err) => {
           console.log(err);
@@ -110,7 +110,7 @@ export function InvoiceProvider({ children }) {
         })
         .then((response) => {
           if (response.status !== 201) {
-            console.log(response);
+            // console.log(response);
           }
         })
         .catch((err) => {

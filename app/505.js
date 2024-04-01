@@ -1,12 +1,12 @@
-import Head from "next/head";
 import Link from "next/link";
+
+// export const metadata = {
+//   title: "500",
+// };
 
 export default function Custom500() {
   return (
     <div className="my-20 flex flex-col items-center justify-center">
-      {/* <Head>
-        <title>404 - Not Found | My Invoice App</title>
-      </Head> */}
       <h1 className="my-20 text-xl md:text-4xl">
         500 - Server-side error occurred
       </h1>

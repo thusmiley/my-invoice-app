@@ -8,9 +8,12 @@ import illustration from "../../public/illustration-empty.svg";
 import { useInvoiceContext } from "@/context/InvoiceContext";
 import InvoiceForm from "@/components/InvoiceForm";
 import { Transition } from "@headlessui/react";
-import Head from "next/head";
 import exampleData from "../../utils/data.json";
 import { emptyInvoice } from "@/utils";
+
+// export const metadata = {
+//   title: "Dashboard",
+// };
 
 export default function Home() {
   const [hydrated, setHydrated] = useState(false);
@@ -39,7 +42,7 @@ export default function Home() {
   }, [invoices, isDemo]);
 
   useEffect(() => {
-    console.log(invoices);
+    // console.log(invoices);
   }, [invoices]);
 
   const handleFilterClick = (e) => {
@@ -52,9 +55,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen z-0 pt-[72px] mb-[90px] px-6 mx-auto md:px-[48px] max-w-[830px]">
-      {/* <Head>
-        <title>Dashboard | My Invoice App</title>
-      </Head> */}
       {!hydrated ? (
         <h2 className="mt-10 headingText text-center md:mt-[64px]">
           Loading...

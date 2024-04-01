@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
@@ -55,7 +54,7 @@ const NavBar = () => {
     <header className="fixed top-0 w-full z-10 xl:h-screen xl:w-[103px]">
       <div className="bg-[#373B53] dark:bg-darkGrey flex justify-between items-center xl:flex-col xl:justify-start xl:fixed xl:top-0 xl:rounded-r-[30px] xl:items-stretch xl:h-full">
         <Link
-          href={pathname === "/login" ? "/login" : "/dashboard"}
+          href={pathname === "/" ? "/" : "/dashboard"}
           className={`${
             isAddInvoice || isEditInvoice
               ? "pointer-events-none"
@@ -139,11 +138,11 @@ const NavBar = () => {
 
           <div
             className={`${
-              pathname === "/login" ? "hidden" : ""
+              pathname === "/" ? "hidden" : ""
             } w-[1px] h-[72px] bg-[#494E6E] mx-6 md:mx-8 md:h-20 xl:h-[1px] xl:w-[103px] xl:mx-0 xl:my-6`}
           />
 
-          <div className={`${pathname === "/login" ? "hidden" : ""}`}>
+          <div className={`${pathname === "/" ? "hidden" : ""}`}>
             {!isDemo && !isLoggedin && (
               <Skeleton variant="circular" width={32} height={32} />
             )}

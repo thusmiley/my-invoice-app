@@ -9,8 +9,11 @@ import { formatDate, findPaymentDueDate } from "@/utils";
 import { useInvoiceContext } from "@/context/InvoiceContext";
 import { Transition } from "@headlessui/react";
 import InvoiceForm from "@/components/InvoiceForm";
-import Head from "next/head";
 import { useRouter } from "next/navigation";
+
+// export const metadata = {
+//   title: "Invoice",
+// };
 
 const Invoice = ({ params }) => {
   const {
@@ -46,9 +49,6 @@ const Invoice = ({ params }) => {
 
   return (
     <main className="min-h-screen pt-[72px] relative px-6 mx-auto pb-[120px] md:pb-[50px] xl:max-w-[730px]">
-      {/* <Head>
-        <title>Invoice #{params.id} | My Invoice App</title>
-      </Head> */}
       <button
         className="flex items-center bodyText font-bold text-almostBlack my-8 md:mt-[48px] hover:text-lightGrey animation-effect"
         onClick={() => router.back()}
