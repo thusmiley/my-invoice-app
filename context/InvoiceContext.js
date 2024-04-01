@@ -158,6 +158,8 @@ export function InvoiceProvider({ children }) {
       setInvoices((prev) =>
         prev.filter((item) => item.invoiceNumber !== invoice.invoiceNumber)
       );
+      console.log("is demoUnder!");
+        
       return;
     }
     if (isLoggedin) {
