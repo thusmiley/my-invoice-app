@@ -11,7 +11,6 @@ import Skeleton from "@mui/material/Skeleton";
 const NavBar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const pathname = usePathname();
-  const [userData, setUserData] = useState();
   const {
     isAddInvoice,
     isEditInvoice,
@@ -21,34 +20,8 @@ const NavBar = () => {
     setIsLoggedin,
     darkMode,
     toggleTheme,
+    userData,
   } = useInvoiceContext();
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (isLoggedin) {
-      setIsLoading(true);
-      fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
-        .then(async (response) => {
-          if (response.status === 404) {
-            console.log("error user data 404");
-            return [];
-          } else if (response.ok) {
-            return response.json();
-          } else {
-            let data = await response.json();
-            throw new Error(`${response.status}: ${data.message}`);
-          }
-        })
-        .then((response) => {
-          setIsLoading(false);
-          setUserData(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, []);
 
   return (
     <header className="fixed top-0 w-full z-10 xl:h-screen xl:w-[103px]">
@@ -146,7 +119,7 @@ const NavBar = () => {
             {!isDemo && !isLoggedin && (
               <Skeleton variant="circular" width={32} height={32} />
             )}
-            {!isLoading && isDemo && (
+            {isDemo && (
               <Image
                 src={avatar}
                 width={32}
@@ -162,10 +135,10 @@ const NavBar = () => {
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
               />
             )}
-            {isLoading && isLoggedin && (
+            {!userData && isLoggedin && (
               <Skeleton variant="circular" width={32} height={32} />
             )}
-            {!isLoading && isLoggedin && userData && (
+            {isLoggedin && userData && (
               <Image
                 src={userData?.photoUrl}
                 width={32}

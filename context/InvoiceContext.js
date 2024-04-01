@@ -24,37 +24,62 @@ export function InvoiceProvider({ children }) {
   const [invoices, setInvoices] = useState();
   const [isAddInvoice, setIsAddInvoice] = useState(false);
   const [isEditInvoice, setIsEditInvoice] = useState(false);
+  const [userData, setUserData] = useState();
 
   // dark mode
-    useEffect(() => {
-      if (
-        localStorage.theme === "dark" ||
-        (!("theme" in localStorage) &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        document.documentElement.classList.add("dark");
-        setDarkMode(true);
-      } else {
-        document.documentElement.classList.remove("dark");
-        setDarkMode(false);
-      }
-    }, [darkMode]);
+  useEffect(() => {
+    if (
+      localStorage.theme === "dark" ||
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.documentElement.classList.add("dark");
+      setDarkMode(true);
+    } else {
+      document.documentElement.classList.remove("dark");
+      setDarkMode(false);
+    }
+  }, [darkMode]);
 
-    const toggleTheme = () => {
-      const theme = localStorage.getItem("theme");
-      if (theme) {
-        localStorage.setItem("theme", theme === "dark" ? "light" : "dark");
-      } else {
-        localStorage.setItem("theme", "dark");
-      }
-      setDarkMode(!darkMode);
-    };
+  const toggleTheme = () => {
+    const theme = localStorage.getItem("theme");
+    if (theme) {
+      localStorage.setItem("theme", theme === "dark" ? "light" : "dark");
+    } else {
+      localStorage.setItem("theme", "dark");
+    }
+    setDarkMode(!darkMode);
+  };
 
   // login/demo toggle
   useEffect(() => {
     localStorage.setItem("isDemo", JSON.stringify(isDemo));
     localStorage.setItem("isLoggedin", JSON.stringify(isLoggedin));
   }, [isDemo, isLoggedin]);
+
+  // auth - fetch user data
+  useEffect(() => {
+    if (isLoggedin) {
+      fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
+        .then(async (response) => {
+          if (response.status === 404) {
+            console.log("error user data 404");
+            return [];
+          } else if (response.ok) {
+            return response.json();
+          } else {
+            let data = await response.json();
+            throw new Error(`${response.status}: ${data.message}`);
+          }
+        })
+        .then((response) => {
+          setUserData(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, []);
 
   // fetch invoices from server
   useEffect(() => {
@@ -85,7 +110,7 @@ export function InvoiceProvider({ children }) {
         })
         .then((response) => {
           setInvoices(response);
-        //   console.log(response);
+          //   console.log(response);
         })
         .catch((err) => {
           console.log(err);
@@ -95,8 +120,10 @@ export function InvoiceProvider({ children }) {
 
   // add invoice
   const addInvoice = (newInvoice) => {
-    setInvoices((prev) => [...prev, newInvoice]);
-    if (isDemo) return;
+    if (isDemo) {
+      setInvoices((prev) => [...prev, newInvoice]);
+      return;
+    }
 
     if (isLoggedin) {
       fetch(`${process.env.BACK_END_URL}/invoices`, {
@@ -106,12 +133,18 @@ export function InvoiceProvider({ children }) {
         body: JSON.stringify(newInvoice),
       })
         .then((response) => {
+          if (response.status !== 201) {
+            throw new Error(
+              `Unexpected server response with status code ${response.status}`
+            );
+          }
+          return response;
+        })
+        .then((response) => {
           return response.json();
         })
         .then((response) => {
-          if (response.status !== 201) {
-            // console.log(response);
-          }
+          setInvoices((prev) => [...prev, response]);
         })
         .catch((err) => {
           console.log(err);
@@ -121,18 +154,30 @@ export function InvoiceProvider({ children }) {
 
   // delete invoice
   const deleteInvoice = (invoice) => {
-    setInvoices((prev) =>
-      prev.filter((item) => item.invoiceNumber !== invoice.invoiceNumber)
-    );
-    if (isDemo) return;
+    if (isDemo) {
+      setInvoices((prev) =>
+        prev.filter((item) => item.invoiceNumber !== invoice.invoiceNumber)
+      );
+      return;
+    }
 
     if (isLoggedin) {
       fetch(`${process.env.BACK_END_URL}/invoices/${invoice?.id}`, {
         method: "DELETE",
         credentials: "include",
+        headers: {
+          "content-type": "application/json",
+        },
       })
         .then((response) => {
-          return response.json();
+          if (response.ok) {
+            setInvoices((prev) =>
+              prev.filter(
+                (item) => item.invoiceNumber !== invoice.invoiceNumber
+              )
+            );
+          }
+          return response;
         })
         .then((response) => {
           if (response.status !== 200) {
@@ -147,15 +192,17 @@ export function InvoiceProvider({ children }) {
 
   // edit invoice
   const editInvoice = (invoiceNumber, newInvoice) => {
-    setInvoices((prev) =>
-      prev.map((invoice) => {
-        if (invoice.invoiceNumber === invoiceNumber) {
-          return newInvoice;
-        }
-        return invoice;
-      })
-    );
-    if (isDemo) return;
+    if (isDemo) {
+      setInvoices((prev) =>
+        prev.map((invoice) => {
+          if (invoice.invoiceNumber === invoiceNumber) {
+            return newInvoice;
+          }
+          return invoice;
+        })
+      );
+      return;
+    }
 
     if (isLoggedin) {
       fetch(`${process.env.BACK_END_URL}/invoices/${newInvoice.id}`, {
@@ -170,6 +217,15 @@ export function InvoiceProvider({ children }) {
         .then((response) => {
           if (response.status !== 201) {
             console.log(response.json());
+          } else {
+            setInvoices((prev) =>
+              prev.map((invoice) => {
+                if (invoice.invoiceNumber === invoiceNumber) {
+                  return newInvoice;
+                }
+                return invoice;
+              })
+            );
           }
         })
         .catch((err) => {
@@ -197,6 +253,8 @@ export function InvoiceProvider({ children }) {
         darkMode,
         setDarkMode,
         toggleTheme,
+        userData,
+        setUserData,
       }}
     >
       {children}
