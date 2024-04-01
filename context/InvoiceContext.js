@@ -24,37 +24,62 @@ export function InvoiceProvider({ children }) {
   const [invoices, setInvoices] = useState();
   const [isAddInvoice, setIsAddInvoice] = useState(false);
   const [isEditInvoice, setIsEditInvoice] = useState(false);
+  const [userData, setUserData] = useState();
 
   // dark mode
-    useEffect(() => {
-      if (
-        localStorage.theme === "dark" ||
-        (!("theme" in localStorage) &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        document.documentElement.classList.add("dark");
-        setDarkMode(true);
-      } else {
-        document.documentElement.classList.remove("dark");
-        setDarkMode(false);
-      }
-    }, [darkMode]);
+  useEffect(() => {
+    if (
+      localStorage.theme === "dark" ||
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.documentElement.classList.add("dark");
+      setDarkMode(true);
+    } else {
+      document.documentElement.classList.remove("dark");
+      setDarkMode(false);
+    }
+  }, [darkMode]);
 
-    const toggleTheme = () => {
-      const theme = localStorage.getItem("theme");
-      if (theme) {
-        localStorage.setItem("theme", theme === "dark" ? "light" : "dark");
-      } else {
-        localStorage.setItem("theme", "dark");
-      }
-      setDarkMode(!darkMode);
-    };
+  const toggleTheme = () => {
+    const theme = localStorage.getItem("theme");
+    if (theme) {
+      localStorage.setItem("theme", theme === "dark" ? "light" : "dark");
+    } else {
+      localStorage.setItem("theme", "dark");
+    }
+    setDarkMode(!darkMode);
+  };
 
   // login/demo toggle
   useEffect(() => {
     localStorage.setItem("isDemo", JSON.stringify(isDemo));
     localStorage.setItem("isLoggedin", JSON.stringify(isLoggedin));
   }, [isDemo, isLoggedin]);
+
+  // auth - fetch user data
+  useEffect(() => {
+    if (isLoggedin) {
+      fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
+        .then(async (response) => {
+          if (response.status === 404) {
+            console.log("error user data 404");
+            return [];
+          } else if (response.ok) {
+            return response.json();
+          } else {
+            let data = await response.json();
+            throw new Error(`${response.status}: ${data.message}`);
+          }
+        })
+        .then((response) => {
+          setUserData(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, []);
 
   // fetch invoices from server
   useEffect(() => {
@@ -85,7 +110,7 @@ export function InvoiceProvider({ children }) {
         })
         .then((response) => {
           setInvoices(response);
-        //   console.log(response);
+          //   console.log(response);
         })
         .catch((err) => {
           console.log(err);
@@ -209,6 +234,8 @@ export function InvoiceProvider({ children }) {
         darkMode,
         setDarkMode,
         toggleTheme,
+        userData,
+        setUserData,
       }}
     >
       {children}
