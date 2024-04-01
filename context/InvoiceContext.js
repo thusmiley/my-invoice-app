@@ -154,12 +154,14 @@ export function InvoiceProvider({ children }) {
   // delete invoice
   const deleteInvoice = (invoice) => {
     if (isDemo) {
+      console.log("is demo!");
       setInvoices((prev) =>
         prev.filter((item) => item.invoiceNumber !== invoice.invoiceNumber)
       );
       return;
     }
     if (isLoggedin) {
+      console.log("is loggedin!");
       fetch(`${process.env.BACK_END_URL}/invoices/${invoice?.id}`, {
         method: "DELETE",
         credentials: "include",
