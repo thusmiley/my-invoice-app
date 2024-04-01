@@ -165,7 +165,7 @@ const NavBar = () => {
               <div className="fixed top-[80px] right-6 bg-white dark:bg-darkGrey rounded-[8px] px-6 py-3 cursor-pointer box-shadow-invoiceCard slideup md:top-[88px] md:right-[48px] xl:bottom-6 xl:left-[111px] xl:top-auto xl:right-auto">
                 {isDemo && (
                   <Link
-                    href={`${process.env.BACK_END_URL}/authentication/github`}
+                    href={`${process.env.NEXT_PUBLIC_BACK_END_URL}/authentication/github`}
                     className="bodyText font-bold hover:text-purple"
                     onClick={() => {
                       setIsProfileOpen(!isProfileOpen);
@@ -178,7 +178,7 @@ const NavBar = () => {
                 )}
                 {isLoggedin && (
                   <form
-                    action={`${process.env.BACK_END_URL}/authentication/logout`}
+                    action={`${process.env.NEXT_PUBLIC_BACK_END_URL}/authentication/logout`}
                     method="POST"
                   >
                     <button

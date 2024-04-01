@@ -60,7 +60,9 @@ export function InvoiceProvider({ children }) {
   // auth - fetch user data
   useEffect(() => {
     if (isLoggedin) {
-      fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
+      fetch(`${process.env.NEXT_PUBLIC_BACK_END_URL}/user`, {
+        credentials: "include",
+      })
         .then(async (response) => {
           if (response.status === 404) {
             console.log("error user data 404");
@@ -93,7 +95,7 @@ export function InvoiceProvider({ children }) {
     }
 
     if (isLoggedin) {
-      fetch(`${process.env.BACK_END_URL}/invoices/all`, {
+      fetch(`${process.env.NEXT_PUBLIC_BACK_END_URL}/invoices/all`, {
         method: "GET",
         credentials: "include",
       })
@@ -125,7 +127,7 @@ export function InvoiceProvider({ children }) {
       return;
     }
     if (isLoggedin) {
-      fetch(`${process.env.BACK_END_URL}/invoices`, {
+      fetch(`${process.env.NEXT_PUBLIC_BACK_END_URL}/invoices`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -164,7 +166,7 @@ export function InvoiceProvider({ children }) {
     }
     if (isLoggedin) {
       console.log("is loggedin!");
-      fetch(`${process.env.BACK_END_URL}/invoices/${invoice?.id}`, {
+      fetch(`${process.env.NEXT_PUBLIC_BACK_END_URL}/invoices/${invoice?.id}`, {
         method: "DELETE",
         credentials: "include",
         headers: {
@@ -206,12 +208,15 @@ export function InvoiceProvider({ children }) {
     }
 
     if (isLoggedin) {
-      fetch(`${process.env.BACK_END_URL}/invoices/${newInvoice.id}`, {
-        method: "PUT",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newInvoice),
-      })
+      fetch(
+        `${process.env.NEXT_PUBLIC_BACK_END_URL}/invoices/${newInvoice.id}`,
+        {
+          method: "PUT",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newInvoice),
+        }
+      )
         .then((response) => {
           if (response.status === 201) {
             setInvoices((prev) =>

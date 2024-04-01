@@ -32,7 +32,7 @@ export default function Home() {
             View as Demo
           </Link>
           <Link
-            href={`${process.env.BACK_END_URL}/authentication/github`}
+            href={`${process.env.NEXT_PUBLIC_BACK_END_URL}/authentication/github`}
             className="w-full bg-purple font-bold text-white animation-effect rounded-full py-3 px-6 hover:bg-lightPurple flex items-center justify-center md:w-auto"
             onClick={() => setIsLoggedin(true)}
           >
