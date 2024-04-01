@@ -10,7 +10,6 @@ import "dotenv/config";
 import Skeleton from "@mui/material/Skeleton";
 
 const NavBar = () => {
-  const [darkMode, setDarkMode] = useState(true);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const pathname = usePathname();
   const [userData, setUserData] = useState();
@@ -21,13 +20,15 @@ const NavBar = () => {
     setIsDemo,
     isLoggedin,
     setIsLoggedin,
+    darkMode,
+    toggleTheme,
   } = useInvoiceContext();
 
-  const [isLoadingImage, setIsLoadingImage] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (isLoggedin) {
-      setIsLoadingImage(true);
+      setIsLoading(true);
       fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
         .then(async (response) => {
           if (response.status === 404) {
@@ -41,7 +42,7 @@ const NavBar = () => {
           }
         })
         .then((response) => {
-          setIsLoadingImage(false);
+          setIsLoading(false);
           setUserData(response);
         })
         .catch((error) => {
@@ -50,33 +51,9 @@ const NavBar = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (
-      localStorage.theme === "dark" ||
-      (!("theme" in localStorage) &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      document.documentElement.classList.add("dark");
-      setDarkMode(true);
-    } else {
-      document.documentElement.classList.remove("dark");
-      setDarkMode(false);
-    }
-  }, [darkMode]);
-
-  const toggleTheme = () => {
-    const theme = localStorage.getItem("theme");
-    if (theme) {
-      localStorage.setItem("theme", theme === "dark" ? "light" : "dark");
-    } else {
-      localStorage.setItem("theme", "dark");
-    }
-    setDarkMode(!darkMode);
-  };
-
   return (
     <header className="fixed top-0 w-full z-10 xl:h-screen xl:w-[103px]">
-      <nav className="bg-[#373B53] dark:bg-darkGrey flex justify-between items-center xl:flex-col xl:justify-start xl:fixed xl:top-0 xl:rounded-r-[30px] xl:items-stretch xl:h-full">
+      <div className="bg-[#373B53] dark:bg-darkGrey flex justify-between items-center xl:flex-col xl:justify-start xl:fixed xl:top-0 xl:rounded-r-[30px] xl:items-stretch xl:h-full">
         <Link
           href={pathname === "/login" ? "/login" : "/dashboard"}
           className={`${
@@ -170,7 +147,7 @@ const NavBar = () => {
             {!isDemo && !isLoggedin && (
               <Skeleton variant="circular" width={32} height={32} />
             )}
-            {!isLoadingImage && isDemo && (
+            {!isLoading && isDemo && (
               <Image
                 src={avatar}
                 width={32}
@@ -186,10 +163,10 @@ const NavBar = () => {
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
               />
             )}
-            {isLoadingImage && isLoggedin && (
+            {isLoading && isLoggedin && (
               <Skeleton variant="circular" width={32} height={32} />
             )}
-            {!isLoadingImage && isLoggedin && userData && (
+            {!isLoading && isLoggedin && userData && (
               <Image
                 src={userData?.photoUrl}
                 width={32}
@@ -244,7 +221,7 @@ const NavBar = () => {
             </div>
           )}
         </div>
-      </nav>
+      </div>
     </header>
   );
 };

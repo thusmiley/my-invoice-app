@@ -46,14 +46,9 @@ const Invoice = ({ params }) => {
 
   return (
     <main className="min-h-screen pt-[72px] relative px-6 mx-auto pb-[120px] md:pb-[50px] xl:max-w-[730px]">
-      <Head>
+      {/* <Head>
         <title>Invoice #{params.id} | My Invoice App</title>
-        <meta
-          name="description"
-          content="Made by Thu Smiley @Naughty Cat"
-          key="desc"
-        />
-      </Head>
+      </Head> */}
       <button
         className="flex items-center bodyText font-bold text-almostBlack my-8 md:mt-[48px] hover:text-lightGrey animation-effect"
         onClick={() => router.back()}

@@ -1,9 +1,11 @@
 import NavBar from "@/components/NavBar";
 import "./styles/globals.css";
 import { InvoiceProvider } from "@/context/InvoiceContext";
-export const metadata = {
-  description: "Made by Thu Smiley @Naughty Cat",
-};
+import NextTopLoader from "nextjs-toploader";
+
+// export const metadata = {
+//   description: "Made by Thu Smiley @Naughty Cat",
+// };
 
 export default function RootLayout({ children }) {
   return (
@@ -11,6 +13,7 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="icon" type="image/svg" href="/logo.svg" />
         <meta property="og:image" content="/preview.jpg" />
+        <title>My Invoice App</title>
         <meta
           name="description"
           content="Made by Thu Smiley @Naughty Cat"
@@ -30,6 +33,19 @@ export default function RootLayout({ children }) {
       <body>
         <InvoiceProvider>
           <NavBar />
+          <NextTopLoader
+            color="#7C5DFA"
+            initialPosition={0.08}
+            crawlSpeed={200}
+            height={5}
+            crawl={true}
+            showSpinner={false}
+            easing="ease"
+            speed={200}
+            // shadow="0 0 10px #7C5DFA,0 0 5px #7C5DFA"
+            zIndex={1600}
+            showAtBottom={true}
+          />
           {children}
         </InvoiceProvider>
       </body>

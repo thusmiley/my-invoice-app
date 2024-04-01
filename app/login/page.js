@@ -18,14 +18,9 @@ export default function Login() {
 
   return (
     <main className="flex justify-center items-center min-h-dvh mb-[90px] px-6 mx-auto md:px-[48px] md:max-w-[550px]">
-      <Head>
+      {/* <Head>
         <title>Login | My Invoice App</title>
-        <meta
-          name="description"
-          content="Made by Thu Smiley @Naughty Cat"
-          key="desc"
-        />
-      </Head>
+      </Head> */}
 
       <div className="bg-white dark:bg-darkGrey rounded-[8px] relative z-0 px-6 pt-8 pb-12 cursor-pointer box-shadow-invoiceCard md:px-8">
         <h1 className="priceText text-center text-[28px]">Login</h1>

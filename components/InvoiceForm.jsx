@@ -455,7 +455,6 @@ const InvoiceForm = ({ invoice }) => {
                 control={control}
                 name="date"
                 render={({ field }) => (
-                  //   <label>
                   <DatePicker
                     selected={data.date}
                     dateFormat="PP"
@@ -485,9 +484,8 @@ const InvoiceForm = ({ invoice }) => {
                       }));
                     }}
                     onFocus={(e) => (e.target.readOnly = true)}
-                    // readOnly={isEditInvoice ? true : false}
+                    readOnly={isEditInvoice ? true : false}
                   />
-                  //   </label>
                 )}
               />
             </div>

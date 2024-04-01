@@ -10,6 +10,7 @@ export function useInvoiceContext() {
 }
 
 export function InvoiceProvider({ children }) {
+  const [darkMode, setDarkMode] = useState(true);
   const [isDemo, setIsDemo] = useState(
     typeof window !== "undefined" && window.localStorage.getItem("isDemo")
       ? JSON.parse(window.localStorage.getItem("isDemo"))
@@ -23,40 +24,76 @@ export function InvoiceProvider({ children }) {
   const [invoices, setInvoices] = useState();
   const [isAddInvoice, setIsAddInvoice] = useState(false);
   const [isEditInvoice, setIsEditInvoice] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
+  // dark mode
+    useEffect(() => {
+      if (
+        localStorage.theme === "dark" ||
+        (!("theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+        setDarkMode(true);
+      } else {
+        document.documentElement.classList.remove("dark");
+        setDarkMode(false);
+      }
+    }, [darkMode]);
+
+    const toggleTheme = () => {
+      const theme = localStorage.getItem("theme");
+      if (theme) {
+        localStorage.setItem("theme", theme === "dark" ? "light" : "dark");
+      } else {
+        localStorage.setItem("theme", "dark");
+      }
+      setDarkMode(!darkMode);
+    };
+
+  // login/demo toggle
   useEffect(() => {
     localStorage.setItem("isDemo", JSON.stringify(isDemo));
     localStorage.setItem("isLoggedin", JSON.stringify(isLoggedin));
   }, [isDemo, isLoggedin]);
 
-  const fetchInvoices = () => {
-    setIsLoading(true);
+  // fetch invoices from server
+  useEffect(() => {
+    if (isDemo) {
+      const localStoredInvoices = localStorage.getItem("invoices");
+      if (localStoredInvoices) {
+        setInvoices(JSON.parse(localStoredInvoices));
+      } else {
+        setInvoices(exampleData);
+      }
+    }
 
-    fetch(`${process.env.BACK_END_URL}/invoices/all`, {
-      credentials: "include",
-    })
-      .then(async (response) => {
-        if (response.status === 404) {
-          console.log("Empty invoice array - error invoices 404");
-          return [];
-        } else if (response.ok) {
-          return response.json();
-        } else {
-          let data = await response.json();
-          throw new Error(`${response.status}: ${data.message}`);
-        }
+    if (isLoggedin) {
+      fetch(`${process.env.BACK_END_URL}/invoices/all`, {
+        method: "GET",
+        credentials: "include",
       })
-      .then((response) => {
-        setInvoices(response);
-        setIsLoading(false);
-        console.log(response);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+        .then(async (response) => {
+          if (response.status === 404) {
+            console.log("Empty invoice array - error invoices 404");
+            return [];
+          } else if (response.ok) {
+            return response.json();
+          } else {
+            let data = await response.json();
+            throw new Error(`${response.status}: ${data.message}`);
+          }
+        })
+        .then((response) => {
+          setInvoices(response);
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isDemo, isLoggedin]);
 
+  // add invoice
   const addInvoice = (newInvoice) => {
     setInvoices((prev) => [...prev, newInvoice]);
     if (isDemo) return;
@@ -65,31 +102,50 @@ export function InvoiceProvider({ children }) {
       fetch(`${process.env.BACK_END_URL}/invoices`, {
         method: "POST",
         credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newInvoice),
-      }).catch((err) => {
-        console.log(err);
-      });
-      // fetchInvoices();
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((response) => {
+          if (response.status !== 201) {
+            console.log(response);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
+  // delete invoice
   const deleteInvoice = (invoice) => {
     setInvoices((prev) =>
-      prev.filter((invoice) => invoice.invoiceNumber !== invoiceNumber)
+      prev.filter((item) => item.invoiceNumber !== invoice.invoiceNumber)
     );
     if (isDemo) return;
 
     if (isLoggedin) {
-      fetch(`${process.env.BACK_END_URL}/invoices/${invoice.id}`, {
+      fetch(`${process.env.BACK_END_URL}/invoices/${invoice?.id}`, {
         method: "DELETE",
         credentials: "include",
-      }).catch((err) => {
-        console.log(err);
-      });
-      //   fetchInvoices();
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((response) => {
+          if (response.status !== 200) {
+            console.log(response);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
+  // edit invoice
   const editInvoice = (invoiceNumber, newInvoice) => {
     setInvoices((prev) =>
       prev.map((invoice) => {
@@ -102,13 +158,23 @@ export function InvoiceProvider({ children }) {
     if (isDemo) return;
 
     if (isLoggedin) {
-      fetch(`${process.env.BACK_END_URL}/invoices/${invoiceNumber}`, {
+      fetch(`${process.env.BACK_END_URL}/invoices/${newInvoice.id}`, {
         method: "PUT",
         credentials: "include",
-      }).catch((err) => {
-        console.log(err);
-      });
-      //   fetchInvoices();
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newInvoice),
+      })
+        .then((response) => {
+          return response;
+        })
+        .then((response) => {
+          if (response.status !== 201) {
+            console.log(response.json());
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
@@ -128,9 +194,9 @@ export function InvoiceProvider({ children }) {
         editInvoice,
         addInvoice,
         deleteInvoice,
-        isLoading,
-        setIsLoading,
-        fetchInvoices,
+        darkMode,
+        setDarkMode,
+        toggleTheme,
       }}
     >
       {children}
