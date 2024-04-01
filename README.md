@@ -18,7 +18,7 @@ My Invoice App
 ### Links
 
 - Repository URL: https://github.com/thusmiley/my-invoice-app.git
-- Live Site URL: https://my-invoice-app.vercel.app/
+- Live Site URL: https://invoice-app.naughty-cat.com/
 
 ### Built with
 
@@ -29,12 +29,13 @@ My Invoice App
 - Tailwind
 - React (Nextjs)
 - Filter
-- Headless CMS
 - React Router
 - React Hook Form
 - HeadlessUI
+- MUI Material
 - Datepicker
-- 
+- Live server
+- LocalStorage
 
 ### Collaborators
 
