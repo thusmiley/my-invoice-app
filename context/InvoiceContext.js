@@ -24,62 +24,37 @@ export function InvoiceProvider({ children }) {
   const [invoices, setInvoices] = useState();
   const [isAddInvoice, setIsAddInvoice] = useState(false);
   const [isEditInvoice, setIsEditInvoice] = useState(false);
-  const [userData, setUserData] = useState();
 
   // dark mode
-  useEffect(() => {
-    if (
-      localStorage.theme === "dark" ||
-      (!("theme" in localStorage) &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      document.documentElement.classList.add("dark");
-      setDarkMode(true);
-    } else {
-      document.documentElement.classList.remove("dark");
-      setDarkMode(false);
-    }
-  }, [darkMode]);
+    useEffect(() => {
+      if (
+        localStorage.theme === "dark" ||
+        (!("theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+        setDarkMode(true);
+      } else {
+        document.documentElement.classList.remove("dark");
+        setDarkMode(false);
+      }
+    }, [darkMode]);
 
-  const toggleTheme = () => {
-    const theme = localStorage.getItem("theme");
-    if (theme) {
-      localStorage.setItem("theme", theme === "dark" ? "light" : "dark");
-    } else {
-      localStorage.setItem("theme", "dark");
-    }
-    setDarkMode(!darkMode);
-  };
+    const toggleTheme = () => {
+      const theme = localStorage.getItem("theme");
+      if (theme) {
+        localStorage.setItem("theme", theme === "dark" ? "light" : "dark");
+      } else {
+        localStorage.setItem("theme", "dark");
+      }
+      setDarkMode(!darkMode);
+    };
 
   // login/demo toggle
   useEffect(() => {
     localStorage.setItem("isDemo", JSON.stringify(isDemo));
     localStorage.setItem("isLoggedin", JSON.stringify(isLoggedin));
   }, [isDemo, isLoggedin]);
-
-  // auth - fetch user data
-  useEffect(() => {
-    if (isLoggedin) {
-      fetch(`${process.env.BACK_END_URL}/user`, { credentials: "include" })
-        .then(async (response) => {
-          if (response.status === 404) {
-            console.log("error user data 404");
-            return [];
-          } else if (response.ok) {
-            return response.json();
-          } else {
-            let data = await response.json();
-            throw new Error(`${response.status}: ${data.message}`);
-          }
-        })
-        .then((response) => {
-          setUserData(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, []);
 
   // fetch invoices from server
   useEffect(() => {
@@ -110,7 +85,7 @@ export function InvoiceProvider({ children }) {
         })
         .then((response) => {
           setInvoices(response);
-          //   console.log(response);
+        //   console.log(response);
         })
         .catch((err) => {
           console.log(err);
@@ -120,35 +95,28 @@ export function InvoiceProvider({ children }) {
 
   // add invoice
   const addInvoice = (newInvoice) => {
-    if (isDemo) {
+    if (isDemo){
       setInvoices((prev) => [...prev, newInvoice]);
-      return;
-    }
-
+      return
+    } 
     if (isLoggedin) {
       fetch(`${process.env.BACK_END_URL}/invoices`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newInvoice),
-      })
-        .then((response) => {
-          if (response.status !== 201) {
-            throw new Error(
-              `Unexpected server response with status code ${response.status}`
-            );
-          }
-          return response;
-        })
-        .then((response) => {
+      }).then((response) => {
+        if (response.status !== 201) {
+          throw new Error(`Unexpected server response with status code ${response.status}`)
+        }
+        return response
+      }).then((response) => {
           return response.json();
-        })
-        .then((response) => {
-          setInvoices((prev) => [...prev, response]);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      }).then(response => {
+        setInvoices((prev) => [...prev, response]);
+      }).catch((err) => {
+        console.log(err);
+      });
     }
   };
 
@@ -156,43 +124,36 @@ export function InvoiceProvider({ children }) {
   const deleteInvoice = (invoice) => {
     if (isDemo) {
       setInvoices((prev) =>
-        prev.filter((item) => item.invoiceNumber !== invoice.invoiceNumber)
+      prev.filter((item) => item.invoiceNumber !== invoice.invoiceNumber)
       );
-      return;
+      return
     }
-
     if (isLoggedin) {
       fetch(`${process.env.BACK_END_URL}/invoices/${invoice?.id}`, {
         method: "DELETE",
         credentials: "include",
         headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            setInvoices((prev) =>
-              prev.filter(
-                (item) => item.invoiceNumber !== invoice.invoiceNumber
-              )
-            );
+          "content-type": "application/json"
+        }
+      }).then((response) => {
+        if(response.status === 200){
+          setInvoices((prev) =>
+          prev.filter((item) => item.invoiceNumber !== invoice.invoiceNumber)
+          )
+          return response
+        }else if (response.status !== 200) {
+            throw new Error(`Unexpected server response with status code ${response.status}`)
           }
-          return response;
-        })
-        .then((response) => {
-          if (response.status !== 200) {
-            console.log(response);
-          }
-        })
-        .catch((err) => {
+      }).catch((err) => {
           console.log(err);
-        });
+      });
     }
   };
 
   // edit invoice
-  const editInvoice = (invoiceNumber, newInvoice) => {
-    if (isDemo) {
+  const editInvoice = async (invoiceNumber, newInvoice) => {
+
+    if (isDemo){
       setInvoices((prev) =>
         prev.map((invoice) => {
           if (invoice.invoiceNumber === invoiceNumber) {
@@ -201,7 +162,7 @@ export function InvoiceProvider({ children }) {
           return invoice;
         })
       );
-      return;
+      return
     }
 
     if (isLoggedin) {
@@ -210,27 +171,22 @@ export function InvoiceProvider({ children }) {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newInvoice),
-      })
-        .then((response) => {
-          return response;
-        })
-        .then((response) => {
-          if (response.status !== 201) {
-            console.log(response.json());
-          } else {
-            setInvoices((prev) =>
-              prev.map((invoice) => {
-                if (invoice.invoiceNumber === invoiceNumber) {
-                  return newInvoice;
-                }
-                return invoice;
-              })
-            );
-          }
-        })
-        .catch((err) => {
+      }).then((response) => {
+        if (response.status === 201){
+          setInvoices((prev) =>
+            prev.map((invoice) => {
+              if (invoice.invoiceNumber === invoiceNumber) {
+                return newInvoice;
+              }
+              return invoice;
+            })
+        );
+        }else if (response.status !== 201) {
+          throw new Error(`Unexpected server response with status code ${response.status}`)
+        }
+      }).catch((err) => {
           console.log(err);
-        });
+      });
     }
   };
 
@@ -253,8 +209,6 @@ export function InvoiceProvider({ children }) {
         darkMode,
         setDarkMode,
         toggleTheme,
-        userData,
-        setUserData,
       }}
     >
       {children}
