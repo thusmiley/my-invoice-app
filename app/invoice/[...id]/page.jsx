@@ -226,8 +226,7 @@ const Invoice = ({ params }) => {
             <button
               type="button"
               className="bodyText font-bold py-3 px-6 bg-red rounded-full text-white hover:bg-lightRed animation-effect"
-              onClick={(e) => {
-                e.preventDefault();
+              onClick={() => {
                 deleteInvoice(invoice);
                 router.replace("/dashboard");
               }}

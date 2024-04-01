@@ -24,7 +24,7 @@ const InvoiceCard = ({ invoice }) => {
             {formatDate(findPaymentDueDate(invoice.date, invoice.paymentTerms))}
           </p>
         </div>
-        <h3 className="bodyText">{invoice.billToName}</h3>
+        <h3 className="bodyText truncate max-w-[120px]">{invoice.billToName}</h3>
       </div>
 
       <div className="flex justify-between items-end -mt-4 md:mt-0 md:items-center md:justify-end">
