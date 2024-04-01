@@ -152,10 +152,10 @@ export function InvoiceProvider({ children }) {
   };
 
   // delete invoice
-  const deleteInvoice = (invoice) => {
+  const deleteInvoice = (invoiceNumber) => {
     if (isDemo) {
       setInvoices((prev) =>
-        prev.filter((item) => item.invoiceNumber !== invoice.invoiceNumber)
+        prev.filter((item) => item.invoiceNumber !== invoiceNumber)
       );
       return;
     }
@@ -170,9 +170,7 @@ export function InvoiceProvider({ children }) {
         .then((response) => {
           if (response.status === 200) {
             setInvoices((prev) =>
-              prev.filter(
-                (item) => item.invoiceNumber !== invoice.invoiceNumber
-              )
+              prev.filter((item) => item.invoiceNumber !== invoiceNumber)
             );
             return response;
           } else if (response.status !== 200) {
