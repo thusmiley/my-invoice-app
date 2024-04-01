@@ -159,7 +159,7 @@ export function InvoiceProvider({ children }) {
         prev.filter((item) => item.invoiceNumber !== invoice.invoiceNumber)
       );
       console.log("is demoUnder!");
-        
+      console.log(invoices);
       return;
     }
     if (isLoggedin) {
