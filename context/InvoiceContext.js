@@ -63,14 +63,15 @@ export function InvoiceProvider({ children }) {
       fetch(`${process.env.NEXT_PUBLIC_BACK_END_URL}/user`, {
         credentials: "include",
       })
-        .then(async (response) => {
+        .then((response) => {
           if (response.status === 404) {
             return [];
           } else if (response.ok) {
             return response.json();
           } else {
-            let data = await response.json();
-            throw new Error(`${response.status}: ${data.message}`);
+            throw new Error(
+              `Unexpected server response with status code ${response.status}`
+            );  
           }
         })
         .then((response) => {
@@ -81,6 +82,32 @@ export function InvoiceProvider({ children }) {
         });
     }
   }, []);
+
+
+    // auth - fetch user data
+    useEffect(() => {
+      if (isLoggedin) {
+        fetch(`${process.env.NEXT_PUBLIC_BACK_END_URL}/user`, {
+          credentials: "include",
+        })
+          .then((response) => {
+            if (response.status === 404) {
+              return [];
+            } else if (response.status === 200) {
+              return response.json();
+            } else {
+              throw new Error(
+                `Unexpected server response with status code ${response.status}`
+              );            }
+          })
+          .then((response) => {
+            setUserData(response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }, []);
 
   // fetch invoices from server
   useEffect(() => {
@@ -98,14 +125,15 @@ export function InvoiceProvider({ children }) {
         method: "GET",
         credentials: "include",
       })
-        .then(async (response) => {
-          if (response.status === 404) {
-            return [];
-          } else if (response.ok) {
+        .then((response) => {
+          if(response.status === 200){
             return response.json();
+          }else if (response.status === 404) {
+            return [];
           } else {
-            let data = await response.json();
-            throw new Error(`${response.status}: ${data.message}`);
+            throw new Error(
+              `Unexpected server response with status code ${response.status}`
+            );  
           }
         })
         .then((response) => {
@@ -117,12 +145,13 @@ export function InvoiceProvider({ children }) {
     }
   }, [isDemo, isLoggedin]);
 
-  // add invoice
+  //Sets local invoices to display immediately if in demo mode, and waits for a succesful server response to set them while logged in
   const addInvoice = (newInvoice) => {
     if (isDemo) {
       setInvoices((prev) => [...prev, newInvoice]);
       return;
     }
+
     if (isLoggedin) {
       fetch(`${process.env.NEXT_PUBLIC_BACK_END_URL}/invoices`, {
         method: "POST",
@@ -130,7 +159,11 @@ export function InvoiceProvider({ children }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newInvoice),
       })
+        //Handles the response depending on if the status code matches the expected success code or not
         .then((response) => {
+          if (response.status === 201){
+            return response.json()
+          }
           if (response.status !== 201) {
             throw new Error(
               `Unexpected server response with status code ${response.status}`
@@ -138,9 +171,7 @@ export function InvoiceProvider({ children }) {
           }
           return response;
         })
-        .then((response) => {
-          return response.json();
-        })
+        //On successful query, adds the new invoice returned by the server with its newly assigned UUID to local
         .then((response) => {
           setInvoices((prev) => [...prev, response]);
         })
@@ -150,7 +181,7 @@ export function InvoiceProvider({ children }) {
     }
   };
 
-  // delete invoice
+  //Sets local invoices to display immediately if in demo mode, and waits for a succesful server response to set them while logged in
   const deleteInvoice = (invoice) => {
     if (isDemo) {
       setInvoices((prev) =>
@@ -158,6 +189,7 @@ export function InvoiceProvider({ children }) {
       );
       return;
     }
+
     if (isLoggedin) {
       console.log("is loggedin!");
       fetch(`${process.env.NEXT_PUBLIC_BACK_END_URL}/invoices/${invoice?.id}`, {
@@ -167,19 +199,23 @@ export function InvoiceProvider({ children }) {
           "content-type": "application/json",
         },
       })
+        //Handles the response depending on if the status code matches the expected success code or not
         .then((response) => {
           if (response.status === 200) {
-            setInvoices((prev) =>
-              prev.filter(
-                (item) => item.invoiceNumber !== invoice.invoiceNumber
-              )
-            );
-            return response;
+            return
           } else if (response.status !== 200) {
             throw new Error(
               `Unexpected server response with status code ${response.status}`
             );
           }
+        })
+        //On successful query, removes the invoice from local
+        .then(() => {
+          setInvoices((prev) =>
+            prev.filter(
+              (item) => item.invoiceNumber !== invoice.invoiceNumber
+            )
+          );
         })
         .catch((err) => {
           console.log(err);
@@ -187,8 +223,8 @@ export function InvoiceProvider({ children }) {
     }
   };
 
-  // edit invoice
-  const editInvoice = async (invoiceNumber, newInvoice) => {
+  //Sets local invoices to display immediately if in demo mode, and waits for a succesful server response to set them while logged in
+  const editInvoice = (invoiceNumber, newInvoice) => {
     if (isDemo) {
       setInvoices((prev) =>
         prev.map((invoice) => {
@@ -211,21 +247,26 @@ export function InvoiceProvider({ children }) {
           body: JSON.stringify(newInvoice),
         }
       )
+        //Handles the response depending on if the status code matches the expected success code or not
         .then((response) => {
           if (response.status === 201) {
-            setInvoices((prev) =>
-              prev.map((invoice) => {
-                if (invoice.invoiceNumber === invoiceNumber) {
-                  return newInvoice;
-                }
-                return invoice;
-              })
-            );
+            return
           } else if (response.status !== 201) {
             throw new Error(
               `Unexpected server response with status code ${response.status}`
             );
           }
+        })
+        //On successful query, updates the invoice on local
+        .then(() => {
+          setInvoices((prev) =>
+            prev.map((invoice) => {
+              if (invoice.invoiceNumber === invoiceNumber) {
+                return newInvoice;
+              }
+              return invoice;
+            })
+          );
         })
         .catch((err) => {
           console.log(err);
