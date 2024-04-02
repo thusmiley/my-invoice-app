@@ -65,7 +65,6 @@ export function InvoiceProvider({ children }) {
       })
         .then(async (response) => {
           if (response.status === 404) {
-            console.log("error user data 404");
             return [];
           } else if (response.ok) {
             return response.json();
@@ -101,7 +100,6 @@ export function InvoiceProvider({ children }) {
       })
         .then(async (response) => {
           if (response.status === 404) {
-            console.log("Empty invoice array - error invoices 404");
             return [];
           } else if (response.ok) {
             return response.json();
@@ -112,7 +110,6 @@ export function InvoiceProvider({ children }) {
         })
         .then((response) => {
           setInvoices(response);
-          //   console.log(response);
         })
         .catch((err) => {
           console.log(err);
@@ -156,12 +153,9 @@ export function InvoiceProvider({ children }) {
   // delete invoice
   const deleteInvoice = (invoice) => {
     if (isDemo) {
-      console.log("is demo!");
       setInvoices((prev) =>
         prev.filter((item) => item.invoiceNumber !== invoice.invoiceNumber)
       );
-      console.log("is demoUnder!");
-      console.log(invoices);
       return;
     }
     if (isLoggedin) {
