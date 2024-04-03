@@ -1,6 +1,6 @@
 "use client";
 
-import backArrowIcon from "../../../public/icon-arrow-left.svg";
+import backArrowIcon from "../../public/icon-arrow-left.svg";
 import Image from "next/image";
 import StatusButton from "@/components/StatusButton";
 import { useState, useEffect } from "react";
@@ -10,10 +10,6 @@ import { useInvoiceContext } from "@/context/InvoiceContext";
 import { Transition } from "@headlessui/react";
 import InvoiceForm from "@/components/InvoiceForm";
 import { useRouter } from "next/navigation";
-
-// export const metadata = {
-//   title: "Invoice",
-// };
 
 const Invoice = ({ params }) => {
   const {

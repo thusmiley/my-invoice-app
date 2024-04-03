@@ -18,7 +18,7 @@ My Invoice App
 ### Links
 
 - Repository URL: https://github.com/thusmiley/my-invoice-app.git
-- Live Site URL: https://invoice-app.naughty-cat.com/
+- Live Site URL: https://my-invoice-app.vercel.app/
 
 ### Built with
 

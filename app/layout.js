@@ -8,8 +8,19 @@ export const metadata = {
     template: "%s | My Invoice App",
     default: "My Invoice App",
   },
-  description: "Made by Thu Smiley @Naughty Cat",
-  metadataBase: new URL("https://my-invoice-app.vercel.app/"),
+  openGraph: {
+    description: "Made by Thu Smiley @Naughty Cat",
+    url: "https://my-invoice-app.vercel.app/",
+    siteName: "My Invoice App",
+    images: [],
+    locale: "en_US",
+    type: "website",
+  },
+  keywords: ["Next.js", "React", "JavaScript", "Tailwind", 'SASS'],
+  authors: [
+    { name: "Thu Smiley @Naughty Cat", url: "https://thusmiley.com/" },
+    { name: "Brenden Gerber", url: "https://blgerber.com/" },
+  ],
 };
 
 const DynamicHeader = dynamic(() => import("@/components/NavBar"), {
