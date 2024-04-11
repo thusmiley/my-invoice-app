@@ -7,6 +7,7 @@ module.exports = {
     "./utils/**/*.{js,ts,jsx,tsx,mdx}",
     "./context/**/*.{js,ts,jsx,tsx,mdx}",
     "./hooks/**/*.{js,ts,jsx,tsx,mdx}",
+    "./views/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   darkMode: "class",
   mode: "jit",
