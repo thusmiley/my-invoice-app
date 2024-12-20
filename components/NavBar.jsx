@@ -1,9 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
-import avatar from "../public/image-avatar.jpg";
 import { useInvoiceContext } from "@/context/InvoiceContext";
 import "dotenv/config";
 import Skeleton from "@mui/material/Skeleton";
@@ -120,10 +118,8 @@ const NavBar = () => {
               <Skeleton variant="circular" width={32} height={32} />
             )}
             {isDemo && (
-              <Image
-                src={avatar}
-                width={32}
-                height={32}
+              <img
+                src="/image-avatar.jpg"
                 placeholder="empty"
                 alt="profile photo"
                 className={`${
@@ -139,10 +135,8 @@ const NavBar = () => {
               <Skeleton variant="circular" width={32} height={32} />
             )}
             {isLoggedin && userData && (
-              <Image
+              <img
                 src={userData?.photoUrl}
-                width={32}
-                height={32}
                 placeholder="empty"
                 alt="profile photo"
                 className={`${

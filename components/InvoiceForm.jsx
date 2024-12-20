@@ -1,6 +1,4 @@
 "use client";
-import Image from "next/image";
-import backArrowIcon from "../public/icon-arrow-left.svg";
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import DatePicker from "react-datepicker";
@@ -128,10 +126,8 @@ const InvoiceForm = ({ invoice }) => {
           }
         }}
       >
-        <Image
-          src={backArrowIcon}
-          width={7}
-          height={10}
+        <img
+          src="/icon-arrow-left.svg"
           alt=""
           className="w-[7px] h-auto object-contain object-center mr-6"
         />

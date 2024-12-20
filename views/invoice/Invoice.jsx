@@ -1,7 +1,5 @@
 "use client";
 
-import backArrowIcon from "../../public/icon-arrow-left.svg";
-import Image from "next/image";
 import StatusButton from "@/components/StatusButton";
 import { useState, useEffect } from "react";
 import SummaryComponent from "@/components/SummaryComponent";
@@ -49,10 +47,8 @@ const Invoice = ({ params }) => {
         className="flex items-center bodyText font-bold text-almostBlack my-8 md:mt-[48px] hover:text-lightGrey animation-effect"
         onClick={() => router.back()}
       >
-        <Image
-          src={backArrowIcon}
-          width={7}
-          height={10}
+        <img
+          src="/icon-arrow-left.svg"
           alt=""
           className="w-[7px] h-auto object-contain object-center mr-6"
         />

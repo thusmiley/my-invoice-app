@@ -1,11 +1,9 @@
 "use client";
-import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Filter from "@/components/Filter";
 import AddNewButton from "@/components/AddNewButton";
 import InvoiceCard from "@/components/InvoiceCard";
-import illustration from "../../public/illustration-empty.svg";
 import { useInvoiceContext } from "@/context/InvoiceContext";
 import InvoiceForm from "@/components/InvoiceForm";
 import { Transition } from "@headlessui/react";
@@ -110,10 +108,8 @@ const Dashboard = () => {
 
       {invoices?.length === 0 ? (
         <section className="max-w-[217px] mx-auto mt-[102px] text-center md:max-w-[242px] md:mt-[210px] xl:mt-[141px]">
-          <Image
-            src={illustration}
-            width={242}
-            height={200}
+          <img
+            src="/illustration-empty.svg"
             alt=""
             className="w-full h-auto object-contain object-center"
             priority={true}

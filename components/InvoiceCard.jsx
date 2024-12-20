@@ -1,8 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import StatusButton from "./StatusButton";
-import Image from "next/image";
-import arrowRightIcon from "../public/icon-arrow-right.svg";
 import { formatCurrency, formatDate, findPaymentDueDate } from "@/utils";
 
 const InvoiceCard = ({ invoice }) => {
@@ -24,7 +22,9 @@ const InvoiceCard = ({ invoice }) => {
             {formatDate(findPaymentDueDate(invoice.date, invoice.paymentTerms))}
           </p>
         </div>
-        <h3 className="bodyText truncate max-w-[120px]">{invoice.billToName}</h3>
+        <h3 className="bodyText truncate max-w-[120px]">
+          {invoice.billToName}
+        </h3>
       </div>
 
       <div className="flex justify-between items-end -mt-4 md:mt-0 md:items-center md:justify-end">
@@ -32,10 +32,8 @@ const InvoiceCard = ({ invoice }) => {
           ${formatCurrency(invoice.amountDue)}
         </h4>
         <StatusButton status={invoice.status} />
-        <Image
-          src={arrowRightIcon}
-          width={7}
-          height={10}
+        <img
+          src="/icon-arrow-right.svg"
           alt="see details"
           className="hidden md:block w-[7px] h-auto object-contain object-center ml-5"
         />

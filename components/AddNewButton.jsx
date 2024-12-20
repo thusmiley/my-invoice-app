@@ -1,5 +1,3 @@
-import Image from "next/image";
-import plusIcon from "../public/icon-plus.svg";
 
 const AddNewButton = ({ isAddInvoice, setIsAddInvoice }) => {
   return (
@@ -8,10 +6,8 @@ const AddNewButton = ({ isAddInvoice, setIsAddInvoice }) => {
       onClick={() => setIsAddInvoice(!isAddInvoice)}
     >
       <span className="bg-white rounded-full w-8 h-8 grid place-content-center">
-        <Image
-          src={plusIcon}
-          height={10}
-          width={10}
+        <img
+          src='/icon-plus.svg'
           alt=""
           className="w-[10px] h-auto object-contain object-center"
         />

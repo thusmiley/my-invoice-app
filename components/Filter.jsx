@@ -1,6 +1,4 @@
 "use client";
-import Image from "next/image";
-import arrowDownIcon from "../public/icon-arrow-down.svg";
 import { useState, useEffect, useRef } from "react";
 import { Transition } from "@headlessui/react";
 
@@ -32,10 +30,8 @@ const Filter = ({ filterStatus, setFilterStatus, handleFilterClick }) => {
         onClick={() => setFilterIsOpen(!filterIsOpen)}
       >
         Filter <span className="hidden md:inline">&nbsp;by status</span>
-        <Image
-          src={arrowDownIcon}
-          height={7}
-          width={11}
+        <img
+          src="/icon-arrow-down.svg"
           alt=""
           className={`${
             filterIsOpen ? "[transform:rotateX(180deg)]" : ""

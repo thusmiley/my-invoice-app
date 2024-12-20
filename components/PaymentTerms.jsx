@@ -1,6 +1,4 @@
 "use client";
-import Image from "next/image";
-import downArrowIcon from "../public/icon-arrow-down.svg";
 import { useEffect, useState, Fragment } from "react";
 import { terms, findPaymentTerms, findPaymentTermsId } from "@/utils";
 import { Listbox } from "@headlessui/react";
@@ -25,10 +23,8 @@ const PaymentTerms = ({ data, setData, onChange }) => {
       <Listbox.Button as="div">
         <div className="bodyText font-bold cursor-pointer py-4 px-6 form-input flex justify-between items-center">
           {selectedTerm?.name}
-          <Image
-            src={downArrowIcon}
-            width={11}
-            height={7}
+          <img
+            src="/icon-arrow-down.svg"
             alt=""
             className="w-[11px] h-auto object-contain object-center"
           />
